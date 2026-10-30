@@ -15,6 +15,8 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 
 
 export const MusicaHome: typeof import("../components/MusicaHome.vue")['default']
+export const AudioMusicaHome: typeof import("../components/audio/MusicaHome.vue")['default']
+export const AudioSonido boton: typeof import("../components/audio/Sonido boton.vue")['default']
 export const HomeHero: typeof import("../components/home/HomeHero.vue")['default']
 export const HomeMenu: typeof import("../components/home/HomeMenu.vue")['default']
 export const HomeTitle: typeof import("../components/home/HomeTitle.vue")['default']
@@ -46,6 +48,8 @@ export const Html: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const LazyMusicaHome: LazyComponent<typeof import("../components/MusicaHome.vue")['default']>
+export const LazyAudioMusicaHome: LazyComponent<typeof import("../components/audio/MusicaHome.vue")['default']>
+export const LazyAudioSonido boton: LazyComponent<typeof import("../components/audio/Sonido boton.vue")['default']>
 export const LazyHomeHero: LazyComponent<typeof import("../components/home/HomeHero.vue")['default']>
 export const LazyHomeMenu: LazyComponent<typeof import("../components/home/HomeMenu.vue")['default']>
 export const LazyHomeTitle: LazyComponent<typeof import("../components/home/HomeTitle.vue")['default']>

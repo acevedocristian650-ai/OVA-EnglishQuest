@@ -1,4 +1,5 @@
 <template>
+   <MusicaHome ruta="/audio/Mapa.mp3"></MusicaHome>
   <div class="game-page">
     <v-container v-if="zone" class="zone-container">
       <v-btn to="/map" variant="tonal" color="amber-lighten-3" rounded="lg" class="mb-4">

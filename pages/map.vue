@@ -52,7 +52,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import MusicaHome from '../components/MusicaHome.vue'
+import MusicaHome from '../components/audio/MusicaHome.vue'
 
 const {
   zones,
