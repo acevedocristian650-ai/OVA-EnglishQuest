@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="480" viewBox="0 0 320 480">
+  <title>Héroe: estudiante convertido en aventurero</title>
+
+  <!--
+    ANIMACIÓN IDLE DEL HÉROE
+    El dibujo es el mismo de antes; solo se agruparon sus piezas con <g> para poder moverlas por separado.
+    Cada <animateTransform> / <animate> es un movimiento. Los ciclos son distintos a propósito:
+        respiración 4.6s | cabeza 6.2s | capa 3.6s | bufanda 2.8s | espada 5.2s | escudo 5.8s | mochila 4.2s | bolsa 3.3s
+    El primer cuadro de cada animación es la pose original, así que nada cambia de lugar.
+  -->
+
+  <!-- Sombra en el suelo (se ensancha un poquito al respirar) -->
+  <ellipse cx="190" cy="458" rx="96" ry="10" fill="#000" opacity="0.4">
+    <animate attributeName="rx" values="96;98;98;96;96" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- ===== PARTE DE ATRÁS DEL CUERPO (capa y mochila) - sube y baja con la respiración ===== -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 -3;0 0;0 0" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+
+    <!-- Capa roja: la parte de arriba queda fija en los hombros, el borde de abajo ondea con el viento -->
+    <path d="M122 150 L96 160 Q40 300 52 420 L152 392 L152 160 Z" fill="#8f1d24">
+      <animate attributeName="d" values="M122 150 L96 160 Q40.0 300 52.0 420.0 L152 392 L152 160 Z;M122 150 L96 160 Q46.4 300 59.4 420.4 L152 392 L152 160 Z;M122 150 L96 160 Q49.0 300 67.5 422.2 L152 392 L152 160 Z;M122 150 L96 160 Q46.4 300 71.5 424.5 L152 392 L152 160 Z;M122 150 L96 160 Q40.0 300 69.2 425.8 L152 392 L152 160 Z;M122 150 L96 160 Q33.6 300 61.9 425.5 L152 392 L152 160 Z;M122 150 L96 160 Q31.0 300 53.8 423.6 L152 392 L152 160 Z;M122 150 L96 160 Q33.6 300 49.7 421.3 L152 392 L152 160 Z;M122 150 L96 160 Q40.0 300 52.0 420.0 L152 392 L152 160 Z" keyTimes="0;0.1;0.2;0.4;0.5;0.6;0.8;0.9;1" dur="3.6s" repeatCount="indefinite"/>
+    </path>
+    <path d="M96 160 Q40 300 52 420 L80 412 Q70 300 112 166 Z" fill="#5c1016">
+      <animate attributeName="d" values="M96 160 Q40.0 300 52.0 420.0 L80.0 412.0 Q70.0 300 112 166 Z;M96 160 Q46.4 300 59.4 420.4 L86.7 412.4 Q76.1 300 112 166 Z;M96 160 Q49.0 300 67.5 422.2 L94.0 414.2 Q80.5 300 112 166 Z;M96 160 Q46.4 300 71.5 424.5 L97.8 416.5 Q80.5 300 112 166 Z;M96 160 Q40.0 300 69.2 425.8 L95.7 417.8 Q76.2 300 112 166 Z;M96 160 Q33.6 300 61.9 425.5 L89.0 417.5 Q70.1 300 112 166 Z;M96 160 Q31.0 300 53.8 423.6 L81.6 415.6 Q65.7 300 112 166 Z;M96 160 Q33.6 300 49.7 421.3 L77.9 413.3 Q65.7 300 112 166 Z;M96 160 Q40.0 300 52.0 420.0 L80.0 412.0 Q70.0 300 112 166 Z" keyTimes="0;0.1;0.2;0.4;0.5;0.6;0.8;0.9;1" dur="3.6s" repeatCount="indefinite"/>
+    </path>
+
+    <!-- Mochila de aventurero con manta enrollada (se balancea un poco, con retraso respecto al cuerpo) -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 129 170;0.7 129 170;0 129 170;-0.7 129 170;0 129 170" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="4.2s" begin="0s" repeatCount="indefinite"/>
+      <rect x="98" y="172" width="60" height="104" rx="16" fill="#6b4423"/>
+      <rect x="98" y="172" width="60" height="42" rx="16" fill="#7d5230"/>
+      <rect x="120" y="200" width="16" height="14" rx="2" fill="#f2c14e"/>
+      <rect x="94" y="150" width="70" height="28" rx="14" fill="#b08a52"/>
+      <path d="M112 150V178M146 150V178" stroke="#6b4423" stroke-width="4"/>
+    </g>
+  </g>
+
+  <!-- Piernas (los pies siempre quedan firmes en el suelo) -->
+  <rect x="150" y="300" width="34" height="124" fill="#262a35"/>
+  <rect x="190" y="300" width="34" height="124" fill="#343a48"/>
+
+  <!-- Botas (miran hacia la derecha, hacia el castillo) -->
+  <path d="M146 410 H190 Q202 410 202 424 V448 H146 Z" fill="#3a2412"/>
+  <path d="M186 410 H230 Q252 414 254 436 V448 H186 Z" fill="#4a2f17"/>
+  <rect x="146" y="408" width="56" height="8" fill="#a8742c"/>
+  <rect x="186" y="408" width="68" height="8" fill="#a8742c"/>
+
+  <!-- Falda de la túnica -->
+  <polygon points="146,254 232,254 244,314 134,314" fill="#24569f"/>
+
+  <!-- ===== PARTE DE ADELANTE DEL CUERPO - sube y baja con la respiración ===== -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 -3;0 0;0 0" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+
+    <!-- Túnica azul y peto de armadura: el pecho se infla un poco al inhalar (se escala desde la cintura) -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;-2.2 -5.2;-2.2 -5.2;0 0;0 0" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum" values="1 1;1.012 1.02;1.012 1.02;1 1;1 1" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+      <rect x="138" y="160" width="94" height="104" rx="20" fill="#2f6fd1"/>
+      <rect x="146" y="168" width="78" height="90" rx="14" fill="#aeb8c8"/>
+      <rect x="160" y="178" width="20" height="68" rx="8" fill="#dfe5ee" opacity="0.6"/>
+    </g>
+
+    <!-- Cinturón y bolsa (la bolsa cuelga y se balancea sola) -->
+    <rect x="140" y="252" width="92" height="14" fill="#5a3a1e"/>
+    <rect x="178" y="249" width="16" height="20" rx="3" fill="#f2c14e"/>
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 219 265;3.5 219 265;0 219 265;-3.5 219 265;0 219 265" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="3.3s" begin="0s" repeatCount="indefinite"/>
+      <rect x="208" y="264" width="22" height="28" rx="6" fill="#6b4423"/>
+    </g>
+
+    <!-- Bufanda roja (la cola flamea con el viento) -->
+    <path d="M150 158 Q188 180 228 156 L230 174 Q190 198 148 176 Z" fill="#c2323a"/>
+    <path d="M152 162 Q112 172 90 218 L112 226 Q126 192 158 180 Z" fill="#a0242c">
+      <animate attributeName="d" values="M152 162 Q112.0 172.0 90.0 218.0 L112.0 226.0 Q126.0 192.0 158 180 Z;M152 162 Q114.1 173.5 94.2 219.1 L115.5 227.1 Q128.3 193.3 158 180 Z;M152 162 Q115.0 174.7 98.5 221.9 L119.1 229.9 Q129.8 194.8 158 180 Z;M152 162 Q114.1 174.9 100.3 224.7 L120.6 232.7 Q129.5 195.6 158 180 Z;M152 162 Q112.0 173.9 98.6 226.0 L119.2 234.0 Q127.8 195.4 158 180 Z;M152 162 Q109.9 172.4 94.4 224.9 L115.7 232.9 Q125.5 194.1 158 180 Z;M152 162 Q109.0 171.2 90.1 222.1 L112.1 230.1 Q124.0 192.6 158 180 Z;M152 162 Q109.9 171.0 88.3 219.3 L110.6 227.3 Q124.2 191.7 158 180 Z;M152 162 Q112.0 172.0 90.0 218.0 L112.0 226.0 Q126.0 192.0 158 180 Z" keyTimes="0;0.1;0.2;0.4;0.5;0.6;0.8;0.9;1" dur="2.8s" repeatCount="indefinite"/>
+    </path>
+
+    <!-- CABEZA completa: se inclina muy poco, pivotando en el cuello -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 191 152;1.8 191 152;1.8 191 152;-1.2 191 152;0 191 152" keyTimes="0;.3;.5;.78;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="6.2s" repeatCount="indefinite"/>
+
+      <!-- Cuello y cabeza -->
+      <rect x="180" y="140" width="22" height="22" fill="#d9a77a"/>
+      <ellipse cx="198" cy="112" rx="34" ry="38" fill="#e6b98f"/>
+      <circle cx="172" cy="118" r="7" fill="#d9a77a"/>
+
+      <!-- Cabello -->
+      <path d="M164 110 Q162 68 198 64 Q238 66 234 102 Q216 86 192 90 Q174 94 168 122 Z" fill="#4a2f1a"/>
+
+      <!-- Aro dorado de héroe (la gema respira un poquito) -->
+      <path d="M166 92 Q198 72 234 94" stroke="#f2c14e" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="200" cy="80" r="5" fill="#6fb6ff">
+        <animate attributeName="r" values="5;6;5" keyTimes="0;.5;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" dur="3s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- Cara (el ojo parpadea de vez en cuando) -->
+      <ellipse cx="216" cy="114" rx="4" ry="6" fill="#1b1209">
+        <animate attributeName="ry" values="6;6;0.8;6;6" keyTimes="0;.9;.93;.96;1" dur="5.5s" repeatCount="indefinite"/>
+      </ellipse>
+      <path d="M208 102 Q216 98 224 102" stroke="#4a2f1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M230 120 Q238 126 230 130" fill="#d9a77a"/>
+      <path d="M214 134 Q222 138 230 133" stroke="#7a4a30" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </g>
+
+    <!-- Escudo (pequeño movimiento de equilibrio) -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 176 200;1.6 176 200;0 176 200;-1.6 176 200;0 176 200" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="5.8s" begin="0s" repeatCount="indefinite"/>
+      <circle cx="176" cy="226" r="38" fill="#8f1d24" stroke="#f2c14e" stroke-width="6"/>
+      <circle cx="176" cy="226" r="10" fill="#f2c14e"/>
+      <path d="M176 192V260M142 226H210" stroke="#f2c14e" stroke-width="3" opacity="0.6"/>
+    </g>
+
+    <!-- BRAZO + ESPADA: el brazo acompaña al hombro y la espada oscila aparte, desde la mano -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 222 182;0.9 222 182;0 222 182;-0.9 222 182;0 222 182" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="4.6s" begin="0s" repeatCount="indefinite"/>
+
+      <!-- Brazo que sostiene la espada -->
+      <line x1="220" y1="180" x2="250" y2="222" stroke="#aeb8c8" stroke-width="24" stroke-linecap="round"/>
+      <line x1="250" y1="222" x2="264" y2="196" stroke="#8d97a8" stroke-width="20" stroke-linecap="round"/>
+
+      <!-- Espada en alto -->
+      <g transform="rotate(14 264 196)">
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="0 264 196;1.4 264 196;0 264 196;-1.4 264 196;0 264 196" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="5.2s" begin="0s" repeatCount="indefinite"/>
+          <polygon points="258,46 264,20 270,46 270,196 258,196" fill="#e8edf5"/>
+          <rect x="263" y="46" width="2" height="150" fill="#aeb8c8"/>
+          <rect x="246" y="190" width="40" height="10" rx="3" fill="#f2c14e"/>
+          <rect x="260" y="199" width="9" height="28" fill="#5a3a1e"/>
+          <circle cx="264.500" cy="232" r="7" fill="#f2c14e"/>
+        </g>
+      </g>
+      <circle cx="266" cy="198" r="11" fill="#e6b98f"/>
+    </g>
+  </g>
+</svg>

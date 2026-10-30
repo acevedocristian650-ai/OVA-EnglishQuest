@@ -1,0 +1,22 @@
+/* ============================================================
+   CSS GLOBAL (assets/css/main.css)
+   Es MUY pequeño a propósito: casi todo se hace con Vuetify.
+   ============================================================ */
+
+/* Letra de aspecto medieval para el título del juego.
+   Usa fuentes que ya trae el computador (no se descarga nada).
+   El !important es para ganarle a la fuente por defecto de Vuetify. */
+.fantasy-title {
+  font-family: 'Papyrus', 'Copperplate', 'Palatino Linotype', Georgia, serif !important;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* Fondo de las páginas del juego que no son la portada (mapa, zonas...).
+   Reutiliza la ilustración de la portada, oscurecida para que el contenido se lea. */
+.game-page {
+  min-height: 100vh;
+  padding: 8px 0 32px;
+  background:
+    linear-gradient(rgba(5, 10, 23, 0.82), rgba(5, 10, 23, 0.92)),
+    url('/images/home-background.svg') center / cover fixed;
+}
