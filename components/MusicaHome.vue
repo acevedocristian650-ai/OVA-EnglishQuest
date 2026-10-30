@@ -5,6 +5,14 @@
 </template>
 
 <script setup>
+// 1. Definir una propiedad que recibirá la ruta del audio
+const props = defineProps({
+  ruta: {
+    type: String,
+    required: true
+  }
+})
+
 const audio = ref(null)
 
 const iniciarMusica = () => {
@@ -14,19 +22,16 @@ const iniciarMusica = () => {
 }
 
 onMounted(() => {
-  // En Nuxt, los archivos de la carpeta public se acceden desde la raíz '/'
-  audio.value = new Audio('/audio/interfazentrada.mp3')
+  // 2. Usar la propiedad dinámica en lugar de la ruta estática
+  audio.value = new Audio(props.ruta)
   audio.value.loop = true
-  audio.value.volume = 0.5 // Ajusta de 0.0 a 1.0
+  audio.value.volume = 0.5 
 
-  // Intenta reproducir automáticamente al cargar la página
   audio.value.play().catch(() => {
-    // Si el navegador bloquea el autoplay, se iniciará con el primer clic que el usuario haga en la pantalla
     document.addEventListener('click', iniciarMusica, { once: true })
   })
 })
 
-// Cuando cambies de página, el componente se destruye y la música se apaga
 onUnmounted(() => {
   if (audio.value) {
     audio.value.pause()
@@ -34,7 +39,6 @@ onUnmounted(() => {
   }
   document.removeEventListener('click', iniciarMusica)
 })
-
 </script>
 
 <style>

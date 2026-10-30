@@ -1,5 +1,5 @@
 <template>
-  <MusicaHome></MusicaHome>
+  <MusicaHome ruta="/audio/interfazentrada.mp3"></MusicaHome>
   <HomeHero>
     <template #top>
       <HomeTitle />
@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import MusicaHome from '../components/home/MusicaHome.vue';
+
 
 // Al pulsar COMENZAR AVENTURA vamos al mapa del reino (pages/map.vue).
 // Cuando exista la selección de héroe (pages/hero.vue), aquí se cambiará la ruta.

@@ -14,10 +14,10 @@ type HydrationStrategies = {
 type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }> & T
 
 
+export const MusicaHome: typeof import("../components/MusicaHome.vue")['default']
 export const HomeHero: typeof import("../components/home/HomeHero.vue")['default']
 export const HomeMenu: typeof import("../components/home/HomeMenu.vue")['default']
 export const HomeTitle: typeof import("../components/home/HomeTitle.vue")['default']
-export const HomeMusicaHome: typeof import("../components/home/MusicaHome.vue")['default']
 export const MapBoard: typeof import("../components/map/MapBoard.vue")['default']
 export const MapScenery: typeof import("../components/map/MapScenery.vue")['default']
 export const MapZone: typeof import("../components/map/MapZone.vue")['default']
@@ -45,10 +45,10 @@ export const Head: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Html: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Html']
 export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
+export const LazyMusicaHome: LazyComponent<typeof import("../components/MusicaHome.vue")['default']>
 export const LazyHomeHero: LazyComponent<typeof import("../components/home/HomeHero.vue")['default']>
 export const LazyHomeMenu: LazyComponent<typeof import("../components/home/HomeMenu.vue")['default']>
 export const LazyHomeTitle: LazyComponent<typeof import("../components/home/HomeTitle.vue")['default']>
-export const LazyHomeMusicaHome: LazyComponent<typeof import("../components/home/MusicaHome.vue")['default']>
 export const LazyMapBoard: LazyComponent<typeof import("../components/map/MapBoard.vue")['default']>
 export const LazyMapScenery: LazyComponent<typeof import("../components/map/MapScenery.vue")['default']>
 export const LazyMapZone: LazyComponent<typeof import("../components/map/MapZone.vue")['default']>

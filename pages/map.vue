@@ -1,4 +1,5 @@
 <template>
+  <MusicaHome ruta="/audio/Mapa.mp3"></MusicaHome>
   <div class="game-page">
     <v-container>
       <!-- Barra superior: volver + título + progreso -->
@@ -51,6 +52,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import MusicaHome from '../components/MusicaHome.vue'
 
 const {
   zones,

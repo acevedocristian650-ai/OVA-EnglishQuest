@@ -14,10 +14,10 @@ type HydrationStrategies = {
 type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }> & T
 
 interface _GlobalComponents {
+  MusicaHome: typeof import("../../components/MusicaHome.vue")['default']
   HomeHero: typeof import("../../components/home/HomeHero.vue")['default']
   HomeMenu: typeof import("../../components/home/HomeMenu.vue")['default']
   HomeTitle: typeof import("../../components/home/HomeTitle.vue")['default']
-  HomeMusicaHome: typeof import("../../components/home/MusicaHome.vue")['default']
   MapBoard: typeof import("../../components/map/MapBoard.vue")['default']
   MapScenery: typeof import("../../components/map/MapScenery.vue")['default']
   MapZone: typeof import("../../components/map/MapZone.vue")['default']
@@ -45,10 +45,10 @@ interface _GlobalComponents {
   Html: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Html']
   Body: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Body']
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
+  LazyMusicaHome: LazyComponent<typeof import("../../components/MusicaHome.vue")['default']>
   LazyHomeHero: LazyComponent<typeof import("../../components/home/HomeHero.vue")['default']>
   LazyHomeMenu: LazyComponent<typeof import("../../components/home/HomeMenu.vue")['default']>
   LazyHomeTitle: LazyComponent<typeof import("../../components/home/HomeTitle.vue")['default']>
-  LazyHomeMusicaHome: LazyComponent<typeof import("../../components/home/MusicaHome.vue")['default']>
   LazyMapBoard: LazyComponent<typeof import("../../components/map/MapBoard.vue")['default']>
   LazyMapScenery: LazyComponent<typeof import("../../components/map/MapScenery.vue")['default']>
   LazyMapZone: LazyComponent<typeof import("../../components/map/MapZone.vue")['default']>
