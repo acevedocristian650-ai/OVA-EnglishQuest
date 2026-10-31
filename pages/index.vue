@@ -1,11 +1,11 @@
 <template>
   <MusicaHome ruta="/audio/interfazentrada.mp3"></MusicaHome>
   <HomeHero>
-    <template #top>
+    <template #title>
       <HomeTitle />
     </template>
 
-    <template #bottom>
+    <template #menu>
       <HomeMenu @start="startAdventure" />
     </template>
   </HomeHero>

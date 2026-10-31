@@ -1,3 +1,8 @@
+/* Tipografías de fantasía (Google Fonts). Si no hay internet, el navegador
+   usa Palatino / Georgia y todo sigue funcionando.
+   Los @import siempre deben ir al principio del archivo. */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cinzel+Decorative:wght@700;900&display=swap');
+
 /* ============================================================
    CSS GLOBAL (assets/css/main.css)
    Es MUY pequeño a propósito: casi todo se hace con Vuetify.

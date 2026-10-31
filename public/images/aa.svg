@@ -1,0 +1,329 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="480" viewBox="0 0 320 480" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo4YmE3N2MxZi1kMDhmLTQ0NjUtYmQzOC1lMmI1OWRkNzcwMTMAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaEBSa2UEa3eTrpr60yjHcQ4AAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo3YjExZjhiZC0xM2E5LTQwMmUtYjMyOC0yZGNhNzgxMzcyYWJscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNof0MdN8U0sZtGVe9NAfyDkQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggKzFaHSeXN7WVJEBwpaCX0lNVvvH/UvEvkU2ab0UWfFakZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaP1dcQNEZfun5Jcr8CV7PP8AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCD6FrUdCXN8bGepdu/Ptbt4BAJXPqrBk3AAJOaHF35JB2RuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiWZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjhiYTc3YzFmLWQwOGYtNDQ2NS1iZDM4LWUyYjU5ZGQ3NzAxMy9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmFiNjg2ZjYyLWE4NDAtNGI0Ny1hMzI2LTcwOTA2OTc5YWZjZnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCArMVodJ5c3tZUkQHCloJfSU1W+8f9S8S+RTZpvRRZ8VqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggiyctNkxt0hJ5fsaIr13/dpDlHtZID641M0kYyiNO8n6iY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggXGgVE9vDJXcm27Xw5RA1ahtlaM8rI61PACk6spKpMkZ0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQKb++foJGTpbNAq1y4Tk8btfm4tMJDYjpCEy+phTMGK0iUfLBvuqe883A+fzEdNGxfezHN8FfqcNmNkqfOBgPx8=</c2pa:manifest></metadata>
+  <title>Héroe: caballero joven aventurero</title>
+
+  <!--
+    HÉROE (versión adolescente / aventurero)
+    Proporciones más realistas (cabeza pequeña, torso y piernas largos), armadura con placas,
+    capa larga con pliegues y rostro de tres cuartos mirando hacia el castillo (derecha).
+
+    ANIMACIÓN IDLE (se conservan todas las originales y se agregan 3 nuevas)
+      respiración 4.6s | cabeza 6.2s | capa 3.6s | bufanda 2.8s | espada 5.2s | escudo 5.8s
+      mochila 4.2s | bolsa 3.3s | parpadeo 5.5s | gema 3s
+      NUEVAS: brillo que recorre la espada 6.5s | vaivén de la túnica 4.4s | mechón de cabello 3.1s
+    El primer cuadro de cada animación es la pose base.
+  -->
+
+  <defs>
+    <linearGradient id="hAcero" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c879c"/><stop offset=".45" stop-color="#e9eff9"/><stop offset="1" stop-color="#5d6880"/>
+    </linearGradient>
+    <linearGradient id="hAceroV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e3e9f3"/><stop offset=".55" stop-color="#97a3b8"/><stop offset="1" stop-color="#566177"/>
+    </linearGradient>
+    <linearGradient id="hAzul" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3c7fe6"/><stop offset="1" stop-color="#1c448f"/>
+    </linearGradient>
+    <linearGradient id="hTabardo" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1b3f84"/><stop offset=".5" stop-color="#2a5db4"/><stop offset="1" stop-color="#1a3b7a"/>
+    </linearGradient>
+    <linearGradient id="hCapa" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7d151c"/><stop offset=".6" stop-color="#b5262f"/><stop offset="1" stop-color="#8f1d24"/>
+    </linearGradient>
+    <linearGradient id="hPiel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e6b48a"/><stop offset="1" stop-color="#f3cfaa"/>
+    </linearGradient>
+    <linearGradient id="hOro" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe9a0"/><stop offset="1" stop-color="#d28f26"/>
+    </linearGradient>
+    <linearGradient id="hCuero" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7d5431"/><stop offset="1" stop-color="#432a14"/>
+    </linearGradient>
+    <linearGradient id="hBota" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2e1b0d"/><stop offset=".6" stop-color="#52341a"/><stop offset="1" stop-color="#3a2411"/>
+    </linearGradient>
+    <radialGradient id="hEscudo" cx=".4" cy=".35" r=".8">
+      <stop offset="0" stop-color="#c2303a"/><stop offset="1" stop-color="#6a1219"/>
+    </radialGradient>
+    <radialGradient id="hDomo" cx=".35" cy=".3" r=".8">
+      <stop offset="0" stop-color="#f4f8ff"/><stop offset=".5" stop-color="#9aa6bb"/><stop offset="1" stop-color="#4c566b"/>
+    </radialGradient>
+    <linearGradient id="hBrillo" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="hHoja"><path d="M262 166 L255 154 L255 28 L262 8 L269 28 L269 154 Z"/></clipPath>
+  </defs>
+
+  <!-- Sombra en el suelo (se ensancha un poquito al respirar) -->
+  <ellipse cx="190" cy="451" rx="92" ry="9" fill="#000" opacity="0.45">
+    <animate attributeName="rx" values="92;95;95;92;92" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- ===== PARTE DE ATRÁS (capa y bolsa de dormir) - sube y baja con la respiración ===== -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 -2.5;0 0;0 0" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+
+    <!-- Capa larga: el borde de abajo ondea con el viento -->
+    <path d="M154 134 C128 180 112 250 96.0 320 C86.0 370 72.0 410 64.0 436 Q100.0 446 128.0 430 Q150.0 440 176 418 L206 262 L212 138 Z" fill="url(#hCapa)"><animate attributeName="d" values="M154 134 C128 180 112 250 96.0 320 C86.0 370 72.0 410 64.0 436 Q100.0 446 128.0 430 Q150.0 440 176 418 L206 262 L212 138 Z;M154 134 C128 180 112 250 99.0 320 C89.9 370 76.8 410 70.0 436 Q103.6 446 131.0 430 Q151.8 440 176 418 L206 262 L212 138 Z;M154 134 C128 180 112 250 103.0 320 C95.1 370 83.2 410 78.0 436 Q108.4 446 135.0 430 Q154.2 440 176 418 L206 262 L212 138 Z;M154 134 C128 180 112 250 105.0 320 C97.7 370 86.4 410 82.0 436 Q110.8 446 137.0 430 Q155.4 440 176 418 L206 262 L212 138 Z;M154 134 C128 180 112 250 102.0 320 C93.8 370 81.6 410 76.0 436 Q107.2 446 134.0 430 Q153.6 440 176 418 L206 262 L212 138 Z;M154 134 C128 180 112 250 97.0 320 C87.3 370 73.6 410 66.0 436 Q101.2 446 129.0 430 Q150.6 440 176 418 L206 262 L212 138 Z;M154 134 C128 180 112 250 91.0 320 C79.5 370 64.0 410 54.0 436 Q94.0 446 123.0 430 Q147.0 440 176 418 L206 262 L212 138 Z;M154 134 C128 180 112 250 93.0 320 C82.1 370 67.2 410 58.0 436 Q96.4 446 125.0 430 Q148.2 440 176 418 L206 262 L212 138 Z;M154 134 C128 180 112 250 96.0 320 C86.0 370 72.0 410 64.0 436 Q100.0 446 128.0 430 Q150.0 440 176 418 L206 262 L212 138 Z" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" dur="3.6s" repeatCount="indefinite"/></path>
+    <!-- pliegues oscuros -->
+    <path d="M154 134 C134 186 122 256 106.0 326 L136.0 428 C140 340 146 240 164 148 Z" fill="#4d0c12" opacity=".75"><animate attributeName="d" values="M154 134 C134 186 122 256 106.0 326 L136.0 428 C140 340 146 240 164 148 Z;M154 134 C134 186 122 256 108.7 326 L138.1 428 C140 340 146 240 164 148 Z;M154 134 C134 186 122 256 112.3 326 L140.9 428 C140 340 146 240 164 148 Z;M154 134 C134 186 122 256 114.1 326 L142.3 428 C140 340 146 240 164 148 Z;M154 134 C134 186 122 256 111.4 326 L140.2 428 C140 340 146 240 164 148 Z;M154 134 C134 186 122 256 106.9 326 L136.7 428 C140 340 146 240 164 148 Z;M154 134 C134 186 122 256 101.5 326 L132.5 428 C140 340 146 240 164 148 Z;M154 134 C134 186 122 256 103.3 326 L133.9 428 C140 340 146 240 164 148 Z;M154 134 C134 186 122 256 106.0 326 L136.0 428 C140 340 146 240 164 148 Z" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" dur="3.6s" repeatCount="indefinite"/></path>
+    <path d="M176 150 C168 230 158 330 150.0 420 Q164.0 424 176 418 L198 262 L204 150 Z" fill="#5e0f16" opacity=".55"><animate attributeName="d" values="M176 150 C168 230 158 330 150.0 420 Q164.0 424 176 418 L198 262 L204 150 Z;M176 150 C168 230 158 330 151.2 420 Q165.5 424 176 418 L198 262 L204 150 Z;M176 150 C168 230 158 330 152.8 420 Q167.5 424 176 418 L198 262 L204 150 Z;M176 150 C168 230 158 330 153.6 420 Q168.5 424 176 418 L198 262 L204 150 Z;M176 150 C168 230 158 330 152.4 420 Q167.0 424 176 418 L198 262 L204 150 Z;M176 150 C168 230 158 330 150.4 420 Q164.5 424 176 418 L198 262 L204 150 Z;M176 150 C168 230 158 330 148.0 420 Q161.5 424 176 418 L198 262 L204 150 Z;M176 150 C168 230 158 330 148.8 420 Q162.5 424 176 418 L198 262 L204 150 Z;M176 150 C168 230 158 330 150.0 420 Q164.0 424 176 418 L198 262 L204 150 Z" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" dur="3.6s" repeatCount="indefinite"/></path>
+    <!-- luz cálida de las antorchas en el borde -->
+    <path d="M154 134 C128 180 112 250 96.0 320 C86.0 370 72.0 410 64.0 436" fill="none" stroke="#ff9a4a" stroke-width="2.2" opacity=".55" stroke-linecap="round"><animate attributeName="d" values="M154 134 C128 180 112 250 96.0 320 C86.0 370 72.0 410 64.0 436;M154 134 C128 180 112 250 99.0 320 C89.9 370 76.8 410 70.0 436;M154 134 C128 180 112 250 103.0 320 C95.1 370 83.2 410 78.0 436;M154 134 C128 180 112 250 105.0 320 C97.7 370 86.4 410 82.0 436;M154 134 C128 180 112 250 102.0 320 C93.8 370 81.6 410 76.0 436;M154 134 C128 180 112 250 97.0 320 C87.3 370 73.6 410 66.0 436;M154 134 C128 180 112 250 91.0 320 C79.5 370 64.0 410 54.0 436;M154 134 C128 180 112 250 93.0 320 C82.1 370 67.2 410 58.0 436;M154 134 C128 180 112 250 96.0 320 C86.0 370 72.0 410 64.0 436" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" dur="3.6s" repeatCount="indefinite"/></path>
+
+    <!-- Bolsa de dormir sobre la espalda (se balancea con retraso) -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 150 140;0.8 150 140;0 150 140;-0.8 150 140;0 150 140" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="4.2s" begin="0s" repeatCount="indefinite"/>
+      <rect x="126" y="128" width="50" height="24" rx="12" transform="rotate(-32 151 140)" fill="#a98250"/>
+      <rect x="126" y="128" width="50" height="10" rx="5" transform="rotate(-32 151 140)" fill="#c6a06a" opacity=".7"/>
+      <path d="M140 129 L144 151 M160 129 L164 151" stroke="#5a3a1e" stroke-width="3.500" transform="rotate(-32 151 140)"/>
+    </g>
+  </g>
+
+  <!-- ===== PIERNAS Y BOTAS (los pies siempre firmes en el suelo) ===== -->
+  <!-- pierna de atrás -->
+  <path d="M156 296 L186 296 L184 352 L182 400 L152 400 L154 352 Z" fill="#1d2234"/>
+  <path d="M170 296 L186 296 L184 352 L182 400 L172 400 Z" fill="#12151f" opacity=".5"/>
+  <!-- pierna de adelante -->
+  <path d="M192 296 L226 296 L228 350 L226 396 L196 396 L198 350 Z" fill="#2a3148"/>
+  <path d="M192 296 L202 296 L202 350 L198 396 L196 396 L198 350 Z" fill="#3d4663" opacity=".6"/>
+  <!-- rodillera -->
+  <path d="M196 338 Q212 330 228 340 L227 360 Q212 366 197 360 Z" fill="url(#hAceroV)"/>
+  <path d="M196 338 Q212 330 228 340" stroke="#fff" stroke-width="1.5" fill="none" opacity=".6"/>
+
+  <!-- bota de atrás -->
+  <path d="M151 392 L183 392 L184 430 L200 443 Q203 452 192 452 L150 452 Q142 452 144 440 Z" fill="url(#hBota)"/>
+  <rect x="149" y="386" width="36" height="12" rx="3" fill="#a8742c"/>
+  <rect x="149" y="386" width="36" height="4" rx="2" fill="#d6a05a" opacity=".7"/>
+  <path d="M143 448 H198" stroke="#150c05" stroke-width="4" stroke-linecap="round"/>
+  <!-- bota de adelante -->
+  <path d="M194 390 L228 390 L229 428 L262 440 Q270 452 256 452 L196 452 Q190 452 192 440 Z" fill="url(#hBota)"/>
+  <rect x="192" y="384" width="38" height="12" rx="3" fill="#b27e32"/>
+  <rect x="192" y="384" width="38" height="4" rx="2" fill="#e0ad66" opacity=".7"/>
+  <path d="M192 448 H262" stroke="#150c05" stroke-width="4" stroke-linecap="round"/>
+  <path d="M232 436 L254 444" stroke="#7a5430" stroke-width="2" opacity=".6"/>
+
+  <!-- ===== TÚNICA (faldón) con vaivén suave ===== -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" values="0 190 244;1.4 190 244;0 190 244;-1.4 190 244;0 190 244" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="4.4s" begin="0s" repeatCount="indefinite"/>
+    <path d="M156 242 L226 242 L240 324 L190 330 L144 324 Z" fill="url(#hTabardo)"/>
+    <path d="M190 242 L190 330" stroke="#14306a" stroke-width="2" opacity=".7"/>
+    <path d="M170 246 L164 326 M212 246 L220 326" stroke="#14306a" stroke-width="2" opacity=".5"/>
+    <path d="M144 324 L190 330 L240 324 L240 318 L190 324 L144 318 Z" fill="url(#hOro)"/>
+    <path d="M186 258 L194 258 L194 300 L190 306 L186 300 Z" fill="url(#hOro)" opacity=".85"/>
+  </g>
+
+  <!-- ===== PARTE DE ADELANTE DEL CUERPO - sube y baja con la respiración ===== -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 -2.5;0 0;0 0" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+
+    <!-- Brazo lejano (detrás del escudo) -->
+    <line x1="154" y1="152" x2="134" y2="206" stroke="#1f4a99" stroke-width="22" stroke-linecap="round"/>
+    <line x1="134" y1="206" x2="146" y2="240" stroke="#8793a8" stroke-width="18" stroke-linecap="round"/>
+
+    <!-- Torso: se infla un poco al inhalar -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;-1.5 -3.5;-1.5 -3.5;0 0;0 0" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum" values="1 1;1.01 1.015;1.01 1.015;1 1;1 1" keyTimes="0;.38;.55;.93;1" calcMode="spline" keySplines=".4 0 .6 1;0 0 1 1;.4 0 .6 1;0 0 1 1" dur="4.6s" repeatCount="indefinite"/>
+      <!-- túnica azul debajo -->
+      <path d="M152 140 Q190 128 228 140 L226 244 L156 244 Z" fill="url(#hAzul)"/>
+      <!-- peto de acero -->
+      <path d="M156 142 Q190 132 226 144 L222 216 Q190 236 160 216 Z" fill="url(#hAcero)"/>
+      <path d="M197 138 L197 228" stroke="#fff" stroke-width="2.2" opacity=".55"/>
+      <path d="M163 160 Q190 170 222 160 M162 186 Q190 196 221 186 M164 208 Q190 218 220 208" stroke="#4a546a" stroke-width="2" fill="none" opacity=".7"/>
+      <path d="M156 142 Q190 132 226 144" stroke="url(#hOro)" stroke-width="3" fill="none"/>
+      <!-- luz cálida del lado de las antorchas -->
+      <path d="M156 144 L160 216" stroke="#ffae5a" stroke-width="2.5" opacity=".55" stroke-linecap="round"/>
+      <!-- tirante de cuero cruzado -->
+      <path d="M163 140 L175 140 L230 238 L218 240 Z" fill="url(#hCuero)"/>
+      <circle cx="190" cy="186" r="3" fill="#f2c14e"/><circle cx="204" cy="209" r="3" fill="#f2c14e"/>
+      <!-- hombreras -->
+      <path d="M150 142 Q130 144 128 164 Q140 174 158 162 Z" fill="url(#hAceroV)"/>
+      <path d="M130 156 Q142 160 156 154" stroke="#4a546a" stroke-width="1.6" fill="none"/>
+      <path d="M216 138 Q248 134 250 162 Q244 178 220 170 Z" fill="url(#hAcero)"/>
+      <path d="M222 150 Q238 150 246 160 M222 160 Q236 162 244 170" stroke="#4a546a" stroke-width="1.8" fill="none" opacity=".8"/>
+      <path d="M216 138 Q248 134 250 162" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/>
+    </g>
+
+    <!-- Cinturón, hebilla y bolsa (la bolsa se balancea sola) -->
+    <rect x="154" y="236" width="74" height="14" fill="url(#hCuero)"/>
+    <rect x="184" y="233" width="16" height="20" rx="3" fill="url(#hOro)"/>
+    <rect x="188" y="238" width="8" height="10" rx="1.5" fill="#6b4423"/>
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 218 250;3.5 218 250;0 218 250;-3.5 218 250;0 218 250" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="3.3s" begin="0s" repeatCount="indefinite"/>
+      <rect x="208" y="248" width="22" height="28" rx="6" fill="url(#hCuero)"/>
+      <rect x="208" y="248" width="22" height="9" rx="4" fill="#8a5d34"/>
+      <circle cx="219" cy="257" r="2" fill="#f2c14e"/>
+    </g>
+
+    <!-- CABEZA (rediseñada, rasgos suaves y juveniles): tres cuartos a la derecha -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 190 118;1.8 190 118;1.8 190 118;-1.2 190 118;0 190 118" keyTimes="0;.3;.5;.78;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="6.2s" repeatCount="indefinite"/>
+      <g transform="translate(195 98) scale(1.06)">
+        <defs>
+          <clipPath id="hFaceClip"><path d="M-12 -8 C-14 -22 -4 -30 8 -28 C16 -26.500 21.500 -20 22.500 -12 C23.500 -10 24.500 -8 24.500 -4 C25 0 25 4 24 8 C23 12 22.500 15 21.500 18 C20.500 21.500 18 24 13 24.600 Q6 25 0 23.500 Q-6 21.500 -9 15 L-11.500 8 C-12.500 3 -12.500 -3 -12 -8 Z"/></clipPath>
+          <clipPath id="hNeckClip"><path d="M-12 3 L9 3 C10 22 14 32 21 48 L-21 48 C-16 32 -12 22 -12 3 Z"/></clipPath>
+          <filter id="hSoft" filterUnits="userSpaceOnUse" x="-70" y="-70" width="140" height="150"><feGaussianBlur stdDeviation="1.400"/></filter>
+          <linearGradient id="hPiel2" x1="0" y1="0" x2="1" y2="0.25"><stop offset="0" stop-color="#f6d4b0"/><stop offset=".6" stop-color="#efc59c"/><stop offset="1" stop-color="#e6b48a"/></linearGradient>
+          <linearGradient id="hLuna" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd6ff" stop-opacity=".4"/><stop offset="1" stop-color="#bcd6ff" stop-opacity="0"/></linearGradient>
+          <linearGradient id="hPelo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4d3119"/><stop offset="1" stop-color="#2c1b0c"/></linearGradient>
+          <radialGradient id="hIris" cx=".5" cy=".6" r=".65"><stop offset="0" stop-color="#7fbf9c"/><stop offset=".6" stop-color="#3f6a52"/><stop offset="1" stop-color="#22402f"/></radialGradient>
+          <clipPath id="hOjoN"><path d="M0 .5 C2 -3.400 6.500 -3.800 9.500 1.200 C7.500 3.800 2.500 3.600 0 .5 Z"/></clipPath>
+          <clipPath id="hOjoF"><path d="M15.500 1.200 C16.800 -2.400 19.800 -2.800 21.500 -.2 C20 2.600 17 3 15.500 1.200 Z"/></clipPath>
+        </defs>
+
+        <!-- pelo de atrás -->
+        <path d="M-14 4 C-24 1 -26 -12 -21 -22 C-15 -33 -1 -38 11 -36 C21 -34 26 -28 25 -18 L17 -19 L-3 -8 L-9 5 Z" fill="url(#hPelo)"/>
+        <path d="M-21 -20 L-31 -24 L-22 -13 Z M-23 -9 L-33 -7 L-23 0 Z M1 -36 L-8 -43 L-3 -33 Z M11 -37 L4 -45 L7 -33 Z" fill="#33200f"/>
+        <path d="M-21 -20 C-26 -10 -24 -1 -15 4" stroke="#ff9a4a" stroke-width="1.500" fill="none" opacity=".5" stroke-linecap="round"/>
+
+        <!-- cuello -->
+        <path d="M-12 3 L9 3 C10 22 14 32 21 48 L-21 48 C-16 32 -12 22 -12 3 Z" fill="#d49b73"/>
+        <g clip-path="url(#hNeckClip)">
+          <path d="M9 3 C10 22 14 32 21 48 L6 48 C4 32 3 20 4 3 Z" fill="#9b6a4a" opacity=".3" filter="url(#hSoft)"/>
+          <path d="M-12 8 L-8 15 Q-5 22 2 24 Q8 25 13 25 L13 34 Q0 37 -12 28 Z" fill="#6d3f2a" opacity=".45" filter="url(#hSoft)"/>
+          <path d="M-12 3 C-12 22 -16 32 -21 48" stroke="#ffae5a" stroke-width="2.200" fill="none" opacity=".45"/>
+        </g>
+
+        <!-- rostro -->
+        <path d="M-12 -8 C-14 -22 -4 -30 8 -28 C16 -26.500 21.500 -20 22.500 -12 C23.500 -10 24.500 -8 24.500 -4 C25 0 25 4 24 8 C23 12 22.500 15 21.500 18 C20.500 21.500 18 24 13 24.600 Q6 25 0 23.500 Q-6 21.500 -9 15 L-11.500 8 C-12.500 3 -12.500 -3 -12 -8 Z" fill="url(#hPiel2)"/>
+        <g clip-path="url(#hFaceClip)">
+          <rect x="-14" y="-32" width="42" height="22" fill="url(#hLuna)"/>
+          <path d="M19 -10 L30 -10 L30 28 L17 28 L19 10 Z" fill="#9b6a4a" opacity=".2" filter="url(#hSoft)"/>
+          <path d="M-9 15 Q-6 21.500 0 23.500 Q6 25 13 24.600 L13 28 L-10 28 Z" fill="#8a5236" opacity=".28" filter="url(#hSoft)"/>
+          <ellipse cx="6" cy="8" rx="4.500" ry="2.600" fill="#e8907a" opacity=".22" filter="url(#hSoft)"/>
+          <ellipse cx="20.500" cy="8.500" rx="2.200" ry="2.200" fill="#e8907a" opacity=".16" filter="url(#hSoft)"/>
+          <path d="M-8 -14 Q8 -10 24 -15" stroke="#7a4a32" stroke-width="4" fill="none" opacity=".2" filter="url(#hSoft)"/>
+          <path d="M-11.500 8 L-9 15 Q-6 21.500 0 23.500" stroke="#ffae5a" stroke-width="2" fill="none" opacity=".4"/>
+        </g>
+
+        <!-- oreja -->
+        <path d="M-7.500 -2 C-11 -2.500 -12 3 -10.500 7.500 C-9.500 9.500 -6.500 9.800 -5.500 7.500 L-4.500 -1 Z" fill="#dca67c"/>
+        <path d="M-7.500 1 Q-5.800 2.800 -7 6.500" stroke="#a8714f" stroke-width="1.100" fill="none" stroke-linecap="round"/>
+        <path d="M-11 1 Q-11.800 5 -9.800 8.800" stroke="#ffae5a" stroke-width="1" fill="none" opacity=".5" stroke-linecap="round"/>
+
+        <!-- nariz pequeña y recta -->
+        <path d="M13.500 -3 C14.800 0 16.500 3 18.800 6.500 L16.500 8 C14.800 5.500 13 2 12.300 -2 Z" fill="#b27a58" opacity=".26" filter="url(#hSoft)"/>
+        <path d="M12 -3.500 C12.200 0 12.200 3 13 5.600" stroke="#a8683f" stroke-width=".9" fill="none" opacity=".45" stroke-linecap="round"/>
+        <path d="M13.200 5.800 Q13.500 8.200 16 8.400 Q18.300 8.200 18.600 6.200" stroke="#8a4f35" stroke-width=".9" fill="none" opacity=".5" stroke-linecap="round"/>
+        <ellipse cx="15.800" cy="7.600" rx="1.200" ry=".7" fill="#5e2f22" opacity=".6"/>
+        <ellipse cx="16.800" cy="4" rx="1.100" ry="2.200" transform="rotate(-18 16.800 4)" fill="#fff1d8" opacity=".35" filter="url(#hSoft)"/>
+
+        <!-- boca: leve sonrisa segura -->
+        <path d="M8 13.600 C10.500 15 14.500 15 17.300 12.800" stroke="#8a4636" stroke-width="1.300" fill="none" stroke-linecap="round"/>
+        <path d="M17.600 12.600 Q18.300 13.300 18 14.200" stroke="#b27a58" stroke-width=".7" fill="none" opacity=".45" stroke-linecap="round"/>
+        <path d="M9.500 15.200 C12 16.600 15 16.400 16.300 14.800 C14 15.600 11.500 15.700 9.500 15.200 Z" fill="#c98068" opacity=".55"/>
+
+        <!-- ojos almendrados verdes (parpadean) -->
+        <g transform="translate(0 -2)">
+          <g>
+            <animateTransform attributeName="transform" type="scale" values="1 1;1 1;1 .1;1 1;1 1" keyTimes="0;.9;.93;.96;1" dur="5.5s" repeatCount="indefinite"/>
+            <path d="M0 .5 C2 -3.400 6.500 -3.800 9.500 1.200 C7.500 3.800 2.500 3.600 0 .5 Z" fill="#f6f0e6"/>
+            <g clip-path="url(#hOjoN)">
+              <circle cx="5.600" cy=".2" r="3.100" fill="url(#hIris)"/>
+              <circle cx="5.900" cy=".2" r="1.400" fill="#0d0a06"/>
+              <rect x="-1" y="-5" width="12" height="3" fill="#1a0f08" opacity=".28"/>
+              <circle cx="6.900" cy="-.9" r=".9" fill="#fff"/>
+              <circle cx="4.500" cy="1.400" r=".4" fill="#fff" opacity=".6"/>
+            </g>
+            <path d="M0 .5 C2 -3.400 6.500 -3.800 9.500 1.200" stroke="#2a1a0c" stroke-width="1.600" fill="none" stroke-linecap="round"/>
+            <path d="M0 .5 L-1.300 -.5" stroke="#2a1a0c" stroke-width="1" stroke-linecap="round"/>
+            <path d="M15.500 1.200 C16.800 -2.400 19.800 -2.800 21.500 -.2 C20 2.600 17 3 15.500 1.200 Z" fill="#efe8dc"/>
+            <g clip-path="url(#hOjoF)">
+              <ellipse cx="19" cy=".2" rx="2.100" ry="2.800" fill="url(#hIris)"/>
+              <ellipse cx="19.200" cy=".2" rx="1" ry="1.300" fill="#0d0a06"/>
+              <rect x="14" y="-5" width="9" height="2.800" fill="#1a0f08" opacity=".28"/>
+              <circle cx="19.800" cy="-.8" r=".6" fill="#fff"/>
+            </g>
+            <path d="M15.500 1.200 C16.800 -2.400 19.800 -2.800 21.500 -.2" stroke="#2a1a0c" stroke-width="1.400" fill="none" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <!-- cejas -->
+        <path d="M-1.500 -8 Q4.500 -12.500 11 -7 L10.800 -5.200 Q4.500 -9.600 -.6 -6 Z" fill="#33200f"/>
+        <path d="M14.500 -7.200 Q18.500 -10.800 23 -8 L22.800 -6.400 Q18.500 -8.800 14.500 -5.600 Z" fill="#33200f"/>
+        <!-- cicatriz en la ceja -->
+        <path d="M2.600 -9.800 L4 -5.200" stroke="#f6d6c0" stroke-width="1.100" stroke-linecap="round"/>
+
+        <!-- pelo del frente -->
+        <path d="M-17 -4 C-22 -22 -7 -37 8 -36 C19 -35 26 -28 25 -18 L23.500 -14 L20.500 -18.500 L17.500 -14 L14 -19.500 L10.500 -14.500 L7 -20 L3 -14.500 L-1 -19.500 L-4.500 -13 L-4.500 -2 L-3.500 3 L-8 -1 C-10.500 -2.500 -13.500 -4 -17 -4 Z" fill="#5a3a22" opacity=".22" transform="translate(0 2.200)" clip-path="url(#hFaceClip)" filter="url(#hSoft)"/>
+        <path d="M-17 -4 C-22 -22 -7 -37 8 -36 C19 -35 26 -28 25 -18 L23.500 -14 L20.500 -18.500 L17.500 -14 L14 -19.500 L10.500 -14.500 L7 -20 L3 -14.500 L-1 -19.500 L-4.500 -13 L-4.500 -2 L-3.500 3 L-8 -1 C-10.500 -2.500 -13.500 -4 -17 -4 Z" fill="url(#hPelo)"/>
+        <path d="M21 -29 Q8 -34 -9 -26 M23 -23 Q8 -28 -14 -16 M15 -33 Q2 -36 -11 -30" stroke="#8a5a30" stroke-width="1" fill="none" opacity=".6" stroke-linecap="round"/>
+        <path d="M19 -34 Q6 -38 -7 -32" stroke="#a9c0e6" stroke-width="1.500" fill="none" opacity=".38" stroke-linecap="round"/>
+
+        <!-- aro dorado con gema azul -->
+        <path d="M-20 -23 C-8 -20.500 6 -22.500 22 -16" stroke="#8a5a14" stroke-width="3.800" fill="none" stroke-linecap="round"/>
+        <path d="M-20 -23 C-8 -20.500 6 -22.500 22 -16" stroke="url(#hOro)" stroke-width="2.600" fill="none" stroke-linecap="round"/>
+        <circle cx="12.600" cy="-19" r="3.400" fill="#6fb6ff" stroke="#f2c14e" stroke-width="1.300">
+          <animate attributeName="r" values="3.400;4.200;3.400" keyTimes="0;.5;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="11.600" cy="-20" r=".9" fill="#fff" opacity=".75"/>
+
+        <!-- mechón suelto -->
+        <path d="M8 -36 C15 -43 25 -41 27 -34 C22 -37 15 -36 8 -36 Z" fill="#3e2714">
+          <animateTransform attributeName="transform" type="rotate" values="0 8 -36;6 8 -36;0 8 -36;-4 8 -36;0 8 -36" keyTimes="0;.25;.5;.75;1" dur="3.1s" repeatCount="indefinite"/>
+        </path>
+      </g>
+    </g>
+
+    <!-- Bufanda roja: el nudo y la cola que flamea con el viento -->
+    <path d="M152 140 Q190 154 230 138 L232 156 Q190 176 150 160 Z" fill="#c2323a"/>
+    <path d="M152 156 Q190 174 232 154 L231 160 Q190 182 151 162 Z" fill="#8f1d24"/>
+    <path d="M160 150 Q132.0 164 108.0 192.0 L124.0 202.0 Q142.0 184 168 168 Z" fill="#8f1d24"><animate attributeName="d" values="M160 150 Q132.0 164 108.0 192.0 L124.0 202.0 Q142.0 184 168 168 Z;M160 150 Q134.0 164 111.5 192.8 L127.5 202.8 Q144.0 184 168 168 Z;M160 150 Q136.0 164 115.0 193.5 L131.0 203.5 Q146.0 184 168 168 Z;M160 150 Q136.8 164 116.4 193.8 L132.4 203.8 Q146.8 184 168 168 Z;M160 150 Q134.4 164 112.2 192.9 L128.2 202.9 Q144.4 184 168 168 Z;M160 150 Q131.2 164 106.6 191.7 L122.6 201.7 Q141.2 184 168 168 Z;M160 150 Q128.8 164 102.4 190.8 L118.4 200.8 Q138.8 184 168 168 Z;M160 150 Q129.6 164 103.8 191.1 L119.8 201.1 Q139.6 184 168 168 Z;M160 150 Q132.0 164 108.0 192.0 L124.0 202.0 Q142.0 184 168 168 Z" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" dur="2.8s" repeatCount="indefinite"/></path>
+    <path d="M158 142 Q126.0 146 100.0 172.0 L116.0 184.0 Q136.0 168 166 160 Z" fill="#c2323a"><animate attributeName="d" values="M158 142 Q126.0 146 100.0 172.0 L116.0 184.0 Q136.0 168 166 160 Z;M158 142 Q128.5 146 104.0 172.8 L120.0 184.8 Q138.5 168 166 160 Z;M158 142 Q131.0 146 108.0 173.5 L124.0 185.5 Q141.0 168 166 160 Z;M158 142 Q132.0 146 109.6 173.8 L125.6 185.8 Q142.0 168 166 160 Z;M158 142 Q129.0 146 104.8 172.9 L120.8 184.9 Q139.0 168 166 160 Z;M158 142 Q125.0 146 98.4 171.7 L114.4 183.7 Q135.0 168 166 160 Z;M158 142 Q122.0 146 93.6 170.8 L109.6 182.8 Q132.0 168 166 160 Z;M158 142 Q123.0 146 95.2 171.1 L111.2 183.1 Q133.0 168 166 160 Z;M158 142 Q126.0 146 100.0 172.0 L116.0 184.0 Q136.0 168 166 160 Z" keyTimes="0;0.125;0.25;0.375;0.5;0.625;0.75;0.875;1" dur="2.8s" repeatCount="indefinite"/></path>
+
+    <!-- Escudo redondo (pequeño movimiento de equilibrio) -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 138 236;1.6 138 236;0 138 236;-1.6 138 236;0 138 236" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="5.8s" begin="0s" repeatCount="indefinite"/>
+      <circle cx="138" cy="236" r="37" fill="#2d3445"/>
+      <circle cx="138" cy="236" r="33" fill="url(#hEscudo)"/>
+      <path d="M138 203 V269 M105 236 H171" stroke="#f2c14e" stroke-width="5" opacity=".9"/>
+      <path d="M115 213 L161 259 M161 213 L115 259" stroke="#f2c14e" stroke-width="1.5" opacity=".45"/>
+      <circle cx="138" cy="236" r="37" fill="none" stroke="url(#hAceroV)" stroke-width="5"/>
+      <circle cx="138" cy="236" r="33" fill="none" stroke="#f2c14e" stroke-width="1.5" opacity=".8"/>
+      <g fill="#dfe6f1">
+        <circle cx="138" cy="203" r="1.800"/><circle cx="138" cy="269" r="1.800"/><circle cx="105" cy="236" r="1.800"/><circle cx="171" cy="236" r="1.800"/>
+        <circle cx="114.700" cy="212.700" r="1.800"/><circle cx="161.300" cy="259.300" r="1.800"/><circle cx="161.300" cy="212.700" r="1.800"/><circle cx="114.700" cy="259.300" r="1.800"/>
+      </g>
+      <circle cx="138" cy="236" r="11" fill="url(#hDomo)" stroke="#f2c14e" stroke-width="2"/>
+      <path d="M104 224 Q108 210 122 205" stroke="#ffae5a" stroke-width="2.500" fill="none" opacity=".6" stroke-linecap="round"/>
+    </g>
+
+    <!-- BRAZO + ESPADA: el brazo acompaña al hombro y la espada oscila aparte, desde la mano -->
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0 226 158;0.9 226 158;0 226 158;-0.9 226 158;0 226 158" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="4.6s" begin="0s" repeatCount="indefinite"/>
+
+      <!-- brazo: manga azul, codo y antebrazo de acero -->
+      <line x1="228" y1="158" x2="238" y2="216" stroke="#1f4a99" stroke-width="22" stroke-linecap="round"/>
+      <circle cx="238" cy="218" r="12" fill="url(#hAceroV)"/>
+      <line x1="238" y1="218" x2="260" y2="192" stroke="#8d97a8" stroke-width="19" stroke-linecap="round"/>
+      <line x1="238" y1="216" x2="259" y2="190" stroke="#e3e9f3" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+
+      <!-- Espada en alto -->
+      <g transform="rotate(16 262 188)">
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="0 262 188;1.4 262 188;0 262 188;-1.4 262 188;0 262 188" keyTimes="0;.25;.5;.75;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1" dur="5.2s" begin="0s" repeatCount="indefinite"/>
+          <!-- hoja: mitad clara y mitad oscura (bisel) -->
+          <path d="M262 166 L255 154 L255 28 L262 8 Z" fill="#f2f6fc"/>
+          <path d="M262 8 L269 28 L269 154 L262 166 Z" fill="#a3afc3"/>
+          <rect x="260.800" y="30" width="2.400" height="120" rx="1.200" fill="#7d889c"/>
+          <!-- brillo que recorre la hoja -->
+          <g clip-path="url(#hHoja)">
+            <rect x="248" y="-30" width="9" height="260" fill="url(#hBrillo)" transform="rotate(20 262 100)">
+              <animateTransform attributeName="transform" type="translate" values="0 140;0 -230;0 -230" keyTimes="0;.22;1" dur="6.5s" repeatCount="indefinite" additive="sum"/>
+            </rect>
+          </g>
+          <!-- guarda -->
+          <path d="M238 160 Q250 172 262 170 Q274 172 286 160 L288 166 Q274 180 262 177 Q250 180 236 166 Z" fill="url(#hOro)" stroke="#8a5a14" stroke-width="1"/>
+          <circle cx="262" cy="172" r="4" fill="#d9322a"/>
+          <!-- empuñadura y pomo -->
+          <rect x="258" y="173" width="8" height="34" rx="2" fill="#4a2f17"/>
+          <path d="M258 178 L266 181 M258 185 L266 188 M258 192 L266 195 M258 199 L266 202" stroke="#8a5d34" stroke-width="1.500"/>
+          <circle cx="262" cy="212" r="7" fill="url(#hOro)" stroke="#8a5a14" stroke-width="1"/>
+        </g>
+      </g>
+      <!-- mano enguantada sobre la empuñadura -->
+      <rect x="251" y="182" width="24" height="20" rx="8" transform="rotate(16 262 188)" fill="url(#hCuero)"/>
+      <path d="M254 188 H272 M254 194 H272" stroke="#2a1a0c" stroke-width="1.200" transform="rotate(16 262 188)" opacity=".7"/>
+    </g>
+  </g>
+</svg>

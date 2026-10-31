@@ -1,1 +1,8 @@
-node_modules
+.nuxt/
+.output/
+node_modules/
+dist/
+.nuxt/ 
+.output/ 
+node_modules/ 
+dist/
