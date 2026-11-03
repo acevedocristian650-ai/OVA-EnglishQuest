@@ -5,9 +5,11 @@
       <!-- Barra superior: volver + título + progreso -->
       <v-row align="center" class="mb-2">
         <v-col cols="12" sm="auto">
-          <v-btn to="/" variant="tonal" color="amber-lighten-3" rounded="lg">
-            🏠 Volver al inicio
-          </v-btn>
+          <AudioSonidoBoton>
+            <v-btn to="/" variant="tonal" color="amber-lighten-3" rounded="lg">
+              🏠 Volver al inicio
+            </v-btn>
+          </AudioSonidoBoton>
         </v-col>
 
         <v-col cols="12" sm>

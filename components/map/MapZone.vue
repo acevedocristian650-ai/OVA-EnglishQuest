@@ -1,12 +1,14 @@
 <template>
   <div class="map-zone" :style="positionStyle">
-    <v-btn icon variant="flat" :color="statusInfo.color" class="zone-button" :class="{
-      'zone-selected': selected,
-      'zone-locked': zone.status === 'locked',
-      'zone-available': zone.status === 'unlocked' && !selected,
-    }" :aria-label="`${zone.name}: ${statusInfo.label}`" :aria-pressed="selected" @click="emit('select', zone.id)">
-      <span class="zone-icon">{{ icon }}</span>
-    </v-btn>
+    <AudioSonidoBoton @click="emit('select', zone.id)">
+      <v-btn icon variant="flat" :color="statusInfo.color" class="zone-button" :class="{
+        'zone-selected': selected,
+        'zone-locked': zone.status === 'locked',
+        'zone-available': zone.status === 'unlocked' && !selected,
+      }" :aria-label="`${zone.name}: ${statusInfo.label}`" :aria-pressed="selected">
+        <span class="zone-icon">{{ icon }}</span>
+      </v-btn>
+    </AudioSonidoBoton>
 
     <!-- El nombre se oculta en pantallas muy pequeñas; allí se lee en el panel -->
     <span class="zone-label d-none d-sm-block" :class="{ 'zone-label-selected': selected }">

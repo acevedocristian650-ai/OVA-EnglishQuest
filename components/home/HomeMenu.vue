@@ -11,9 +11,15 @@
 <template>
   <div>
     <nav class="home-menu" aria-label="Menú principal">
-      <BaseBoton variante="principal" @click="emit('start')">Comenzar aventura</BaseBoton>
-      <BaseBoton @click="showHowToPlay = true">Cómo jugar</BaseBoton>
-      <BaseBoton @click="showOptions = true">Opciones</BaseBoton>
+      <AudioSonidoBoton @click="emit('start')">
+        <BaseBoton variante="principal">Comenzar aventura</BaseBoton>
+      </AudioSonidoBoton>
+      <AudioSonidoBoton @click="showHowToPlay = true">
+        <BaseBoton>Cómo jugar</BaseBoton>
+      </AudioSonidoBoton>
+      <AudioSonidoBoton @click="showOptions = true">
+        <BaseBoton>Opciones</BaseBoton>
+      </AudioSonidoBoton>
     </nav>
 
     <!-- Las ventanas se abren o cierran con v-model -->

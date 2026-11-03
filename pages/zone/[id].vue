@@ -2,9 +2,11 @@
    <MusicaHome ruta="/audio/Mapa.mp3"></MusicaHome>
   <div class="game-page">
     <v-container v-if="zone" class="zone-container">
-      <v-btn to="/map" variant="tonal" color="amber-lighten-3" rounded="lg" class="mb-4">
-        🗺️ Volver al mapa
-      </v-btn>
+      <AudioSonidoBoton>
+        <v-btn to="/map" variant="tonal" color="amber-lighten-3" rounded="lg" class="mb-4">
+          🗺️ Volver al mapa
+        </v-btn>
+      </AudioSonidoBoton>
 
       <v-sheet
         color="rgba(47, 29, 14, 0.92)"
@@ -50,9 +52,11 @@
         />
 
         <!-- Botón temporal para probar el desbloqueo de zonas -->
-        <v-btn color="green-darken-1" size="large" rounded="lg" block @click="simulateVictory">
-          🏆 Simular victoria (temporal)
-        </v-btn>
+        <AudioSonidoBoton @click="simulateVictory">
+          <v-btn color="green-darken-1" size="large" rounded="lg" block>
+            🏆 Simular victoria (temporal)
+          </v-btn>
+        </AudioSonidoBoton>
       </v-sheet>
     </v-container>
   </div>

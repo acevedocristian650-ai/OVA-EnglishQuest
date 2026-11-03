@@ -56,18 +56,19 @@
         </v-list-item>
       </v-list>
 
-      <v-btn
-        block
-        size="x-large"
-        color="amber-darken-3"
-        rounded="lg"
-        elevation="8"
-        class="font-weight-bold"
-        :disabled="zone.status === 'locked'"
-        @click="emit('start', zone.id)"
-      >
-        {{ zone.status === 'completed' ? '🔁 Repetir misión' : '⚔️ Comenzar misión' }}
-      </v-btn>
+      <AudioSonidoBoton @click="emit('start', zone.id)">
+        <v-btn
+          block
+          size="x-large"
+          color="amber-darken-3"
+          rounded="lg"
+          elevation="8"
+          class="font-weight-bold"
+          :disabled="zone.status === 'locked'"
+        >
+          {{ zone.status === 'completed' ? '🔁 Repetir misión' : '⚔️ Comenzar misión' }}
+        </v-btn>
+      </AudioSonidoBoton>
     </div>
 
     <!-- Sin zona seleccionada -->
