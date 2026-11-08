@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="640" viewBox="0 0 1000 640">
+  <title>Mapa del Reino del Conocimiento</title>
+  <desc>Un camino dorado une un bosque, un puente sobre el río, una torre y la puerta de la ciudad amurallada.</desc>
+<style>
+.oleaje{animation:oleaje var(--t,5s) ease-in-out var(--d,0s) infinite alternate}
+@keyframes oleaje{from{transform:translate(-7px,2px)}to{transform:translate(8px,-3px)}}
+.camino{animation:march 1.4s linear infinite}
+@keyframes march{to{stroke-dashoffset:-13}}
+.corriente{stroke-dasharray:3 17;animation:flow 2.4s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-20}}
+.bandera{transform-box:fill-box;transform-origin:0 50%;animation:ondea 1.3s ease-in-out var(--d,0s) infinite alternate}
+@keyframes ondea{from{transform:skewY(-7deg) scaleX(1)}to{transform:skewY(7deg) scaleX(.86)}}
+.sombra-nube{animation:nube var(--t) linear var(--d) infinite}
+@keyframes nube{from{transform:translateX(-380px)}to{transform:translateX(1380px)}}
+.brillo{animation:brillo var(--t) ease-in-out var(--d) infinite}
+@keyframes brillo{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:.9;transform:scale(1)}}
+.aguja{transform-box:fill-box;transform-origin:center;animation:aguja 6s ease-in-out infinite alternate}
+@keyframes aguja{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+  <defs>
+    <radialGradient id="suave"><stop offset="0" stop-color="#06101f" stop-opacity=".38"/><stop offset="1" stop-color="#06101f" stop-opacity="0"/></radialGradient>
+    <radialGradient id="mar" cx="54%" cy="42%" r="75%">
+      <stop stop-color="#244854"/>
+      <stop offset="1" stop-color="#101a31"/>
+    </radialGradient>
+    <linearGradient id="tierra" x2="0.85" y2="1">
+      <stop stop-color="#385c55"/>
+      <stop offset=".52" stop-color="#416957"/>
+      <stop offset="1" stop-color="#263f46"/>
+    </linearGradient>
+    <linearGradient id="agua" x2="1" y2="1">
+      <stop stop-color="#315b69"/>
+      <stop offset="1" stop-color="#478290"/>
+    </linearGradient>
+    <path id="isla" d="M90 411C80 364 118 351 133 306C151 250 126 215 170 184C197 165 230 176 255 140C284 98 329 69 387 80C429 88 471 63 519 80C552 91 570 121 607 113C654 102 671 62 725 59C782 56 793 87 846 100C901 113 927 145 915 194C907 230 881 250 906 299C928 342 947 374 919 425C900 459 921 504 878 536C843 562 800 549 769 570C735 593 688 605 650 580C606 551 573 576 533 564C482 549 466 518 421 532C382 544 370 585 325 586C277 587 262 565 222 569C183 573 147 543 149 507C152 470 99 456 90 411Z"/>
+    <clipPath id="costa"><use href="#isla"/></clipPath>
+    <pattern id="papel" width="13" height="13" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="3" r=".7" fill="#ffedc2" opacity=".23"/>
+      <circle cx="9" cy="8" r=".65" fill="#081427" opacity=".65"/>
+    </pattern>
+    <g id="ola" fill="none" stroke="#83aeb3" stroke-width="1.7" stroke-linecap="round">
+      <path d="M0 4q8-7 16 0t16 0m-20 9q8-7 16 0t16 0"/>
+    </g>
+    <g id="arbol" stroke="#1b3735" stroke-linejoin="round" stroke-width="2.5">
+      <path d="M0-48C-7-34-12-25-19-19l7 1-10 13q22 8 44 0L12-18l7-1C12-25 7-34 0-48Z" fill="currentColor"/>
+      <path d="M0-43v45" fill="none" opacity=".55"/>
+    </g>
+    <g id="montana" stroke="#273b46" stroke-linejoin="round" stroke-width="2.5">
+      <path d="M-45 0Q-23-24-4-62q6-10 13 0Q29-28 54 0Q8 9-45 0Z" fill="#677579"/>
+      <path d="M3-68Q24-31 54 0L4 3 15-12-6-20 7-35Z" fill="#465964" stroke="none"/>
+      <path d="M-16-40-4-62q6-10 13 0l17 28-18-8-8 4-7-5Z" fill="#bdc1af"/>
+    </g>
+  </defs>
+
+  <rect width="1000" height="640" fill="url(#mar)"/>
+  <g fill="none" stroke="#659298" opacity=".29">
+    <use href="#isla" stroke-width="38" opacity=".22"/>
+    <use href="#isla" stroke-width="22" opacity=".38"/>
+    <use href="#isla" stroke-width="11"/>
+  </g>
+  <use href="#isla" fill="url(#tierra)" stroke="#afae79" stroke-width="3"/>
+
+  <g clip-path="url(#costa)">
+    <path d="M106 254q86-80 182-30t201-9q96-50 199 27t246-8M104 271q86-80 182-30t201-9q96-50 199 27t246-8M120 308q79-77 170-25t202-8q96-50 199 27t246-8M280 555q76-63 154-50t145-6q83-35 177 1t184-41" fill="none" stroke="#96ad80" stroke-width="2" opacity=".18"/>
+    <path d="M111 360Q179 305 271 351t161-18q22 43-13 79-45 44-116 15t-171 48Z" fill="#254f42" opacity=".62"/>
+    <path d="M624 174q52-41 117-12t147 4q11 63-26 102-35 27-108-5t-143-11Z" fill="#61715b" opacity=".45"/>
+    <path d="M494 62C430 145 519 180 500 230C479 286 406 300 432 361C463 424 509 431 465 502C440 545 461 590 486 616" fill="none" stroke="#1c4247" stroke-width="40"/>
+    <path d="M494 62C430 145 519 180 500 230C479 286 406 300 432 361C463 424 509 431 465 502C440 545 461 590 486 616" fill="none" stroke="url(#agua)" stroke-width="28"/>
+    <path d="M494 62C430 145 519 180 500 230C479 286 406 300 432 361C463 424 509 431 465 502C440 545 461 590 486 616" fill="none" stroke="#9fc2b8" stroke-width="2" opacity=".55"/>
+    <path class="corriente" d="M494 62C430 145 519 180 500 230C479 286 406 300 432 361C463 424 509 431 465 502C440 545 461 590 486 616" fill="none" stroke="#dff3ee" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  </g>
+
+  <g opacity=".46">
+    <use class="oleaje" style="--t:4.7s;--d:-0.9s" href="#ola" x="50" y="258"/>
+    <use class="oleaje" style="--t:5.4s;--d:-1.8s" href="#ola" x="42" y="470"/>
+    <use class="oleaje" style="--t:6.1s;--d:-2.7s" href="#ola" x="90" y="539"/>
+    <use class="oleaje" style="--t:6.8s;--d:-3.6s" href="#ola" x="405" y="597"/>
+    <use class="oleaje" style="--t:7.5s;--d:-4.5s" href="#ola" x="879" y="569"/>
+    <use class="oleaje" style="--t:8.2s;--d:-5.4s" href="#ola" x="921" y="251"/>
+    <use class="oleaje" style="--t:8.9s;--d:-6.3s" href="#ola" x="878" y="62"/>
+  </g>
+
+  <g>
+    <use href="#montana" transform="translate(327 178) scale(1.07)"/>
+    <use href="#montana" transform="translate(392 185) scale(.85)"/>
+    <use href="#montana" transform="translate(281 208) scale(.83)"/>
+    <use href="#montana" transform="translate(353 219) scale(.8)"/>
+  </g>
+  <g color="#518369">
+    <use href="#arbol" transform="translate(170 415) scale(.78)"/>
+    <use href="#arbol" transform="translate(204 394) scale(.98)"/>
+    <use href="#arbol" transform="translate(238 405) scale(.83)"/>
+    <use href="#arbol" transform="translate(273 403) scale(.69)"/>
+    <use href="#arbol" transform="translate(302 416) scale(.84)"/>
+    <use href="#arbol" transform="translate(581 208) scale(.64)"/>
+    <use href="#arbol" transform="translate(608 210) scale(.77)"/>
+    <use href="#arbol" transform="translate(826 494) scale(.9)"/>
+    <use href="#arbol" transform="translate(855 484) scale(.73)"/>
+  </g>
+  <g color="#739779">
+    <use href="#arbol" transform="translate(186 436) scale(.78)"/>
+    <use href="#arbol" transform="translate(220 427) scale(1.12)"/>
+    <use href="#arbol" transform="translate(253 435) scale(.85)"/>
+    <use href="#arbol" transform="translate(284 437) scale(.66)"/>
+  </g>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M173 490Q188 474 210 461C288 448 294 368 358 376Q396 381 430 365C509 329 550 356 599 394S705 459 760 429C818 400 838 353 810 308S708 251 750 166" stroke="#20343a" stroke-width="12"/>
+    <path class="camino" d="M173 490Q188 474 210 461C288 448 294 368 358 376Q396 381 430 365C509 329 550 356 599 394S705 459 760 429C818 400 838 353 810 308S708 251 750 166" stroke="#e1bc76" stroke-width="4.5" stroke-dasharray="2 11"/>
+  </g>
+
+  <g transform="translate(427 359) rotate(-15)" stroke-linecap="round">
+    <path d="M-35 10q35-36 70 0" fill="none" stroke="#263b3c" stroke-width="24"/>
+    <path d="M-35 10q35-36 70 0" fill="none" stroke="#d3a26f" stroke-width="13"/>
+    <path d="M-27 4v8m12-16v9m15-12v9m15-6v9m12-1v8" fill="none" stroke="#755945" stroke-width="2"/>
+  </g>
+
+  <g transform="translate(760 382)" stroke="#263a47" stroke-width="3" stroke-linejoin="round">
+    <ellipse cy="26" rx="52" ry="15" fill="#263e43" opacity=".5" stroke="none"/>
+    <path d="M-23-27h46l-5 49h-37Z" fill="#9c8e7b"/>
+    <path d="M7-27h16l-5 49H5Z" fill="#6c6970" stroke="none"/>
+    <path d="M-29-29 0-78 29-29Q0-18-29-29Z" fill="#63749a"/>
+    <path d="M0-77v-19" fill="none" stroke-linecap="round"/><path class="bandera" d="M0-96q17-9 32-1-10 5-19 10L0-89Z" fill="#e0ac60" stroke-linecap="round"/>
+    <path d="M-5 22V6a5 5 0 0 1 10 0v16m-7-48v12" fill="#384752"/>
+  </g>
+
+  <g transform="translate(750 125)" stroke="#263744" stroke-width="2.5" stroke-linejoin="round">
+    <ellipse cy="29" rx="77" ry="14" fill="#273b45" opacity=".48" stroke="none"/>
+    <path d="M-58 4h116v26h-116Z" fill="#9d8b78"/>
+    <path d="M-43 5v-19l17-13 18 13V5m13 0v-18l16-12 20 12V5" fill="#b29775"/>
+    <path d="M-10-11v-24l12-11 12 11v24" fill="#d2b492"/>
+    <path d="M-64 29v-34h17v34m94 0v-34h17v34" fill="#b9a28a"/>
+    <path d="M-68-4l12-16 13 16Zm111 0 12-16 13 16Z" fill="#965d5d"/>
+    <path d="M-17 30V9h34v21" fill="#cdb395"/>
+    <path d="M-7 30v-8a7 7 0 1 1 14 0v8Z" fill="#2e3747"/>
+    <path class="bandera" style="--d:-.6s" d="M2-47v-16q11-4 20 1-8 1-12 6H2" fill="#e5b468" stroke-linecap="round"/>
+  </g>
+
+  <g clip-path="url(#costa)">
+    <g class="sombra-nube" style="--t:60s;--d:-8s"><ellipse cx="0" cy="230" rx="170" ry="48" fill="url(#suave)"/><ellipse cx="90" cy="250" rx="120" ry="34" fill="url(#suave)"/></g>
+    <g class="sombra-nube" style="--t:85s;--d:-50s"><ellipse cx="0" cy="470" rx="190" ry="52" fill="url(#suave)"/><ellipse cx="-80" cy="490" rx="130" ry="36" fill="url(#suave)"/></g>
+  </g>
+  <g fill="#cfe6ea">
+    <path class="brillo" style="--t:3.7s;--d:-0.5s;transform-box:fill-box;transform-origin:center" d="M60 114L61.6 118.4L66 120L61.6 121.6L60 126L58.4 121.6L54 120L58.4 118.4Z"/>
+    <path class="brillo" style="--t:4.2s;--d:-0.8s;transform-box:fill-box;transform-origin:center" d="M930 554L931.6 558.4L936 560L931.6 561.6L930 566L928.4 561.6L924 560L928.4 558.4Z"/>
+    <path class="brillo" style="--t:3.2s;--d:-2.0s;transform-box:fill-box;transform-origin:center" d="M70 324L71.6 328.4L76 330L71.6 331.6L70 336L68.4 331.6L64 330L68.4 328.4Z"/>
+    <path class="brillo" style="--t:5.8s;--d:-4.0s;transform-box:fill-box;transform-origin:center" d="M955 324L956.6 328.4L961 330L956.6 331.6L955 336L953.4 331.6L949 330L953.4 328.4Z"/>
+    <path class="brillo" style="--t:5.3s;--d:-1.1s;transform-box:fill-box;transform-origin:center" d="M300 604L301.6 608.4L306 610L301.6 611.6L300 616L298.4 611.6L294 610L298.4 608.4Z"/>
+    <path class="brillo" style="--t:4.6s;--d:-1.4s;transform-box:fill-box;transform-origin:center" d="M760 609L761.6 613.4L766 615L761.6 616.6L760 621L758.4 616.6L754 615L758.4 613.4Z"/>
+    <path class="brillo" style="--t:3.5s;--d:-0.5s;transform-box:fill-box;transform-origin:center" d="M930 104L931.6 108.4L936 110L931.6 111.6L930 116L928.4 111.6L924 110L928.4 108.4Z"/>
+    <path class="brillo" style="--t:3.6s;--d:-4.6s;transform-box:fill-box;transform-origin:center" d="M40 534L41.6 538.4L46 540L41.6 541.6L40 546L38.4 541.6L34 540L38.4 538.4Z"/>
+    <path class="brillo" style="--t:5.5s;--d:-4.0s;transform-box:fill-box;transform-origin:center" d="M610 34L611.6 38.4L616 40L611.6 41.6L610 46L608.4 41.6L604 40L608.4 38.4Z"/>
+    <path class="brillo" style="--t:5.4s;--d:-1.0s;transform-box:fill-box;transform-origin:center" d="M200 34L201.6 38.4L206 40L201.6 41.6L200 46L198.4 41.6L194 40L198.4 38.4Z"/>
+  </g>
+
+  <rect width="1000" height="640" fill="url(#papel)" opacity=".45"/>
+  <rect x="14" y="14" width="972" height="612" rx="16" fill="none" stroke="#c3a36c" stroke-width="1.5" opacity=".72"/>
+  <rect x="22" y="22" width="956" height="596" rx="12" fill="none" stroke="#b79865" opacity=".4"/>
+
+  <g fill="#dec58e" font-family="Georgia, serif" text-anchor="middle">
+    <text x="163" y="88" font-size="16" letter-spacing="5">ENGLISH QUEST</text>
+    <text x="163" y="116" font-size="21" letter-spacing="1">Reino del Conocimiento</text>
+    <path d="M79 133h168m-92 0 8-4 8 4-8 4Z" fill="none" stroke="#c3a36c"/>
+    <text x="335" y="255" font-size="12" letter-spacing="3" opacity=".84">SIERRA DE LA NIEBLA</text>
+    <text x="674" y="605" font-size="13" letter-spacing="4" opacity=".78">MAR DEL CREPÚSCULO</text>
+  </g>
+  <g transform="translate(106 566)" stroke="#e3c98e" fill="none" opacity=".88">
+    <circle r="24" stroke-width=".8"/>
+    <path d="M0-28 5-5 28 0 5 5 0 28-5 5-28 0-5-5Z" fill="#203343"/>
+    <path class="aguja" d="M0-28 5-5 0 0-5 5-28 0-5-5Z" fill="#e3c98e"/>
+    <text y="-33" fill="#e3c98e" stroke="none" text-anchor="middle" font-family="Georgia, serif" font-size="11">N</text>
+  </g>
+</svg>

@@ -1,38 +1,51 @@
 <template>
-  <div class="map-board" :style="{ aspectRatio: `${mapSize.width} / ${mapSize.height}` }">
-    <MapScenery :zones="zones" />
-
+  <nav class="mapa" aria-label="Zonas del reino">
+    <img class="ilustracion" src="/images/mapa-del-reino.svg" alt="" />
     <MapZone
-      v-for="(zone, index) in zones"
-      :key="zone.id"
-      :zone="zone"
-      :number="index + 1"
-      :selected="zone.id === selectedId"
-      @select="emit('select-zone', $event)"
+      v-for="nivel in niveles"
+      :key="nivel.numero"
+      :class="`zona-${nivel.numero}`"
+      :nivel="nivel"
+      :estado="estadoDe(nivel.numero)"
+      @elegir="emit('elegir', $event)"
     />
-  </div>
+  </nav>
 </template>
 
 <script setup>
-import { mapSize } from '~/data/zones'
-
-defineProps({
-  zones: { type: Array, required: true },
-  selectedId: { type: String, default: null }
+const props = defineProps({
+  niveles: { type: Array, required: true },
+  nivelDesbloqueado: { type: Number, required: true }
 })
 
-const emit = defineEmits(['select-zone'])
+const emit = defineEmits(['elegir'])
+
+function estadoDe(numero) {
+  if (numero < props.nivelDesbloqueado) return 'completada'
+  if (numero === props.nivelDesbloqueado) return 'disponible'
+  return 'bloqueada'
+}
 </script>
 
 <style scoped>
-.map-board {
+.mapa {
   position: relative;
-  width: 100%;
+  border: 1px solid #be9348;
+  border-radius: 18px;
   overflow: hidden;
-  border-radius: 16px;
-  border: 6px solid #2f1d0e;
-  outline: 2px solid #b08a52;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-  background: #1c3329;
+  background: #101c32;
+  box-shadow: 0 12px 35px #0009;
 }
+
+.ilustracion {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1000 / 640;
+}
+
+.zona-1 { left: 21%; top: 72%; }
+.zona-2 { left: 55%; top: 57%; }
+.zona-3 { left: 81%; top: 63%; }
+.zona-4 { left: 75%; top: 35%; }
 </style>

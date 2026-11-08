@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540"><defs><filter id="pintura" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+<feTurbulence type="fractalNoise" baseFrequency="0.0115" numOctaves="3" seed="7" result="forma"/>
+<feDisplacementMap in="SourceGraphic" in2="forma" scale="10.56" xChannelSelector="R" yChannelSelector="G" result="irregular"/>
+<feGaussianBlur in="irregular" stdDeviation="1.06" result="suave"/>
+<feGaussianBlur in="irregular" stdDeviation="4.22" result="aura"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="2" result="grano"/>
+<feColorMatrix in="grano" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 1.35" result="granoAlfa"/>
+<feComposite in="suave" in2="granoAlfa" operator="in" result="pintado"/>
+<feMerge><feMergeNode in="aura"/><feMergeNode in="pintado"/></feMerge>
+</filter></defs><g filter="url(#pintura)">
+  <defs>
+    <linearGradient id="viento">
+      <stop stop-color="#f0f7ff"/>
+      <stop offset="1" stop-color="#aea6ff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#viento)" stroke-linecap="round">
+    <path d="M331 315Q460 180 690 117M342 330Q481 206 715 142M361 339Q505 232 693 197" stroke-width="8"/>
+    <path d="M312 317Q421 169 617 110m-280 231q104-63 191-94" stroke-width="3"/>
+  </g>
+  <path d="M341 290l5 19 20 6-20 5-5 20-5-20-21-5 21-6Z" fill="#edf4ff"/>
+  <path d="m327 309-30-13m39 30-20 24m36-20 10 29m1-38 28 5" fill="none" stroke="#c2b6ff" stroke-width="3" stroke-linecap="round"/>
+</g></svg>

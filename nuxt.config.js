@@ -7,9 +7,6 @@ export default defineNuxtConfig({
   // (si usas la carpeta app/ de Nuxt 4, borra esta línea)
   srcDir: '.',
 
-  // CSS global (muy pequeño)
-  css: ['~/assets/css/main.css'],
-
   // Vuetify necesita ser "transpilado" por Nuxt
   build: {
     transpile: ['vuetify']

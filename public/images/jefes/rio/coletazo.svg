@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540"><defs><filter id="pintura" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+<feTurbulence type="fractalNoise" baseFrequency="0.0115" numOctaves="3" seed="7" result="forma"/>
+<feDisplacementMap in="SourceGraphic" in2="forma" scale="10.56" xChannelSelector="R" yChannelSelector="G" result="irregular"/>
+<feGaussianBlur in="irregular" stdDeviation="1.06" result="suave"/>
+<feGaussianBlur in="irregular" stdDeviation="4.22" result="aura"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="2" result="grano"/>
+<feColorMatrix in="grano" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 1.35" result="granoAlfa"/>
+<feComposite in="suave" in2="granoAlfa" operator="in" result="pintado"/>
+<feMerge><feMergeNode in="aura"/><feMergeNode in="pintado"/></feMerge>
+</filter></defs><g filter="url(#pintura)">
+  <defs>
+    <linearGradient id="marea">
+      <stop stop-color="#e7ffff"/>
+      <stop offset=".42" stop-color="#76e1c6"/>
+      <stop offset="1" stop-color="#40aca6" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path d="M695 392Q522 471 324 389Q363 454 493 457Q624 452 695 392Z" fill="url(#marea)" opacity=".48"/>
+  <path d="M695 392Q515 470 324 389m6 11q139 81 271 38" fill="none" stroke="url(#marea)" stroke-width="8" stroke-linecap="round"/>
+  <path d="m330 393-31-22m42 17-9-31m22 40 17-27m-28 46-30 12m43-7 19 22" fill="none" stroke="#b9f5db" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="331" cy="395" r="10" fill="#eaffdc"/>
+</g></svg>

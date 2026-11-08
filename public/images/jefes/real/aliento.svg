@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540"><defs><filter id="pintura" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+<feTurbulence type="fractalNoise" baseFrequency="0.0115" numOctaves="3" seed="7" result="forma"/>
+<feDisplacementMap in="SourceGraphic" in2="forma" scale="10.56" xChannelSelector="R" yChannelSelector="G" result="irregular"/>
+<feGaussianBlur in="irregular" stdDeviation="1.06" result="suave"/>
+<feGaussianBlur in="irregular" stdDeviation="4.22" result="aura"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="2" result="grano"/>
+<feColorMatrix in="grano" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 1.35" result="granoAlfa"/>
+<feComposite in="suave" in2="granoAlfa" operator="in" result="pintado"/>
+<feMerge><feMergeNode in="aura"/><feMergeNode in="pintado"/></feMerge>
+</filter></defs><g filter="url(#pintura)">
+  <defs>
+    <linearGradient id="fuego">
+      <stop stop-color="#ec4c38" stop-opacity=".36"/>
+      <stop offset=".48" stop-color="#f86c30"/>
+      <stop offset="1" stop-color="#ffe3a2"/>
+    </linearGradient>
+    <radialGradient id="brasa">
+      <stop stop-color="#fff3c8"/>
+      <stop offset="1" stop-color="#fb602e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path d="M560 266Q486 215 409 246Q425 224 367 208Q380 243 315 232Q328 258 274 278Q306 286 292 314Q332 301 320 355Q366 318 380 339Q418 304 439 323Q508 290 560 273Z" fill="url(#fuego)"/>
+  <path d="M557 270Q470 247 433 269Q413 259 389 270Q388 283 336 288Q387 310 450 288Z" fill="#ffe9ae" opacity=".85"/>
+  <circle cx="331" cy="289" r="66" fill="url(#brasa)"/>
+  <path d="m300 271-24-16m48 5-4-24m25 69 12 24m-42-20-15 21m-9-35-21 5" fill="none" stroke="#ffb27c" stroke-width="4" stroke-linecap="round"/>
+</g></svg>

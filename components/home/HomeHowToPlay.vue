@@ -33,9 +33,10 @@ const open = defineModel({ type: Boolean, default: false });
 
 // Pasos que se muestran (array de textos)
 const steps = [
-  "Elige a tu héroe.",
   "Explora el mapa del reino y escoge una zona.",
-  "Responde preguntas de inglés para vencer a los enemigos.",
-  "¡Gana batallas y salva el Reino del Conocimiento!"
+  "Si juegas en celular, gira la pantalla para ver la arena en horizontal.",
+  "Responde una pregunta de inglés. Si aciertas, elige un ataque con los botones en pantalla.",
+  "Si fallas, el guardián te ataca. Después puedes revisar la respuesta correcta y su explicación.",
+  "Derrota al guardián para desbloquear la siguiente zona."
 ];
 </script>

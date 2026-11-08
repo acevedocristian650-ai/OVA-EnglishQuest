@@ -8,7 +8,7 @@
 const props = defineProps({
   rutaSonido: {
     type: String,
-    default: '/audio/boton.mp3.mp3'
+    default: '/audio/boton.mp3'
   },
   volumen: {
     type: Number,
