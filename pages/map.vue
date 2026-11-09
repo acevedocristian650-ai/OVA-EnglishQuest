@@ -20,11 +20,20 @@
     @volver="volverAlMapa"
     @reintentar="intento++"
   />
+
+  <!-- Transición Cinemática de Encuentro / Versus al entrar al nivel -->
+  <MapEncuentroTransicion
+    :activo="enTransicion"
+    :nivel="nivelSeleccionado"
+    @listo="iniciarCombate"
+  />
 </template>
 
 <script setup>
 const pantalla = ref('mapa')
 const nivelActual = ref(null)
+const nivelSeleccionado = ref(null)
+const enTransicion = ref(false)
 const nivelDesbloqueado = ref(1)
 const intento = ref(0)
 
@@ -88,12 +97,18 @@ const niveles = [
 ]
 
 function entrar(numero) {
-  if (numero > nivelDesbloqueado.value) return
+  if (numero > nivelDesbloqueado.value || enTransicion.value) return
   const nivel = niveles.find((zona) => zona.numero === numero)
   if (!nivel) return
 
-  nivelActual.value = nivel
+  nivelSeleccionado.value = nivel
+  enTransicion.value = true
+}
+
+function iniciarCombate() {
+  nivelActual.value = nivelSeleccionado.value
   pantalla.value = 'combate'
+  enTransicion.value = false
 }
 
 function desbloquear() {
@@ -112,6 +127,21 @@ function volverAlMapa() {
 .reino {
   min-height: 100dvh;
   background: #0b1325;
+  animation: aparicion-mapa 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes aparicion-mapa {
+  0% {
+    opacity: 0;
+    transform: scale(1.03);
+  }
+  40% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .contenido {

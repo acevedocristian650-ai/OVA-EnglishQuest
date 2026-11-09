@@ -5,6 +5,33 @@
       <img class="proyectil" :src="`/images/magia/${ataque.id}.svg`" alt="" />
       <img class="residuo" :src="`/images/magia/${ataque.id}.svg`" alt="" />
     </template>
+    <template v-else-if="ataque.id === 'rival'">
+      <!-- Nivel 1: Grifo del Alba (Bola de Fuego Solar) -->
+      <div class="ataque-rival-1 bola-fuego-rival">
+        <div class="fuego-cola" />
+        <div class="fuego-aura" />
+        <div class="fuego-nucleo" />
+        <span v-for="n in 6" :key="n" class="chispa-vuelo" :style="estiloChispa(n)" />
+      </div>
+
+      <!-- Nivel 2: Basilisco del Río (Ola Venenosa / Torrente Acuático) -->
+      <div class="ataque-rival-2 ola-venenosa-rival">
+        <img src="/images/jefes/rio/ola-venenosa.png" alt="Ola Venenosa" class="ola-img" draggable="false" />
+      </div>
+
+      <!-- Nivel 3: Águila de la Tormenta (Relámpago Celestial) -->
+      <div class="ataque-rival-3 relampago-rival">
+        <div class="resplandor-cielo" />
+        <img src="/images/jefes/viento/relampago-tormenta.png" alt="Relámpago de Tormenta" class="relampago-img" draggable="false" />
+      </div>
+
+      <!-- Nivel 4: Dragón Real (Aliento de Fuego Continuo) -->
+      <div class="ataque-rival-4 aliento-rival">
+        <img src="/images/jefes/real/aliento-fuego.png" alt="Aliento de Dragón" class="aliento-img" draggable="false" />
+      </div>
+
+      <img class="estela" :src="estela" alt="" />
+    </template>
     <template v-else>
       <span class="amago" />
       <img class="estela" :src="estela" alt="" />
@@ -36,6 +63,18 @@ const props = defineProps({
 
 const chispas = [-165, -132, -104, -76, -45, -15, 18, 46, 138, 166]
 const sangre = computed(() => props.ataque.sangre ? [-154, -119, -82, -53, -24, 12] : [])
+
+function estiloChispa(n) {
+  const top = 25 + ((n * 13) % 45)
+  const delay = (n * 0.05).toFixed(2)
+  const size = 3 + (n % 4)
+  return {
+    top: `${top}%`,
+    width: `${size}px`,
+    height: `${size}px`,
+    '--delay': `${delay}s`
+  }
+}
 </script>
 
 <style scoped>
@@ -54,10 +93,232 @@ const sangre = computed(() => props.ataque.sangre ? [-154, -119, -82, -53, -24, 
 .nivel-1.escudo { --x: 63%; }
 .rayo { --x: 64%; --y: 53%; --lumbre: #d3f4ff; --halo: #4baafa92; }
 .fenix { --x: 64%; --y: 55%; --lumbre: #ffdc94; --halo: #f476368b; }
-.rival { --x: 34%; --y: 55%; --lumbre: #ffc3a6; --halo: #dd543b72; }
-.nivel-2.rival { --y: 68%; --lumbre: #c1efd8; --halo: #68b29b88; }
-.nivel-3.rival { --lumbre: #e0e0ff; --halo: #9d9dea8c; }
-.nivel-4.rival { --lumbre: #ffd08e; --halo: #fa683f9a; }
+.rival { --x: 34%; --y: 55%; --lumbre: #ffe082; --halo: #ff980088; }
+.nivel-2.rival { --y: 55%; --lumbre: #b9f6ca; --halo: #00e67688; }
+.nivel-3.rival { --lumbre: #e0f7fa; --halo: #00e5ff88; }
+.nivel-4.rival { --lumbre: #ffccbc; --halo: #ff572288; }
+
+/* Activar el ataque único de cada nivel */
+.ataque-rival-1, .ataque-rival-2, .ataque-rival-3, .ataque-rival-4 {
+  display: none;
+}
+.nivel-1 .ataque-rival-1 { display: block; }
+.nivel-2 .ataque-rival-2 { display: block; }
+.nivel-3 .ataque-rival-3 { display: block; }
+.nivel-4 .ataque-rival-4 { display: block; }
+
+/* Nivel 1: Bola de Fuego lanzada por el Grifo */
+.bola-fuego-rival {
+  position: absolute;
+  width: min(85px, 12vw);
+  height: min(85px, 12vw);
+  pointer-events: none;
+  z-index: 15;
+  will-change: transform, opacity, left, top;
+  animation: disparar-fuego var(--duracion) cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes disparar-fuego {
+  0% {
+    opacity: 0;
+    left: 66%;
+    top: 45%;
+    transform: scale(0.2);
+  }
+  20% {
+    opacity: 1;
+    left: 64%;
+    top: 44%;
+    transform: scale(1.05);
+  }
+  38% {
+    opacity: 1;
+    left: 52%;
+    top: 48%;
+    transform: scale(1.18);
+  }
+  53% {
+    opacity: 1;
+    left: 34%;
+    top: 53%;
+    transform: scale(1.35);
+  }
+  64% {
+    opacity: 0.4;
+    left: 33%;
+    top: 53%;
+    transform: scale(1.85);
+  }
+  75%, 100% {
+    opacity: 0;
+    left: 33%;
+    top: 53%;
+    transform: scale(2.1);
+  }
+}
+
+.fuego-aura {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 110, 50, 0.7) 0%, rgba(255, 190, 60, 0.3) 45%, transparent 70%);
+  animation: pulso-fuego 0.3s ease-in-out infinite alternate;
+}
+
+.fuego-nucleo {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 15%, #ffe57f 40%, #ff5722 80%, #b71c1c 100%);
+  box-shadow: 0 0 16px #ff9800, 0 0 32px #ff5722;
+}
+
+.fuego-cola {
+  position: absolute;
+  left: 55%;
+  top: 22%;
+  width: 140%;
+  height: 56%;
+  background: linear-gradient(to right, rgba(255, 87, 34, 0.95) 0%, rgba(255, 193, 7, 0.5) 50%, transparent 100%);
+  border-radius: 0 50% 50% 0;
+  transform-origin: left center;
+  filter: blur(2px);
+  animation: aleteo-cola 0.15s ease-in-out infinite alternate;
+}
+
+.chispa-vuelo {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffe082;
+  box-shadow: 0 0 6px #ff9800;
+  animation: soltar-chispa 0.4s linear infinite;
+  animation-delay: var(--delay);
+}
+
+@keyframes aleteo-cola {
+  from { transform: scaleY(0.85); }
+  to { transform: scaleY(1.2); }
+}
+
+@keyframes pulso-fuego {
+  from { transform: scale(0.92); }
+  to { transform: scale(1.1); }
+}
+
+@keyframes soltar-chispa {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(40px, -10px) scale(0.2); }
+}
+
+/* Nivel 2: Ola Venenosa del Basilisco */
+.ola-venenosa-rival {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60%;
+  pointer-events: none;
+  z-index: 15;
+  overflow: hidden;
+}
+
+.ola-img {
+  position: absolute;
+  right: -15%;
+  bottom: -4%;
+  width: 110%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 18px rgba(0, 230, 118, 0.8));
+  animation: arrastre-ola var(--duracion) cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+@keyframes arrastre-ola {
+  0% { opacity: 0; transform: translateX(50%) scaleY(0.7); }
+  22% { opacity: 0.95; transform: translateX(20%) scaleY(0.95); }
+  52% { opacity: 1; transform: translateX(-22%) scaleY(1.05); }
+  68% { opacity: 0.85; transform: translateX(-36%) scaleY(1); }
+  85% { opacity: 0.35; transform: translateX(-46%) scaleY(0.9); }
+  100% { opacity: 0; transform: translateX(-54%) scaleY(0.75); }
+}
+
+/* Nivel 3: Relámpago de Tormenta del Águila */
+.relampago-rival {
+  position: absolute;
+  left: 18%;
+  top: -8%;
+  width: 32%;
+  height: 108%;
+  pointer-events: none;
+  z-index: 16;
+}
+
+.resplandor-cielo {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 35% 20%, rgba(179, 229, 252, 0.65) 0%, transparent 70%);
+  opacity: 0;
+  animation: destello-cielo var(--duracion) ease-out both;
+}
+
+.relampago-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.9)) drop-shadow(0 0 50px rgba(118, 255, 3, 0.5));
+  opacity: 0;
+  animation: impacto-rayo-rival var(--duracion) ease-out both;
+}
+
+@keyframes destello-cielo {
+  0%, 25% { opacity: 0; }
+  34% { opacity: 0.45; }
+  40% { opacity: 0.25; }
+  52%, 56% { opacity: 0.95; }
+  68% { opacity: 0.3; }
+  85%, 100% { opacity: 0; }
+}
+
+@keyframes impacto-rayo-rival {
+  0%, 30% { opacity: 0; transform: scaleY(0.15); transform-origin: top center; }
+  42% { opacity: 0.85; transform: scaleY(0.9); }
+  48% { opacity: 0.6; transform: scaleY(0.98); }
+  52%, 56% { opacity: 1; transform: scaleY(1); }
+  68% { opacity: 0.55; transform: scale(1.02); }
+  85% { opacity: 0.2; transform: scale(1.04); }
+  100% { opacity: 0; transform: scale(1.06); }
+}
+
+/* Nivel 4: Aliento de Fuego Continuo del Dragón */
+.aliento-rival {
+  position: absolute;
+  right: 18%;
+  top: 34%;
+  width: 72%;
+  height: 42%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.aliento-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: right center;
+  filter: drop-shadow(0 0 20px rgba(255, 87, 34, 0.9)) drop-shadow(0 0 45px rgba(255, 193, 7, 0.65));
+  opacity: 0;
+  animation: llamarada-dragon var(--duracion) cubic-bezier(0.22, 0.85, 0.3, 1) both;
+}
+
+@keyframes llamarada-dragon {
+  0%, 18% { opacity: 0; transform: scaleX(0.1) scaleY(0.4); }
+  30% { opacity: 0.9; transform: scaleX(0.55) scaleY(0.85); }
+  48%, 62% { opacity: 1; transform: scaleX(1) scaleY(1.05); filter: brightness(1.2); }
+  76% { opacity: 0.75; transform: scaleX(1.02) scaleY(0.92); }
+  90% { opacity: 0.3; transform: scaleX(1.04) scaleY(0.7); }
+  100% { opacity: 0; transform: scaleX(1.06) scaleY(0.5); }
+}
+
 /* Los efectos de contacto permanecen ocultos durante la espera. */
 .estela, .residuo, .luz, .onda, .polvo, .chispa, .gota { opacity: 0; }
 .estela { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; animation: corte 900ms cubic-bezier(.2, .8, .2, 1) var(--momento-impacto) both; }

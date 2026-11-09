@@ -7,7 +7,7 @@
       </span>
       <div class="accion">
         <span v-if="ataque?.final" class="penumbra" aria-hidden="true" />
-        <div class="luchador caballero" :class="[caballero, { esperando, 'en-guardia': enGuardia, victoria, tenso: urgente, esquivando }]" role="img" aria-label="Caballero con hacha y escudo solar">
+        <div class="luchador caballero" :class="[caballero, { esperando, 'en-guardia': enGuardia, victoria, tenso: urgente }]" role="img" aria-label="Caballero con hacha y escudo solar">
           <img v-for="pose in [...posesCaballero, ...intermediosCaballero, ...posesNuevasCaballero]" :key="pose" class="pose"
             :class="[pose, { amp: medidas[`caballero/${pose}`] }]" :style="estiloAmp('caballero', pose)"
             :src="`/images/personajes-mate/caballero/${pose}.${extension(pose)}`" alt="" draggable="false" />
@@ -19,14 +19,13 @@
             :src="`${nivel.arte}/${pose}.${extension(pose)}`" alt="" draggable="false" />
           <!-- Ecos del ataque: estela que queda atrás cuando el enemigo se lanza -->
           <template v-if="ataqueRival">
-            <img v-for="n in 2" :key="`eco-${n}`" class="pose eco amp" :class="`eco-${n}`" :style="estiloAmp(carpetaGuardian, 'ataque')"
+            <img v-for="n in 2" :key="`eco-${n}`" class="pose eco" :class="[`eco-${n}`, { amp: medidas[`${carpetaGuardian}/ataque`] }]" :style="estiloAmp(carpetaGuardian, 'ataque')"
               :src="`${nivel.arte}/ataque.webp`" alt="" draggable="false" />
           </template>
           <span class="onda-suelo" aria-hidden="true" />
           <span class="particulas-carga" aria-hidden="true">
             <span v-for="(p, i) in particulasCarga" :key="i" class="p" :style="p" />
           </span>
-          <span v-if="esquivando" class="descarga" aria-hidden="true" />
         </div>
         <template v-if="ataque?.final">
           <span class="rotulo-final" aria-hidden="true">¡Golpe final!</span>
@@ -79,7 +78,7 @@ const nuevas = new Set([...posesNuevasCaballero, 'carga-1', 'carga-2', 'ataque',
 const extension = (pose) => (pose.startsWith('tw-') || nuevas.has(pose) ? 'webp' : 'png')
 const carpetaGuardian = computed(() => props.nivel.arte.split('/').pop())
 // Medidas en unidades del lienzo de referencia (512 de alto): ancho, alto, desvío horizontal y distancia al suelo.
-const medidas = {"caballero/golpeado": {"w": 0.7617, "h": 0.6738, "dx": 0.0, "by": 0.0279}, "caballero/anticipacion": {"w": 0.6758, "h": 0.5781, "dx": 0.0, "by": 0.0279}, "caballero/esquiva": {"w": 0.6504, "h": 0.6406, "dx": 0.0, "by": 0.0279}, "caballero/guardia": {"w": 0.625, "h": 0.5898, "dx": -0.001, "by": 0.0279}, "caballero/final-1": {"w": 0.5879, "h": 0.7168, "dx": -0.001, "by": 0.0279}, "caballero/final-2": {"w": 0.7676, "h": 0.7148, "dx": -0.001, "by": 0.0279}, "caballero/final-3": {"w": 0.7051, "h": 0.5469, "dx": -0.001, "by": 0.0279}, "grifo/carga-1": {"w": 0.6855, "h": 0.5352, "dx": -0.001, "by": 0.1669}, "grifo/carga-2": {"w": 0.9199, "h": 0.8926, "dx": -0.001, "by": 0.1669}, "grifo/ataque": {"w": 0.9629, "h": 0.5293, "dx": -0.001, "by": 0.1669}, "grifo/derrota-1": {"w": 0.8945, "h": 0.7012, "dx": -0.001, "by": 0.1669}, "grifo/derrota-2": {"w": 0.8359, "h": 0.4805, "dx": -0.001, "by": 0.1669}, "viento/carga-1": {"w": 0.7461, "h": 0.5742, "dx": 0.0, "by": 0.1668}, "viento/carga-2": {"w": 0.9023, "h": 0.8457, "dx": 0.0, "by": 0.1668}, "viento/ataque": {"w": 0.8555, "h": 0.4609, "dx": 0.0, "by": 0.1668}, "rio/carga-1": {"w": 1.0332, "h": 0.5039, "dx": -0.001, "by": 0.1693}, "rio/carga-2": {"w": 1.0312, "h": 0.6094, "dx": -0.001, "by": 0.1693}, "rio/ataque": {"w": 1.0664, "h": 0.4043, "dx": -0.001, "by": 0.1693}, "real/carga-1": {"w": 0.7656, "h": 0.5938, "dx": -0.001, "by": 0.1671}, "real/carga-2": {"w": 0.9336, "h": 0.7559, "dx": -0.001, "by": 0.1671}, "real/ataque": {"w": 1.0, "h": 0.4609, "dx": -0.001, "by": 0.1671}}
+const medidas = {"caballero/golpeado": {"w": 0.7617, "h": 0.6738, "dx": 0.0, "by": 0.0279}, "caballero/anticipacion": {"w": 0.6758, "h": 0.5781, "dx": 0.0, "by": 0.0279}, "caballero/esquiva": {"w": 0.6504, "h": 0.6406, "dx": 0.0, "by": 0.0279}, "caballero/guardia": {"w": 0.625, "h": 0.5898, "dx": -0.001, "by": 0.0279}, "caballero/final-1": {"w": 0.5879, "h": 0.7168, "dx": -0.001, "by": 0.0279}, "caballero/final-2": {"w": 0.7676, "h": 0.7148, "dx": -0.001, "by": 0.0279}, "caballero/final-3": {"w": 0.7051, "h": 0.5469, "dx": -0.001, "by": 0.0279}, "grifo/carga-1": {"w": 0.6855, "h": 0.5352, "dx": -0.001, "by": 0.1669}, "grifo/carga-2": {"w": 0.9199, "h": 0.8926, "dx": -0.001, "by": 0.1669}, "grifo/ataque": {"w": 0.9629, "h": 0.5293, "dx": -0.001, "by": 0.1669}, "grifo/derrota-1": {"w": 0.8945, "h": 0.7012, "dx": -0.001, "by": 0.1669}, "grifo/derrota-2": {"w": 0.8359, "h": 0.4805, "dx": -0.001, "by": 0.1669}}
 function estiloAmp(carpeta, pose) {
   const m = medidas[`${carpeta}/${pose}`]
   return m ? { '--w': m.w, '--h': m.h, '--dx': m.dx, '--by': m.by } : undefined
@@ -124,18 +123,7 @@ function alImpactar() {
   temporizadorPausa = setTimeout(() => (congelado.value = false), props.ataque?.final ? 150 : 95)
 }
 
-// Acierto: la carga del enemigo se suelta en el vacío y el caballero la esquiva antes de elegir su ataque
-const esquivando = ref(false)
-let temporizadorEsquiva = null
-watch(() => props.carga, (nuevo, previo) => {
-  if (nuevo === 0 && previo !== null && previo > 0.15 && !props.ataque) {
-    esquivando.value = true
-    clearTimeout(temporizadorEsquiva)
-    temporizadorEsquiva = setTimeout(() => (esquivando.value = false), 900)
-  }
-})
-watch(() => props.ataque, (valor) => { if (valor) esquivando.value = false })
-onBeforeUnmount(() => { clearTimeout(temporizadorPausa); clearTimeout(temporizadorEsquiva) })
+onBeforeUnmount(() => { clearTimeout(temporizadorPausa) })
 const caballero = computed(() => estadoLuchador(props.vidaCaballero, 100, ataqueRival.value))
 const guardian = computed(() => estadoLuchador(props.vidaRival, props.nivel.vida, !ataqueRival.value))
 
@@ -232,10 +220,10 @@ const efecto = computed(() => {
   background: radial-gradient(ellipse, #101112bd 5%, #10111262 44%, transparent 74%);
 }
 .guardian::before { bottom: 13%; }
-.escenario.nivel-1 { --aura: #ffd85a; }
-.escenario.nivel-2 { --aura: #86e6b4; }
-.escenario.nivel-3 { --aura: #a9b6ff; }
-.escenario.nivel-4 { --aura: #ff7f45; }
+.escenario.nivel-1 { --aura: #ffd54f; }
+.escenario.nivel-2 { --aura: #00e676; }
+.escenario.nivel-3 { --aura: #00e5ff; }
+.escenario.nivel-4 { --aura: #ff5722; }
 .pose {
   position: absolute;
   inset: 0;
@@ -263,7 +251,7 @@ const efecto = computed(() => {
 }
 .nivel-1 .escudo .caballero { --alcance-escudo: clamp(26%, calc(112% - var(--alto) * 0.83), 53%); }
 .magia .caballero { animation: conjurar var(--duracion) ease-out both, deformar-magia var(--duracion) ease-in-out both; }
-.rival .guardian { --avance: -43%; animation: avance-guardian var(--duracion) ease-out both, deformar var(--duracion) ease-in-out both; }
+.rival .guardian { --avance: -20%; animation: avance-guardian var(--duracion) ease-out both, deformar var(--duracion) ease-in-out both; }
 .nivel-2 .rival .guardian { --avance: -31%; }
 .nivel-3 .rival .guardian { --avance: -40%; --altura: -18%; }
 .nivel-4 .rival .guardian { --avance: -11%; }
@@ -336,7 +324,7 @@ const efecto = computed(() => {
 }
 
 /* ---------- Espera de la pregunta: el enemigo carga su ataque ---------- */
-.esperando .pose { transition: opacity 140ms linear; }
+.esperando .pose { transition: opacity 220ms cubic-bezier(0.25, 0.8, 0.25, 1); }
 .guardian::after {
   content: '';
   position: absolute;
@@ -381,16 +369,6 @@ const efecto = computed(() => {
 .luchador.caballero.tenso:not(.emisor, .receptor, .tendido) { animation: tensar 0.5s ease-in-out infinite; }
 @keyframes tensar { 0%, 100% { transform: translateX(-2%) scale(1.02, 0.97); } 50% { transform: translateX(-3.4%) scale(1.035, 0.95); } }
 
-/* Acierto: el enemigo suelta su carga y el caballero la esquiva */
-.luchador.caballero.esquivando :is(.reposo, .dolor, .guardia) { opacity: 0; }
-.luchador.caballero.esquivando .esquiva { opacity: 1; }
-.luchador.caballero.esquivando:not(.emisor, .receptor, .tendido) { animation: esquivar 0.9s ease-out both; }
-@keyframes esquivar { 0% { transform: none; } 22% { transform: translate(-9%, -1%) rotate(-3deg); } 70% { transform: translate(-6%, 0); } 100% { transform: none; } }
-.descarga { position: absolute; left: 50%; top: 52%; width: 62cqw; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; opacity: 0;
-  background: radial-gradient(circle, #fff 0, var(--aura, #ffd85a) 30%, transparent 66%); animation: descarga 0.7s ease-out both; }
-.descarga::after { content: ''; position: absolute; inset: 8%; border-radius: 50%; border: 3px solid var(--aura, #ffd85a); }
-@keyframes descarga { 0% { opacity: 0.9; scale: 0.3; } 100% { opacity: 0; scale: 1.7; } }
-
 /* Ambiente: motas flotando para que el fondo no se sienta como una imagen quieta */
 .ambiente { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .mota { position: absolute; left: var(--x); bottom: -4%; width: var(--s); height: var(--s); border-radius: 50%; background: var(--aura, #ffd85a); opacity: 0; animation: flotar-mota var(--t) linear infinite; animation-delay: calc(var(--d) * -1s); }
@@ -412,7 +390,7 @@ const efecto = computed(() => {
 @keyframes eco-1 { 0%, 37% { opacity: 0; transform: none; } 40% { opacity: 0.5; transform: translateX(7%); } 50% { opacity: 0.32; transform: translateX(18%); } 58%, 100% { opacity: 0; transform: translateX(24%); } }
 @keyframes eco-2 { 0%, 38% { opacity: 0; transform: none; } 41% { opacity: 0.32; transform: translateX(15%); } 51% { opacity: 0.18; transform: translateX(34%); } 59%, 100% { opacity: 0; transform: translateX(42%); } }
 @keyframes preparar-rival { 0% { opacity: 1; } 36%, 100% { opacity: 0; } }
-@keyframes golpear-rival { 0%, 83%, 100% { opacity: 0; } 36% { opacity: 1; } }
+@keyframes golpear-rival { 0%, 88%, 100% { opacity: 0; } 36% { opacity: 1; } }
 
 /* ---------- Golpe final: el caballero salta, remata y el enemigo cae ---------- */
 .secuencia.final.activa { transform-origin: 62% 62%; animation-name: camara-final; animation-timing-function: ease-in-out; }
@@ -500,7 +478,7 @@ const efecto = computed(() => {
 @keyframes lanzar-conjuro { 0%, 69%, 100% { opacity: 0; } 32% { opacity: 1; } }
 @keyframes recoger-golpe { 0% { opacity: 0; } 73% { opacity: 1; } 88%, 100% { opacity: 0; } }
 @keyframes reposo-atacante { 0% { opacity: 0; } 88%, 100% { opacity: 1; } }
-@keyframes reposo-guardian { 0% { opacity: 0; } 83%, 100% { opacity: 1; } }
+@keyframes reposo-guardian { 0% { opacity: 0; } 88%, 100% { opacity: 1; } }
 @keyframes reposo-rival { 0% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes sacudida { 0% { opacity: 1; } 18%, 100% { opacity: 0; } }
 @keyframes dolor { 0%, 42%, 100% { opacity: 0; } 18% { opacity: 1; } }
@@ -517,7 +495,9 @@ const efecto = computed(() => {
   43% { transform: translate(12%, -4%) rotate(-2deg); }
   54%, 58% { transform: translate(39%, 1%); }
   69% { transform: translate(28%, 2%) rotate(3deg); }
-  84% { transform: translateX(8%); }
+  84% { transform: translateX(6%); }
+  94% { transform: translateX(1.5%); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 }
 @keyframes avance-barrido {
   20% { transform: translate(-7%, 1%) rotate(-5deg); }
@@ -525,7 +505,9 @@ const efecto = computed(() => {
   45% { transform: translate(18%, 1%) rotate(2deg); }
   54%, 57% { transform: translate(37%, 1%) rotate(4deg); }
   69% { transform: translate(22%, 3%) rotate(2deg); }
-  84% { transform: translateX(7%); }
+  84% { transform: translateX(5%); }
+  94% { transform: translateX(1.2%); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 }
 @keyframes avance-escudo {
   19% { transform: translate(-5%, 3%); }
@@ -533,24 +515,37 @@ const efecto = computed(() => {
   45% { transform: translate(23%, 2%) rotate(3deg); }
   54%, 58% { transform: translateX(var(--alcance-escudo)); }
   69% { transform: translate(25%, 3%) rotate(-4deg); }
-  84% { transform: translateX(8%); }
+  84% { transform: translateX(6%); }
+  94% { transform: translateX(1.5%); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 }
 @keyframes avance-guardian {
   16% { transform: translateY(2%); }
-  35% { transform: translate(10%, var(--altura, -2%)); }
+  35% { transform: translate(8%, var(--altura, -2%)); }
   44% { transform: translateX(calc(var(--avance) * 0.55)); }
   54%, 58% { transform: translateX(var(--avance)); }
-  70% { transform: translate(-15%, 2%); }
-  83% { transform: translateX(-7%); }
+  70% { transform: translate(-12%, 1.5%); }
+  83% { transform: translateX(-4.5%); }
+  94% { transform: translateX(-1%); }
+  100% { transform: translate(0, 0); }
 }
 @keyframes recibir {
   0%, 7% { transform: none; }
   18% { transform: translateX(var(--retroceso)) rotate(var(--inclinacion)); }
   38% { transform: translate(calc(var(--retroceso) * 0.75), 1%) rotate(calc(var(--inclinacion) * -0.45)); }
-  58% { transform: translate(calc(var(--retroceso) * 0.6), 3%); }
-  73% { transform: translateX(calc(var(--retroceso) * 0.4)); }
+  58% { transform: translate(calc(var(--retroceso) * 0.45), 2%); }
+  75% { transform: translateX(calc(var(--retroceso) * 0.2)); }
+  90% { transform: translateX(calc(var(--retroceso) * 0.05)); }
+  100% { transform: none; }
 }
-@keyframes conjurar { 16% { transform: translate(-3%, 1%); } 30% { transform: translateY(-3%); } 42%, 57% { transform: translateX(5%); } 72% { transform: translate(2%, 2%); } }
+@keyframes conjurar {
+  16% { transform: translate(-3%, 1%); }
+  30% { transform: translateY(-3%); }
+  42%, 57% { transform: translateX(5%); }
+  72% { transform: translate(2%, 2%); }
+  88% { transform: translate(0.5%, 0.5%); }
+  100% { transform: translate(0, 0); }
+}
 /* Cámara: se acerca despacio mientras el atacante se carga, golpea con zoom + sacudida y vuelve */
 @keyframes camara {
   0%   { transform: scale(1) translate(0, 0); }
