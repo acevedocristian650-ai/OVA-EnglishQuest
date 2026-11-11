@@ -1,5 +1,8 @@
 <template>
-  <AudioMusicaHome ruta="/audio/Mapa.mp3" />
+  <!-- Una pista por pantalla: el key obliga a desmontar una y montar la otra al cambiar. -->
+  <AudioMusicaHome v-if="pantalla === 'mapa'" key="musica-mapa" ruta="/audio/Mapa.mp3" />
+  <AudioMusicaHome v-else :key="`musica-combate-${nivelActual?.numero}`"
+    :ruta="`/audio/combate/batalla-${nivelActual?.numero ?? 1}.mp3`" :volumen="0.4" />
   <section v-if="pantalla === 'mapa'" class="reino">
     <v-container class="contenido">
       <AudioSonidoBoton>

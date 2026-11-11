@@ -10,6 +10,10 @@ const props = defineProps({
   ruta: {
     type: String,
     required: true
+  },
+  volumen: {
+    type: Number,
+    default: 0.5
   }
 })
 
@@ -25,7 +29,7 @@ onMounted(() => {
   // 2. Usar la propiedad dinámica en lugar de la ruta estática
   audio.value = new Audio(props.ruta)
   audio.value.loop = true
-  audio.value.volume = 0.5 
+  audio.value.volume = props.volumen
 
   audio.value.play().catch(() => {
     document.addEventListener('click', iniciarMusica, { once: true })

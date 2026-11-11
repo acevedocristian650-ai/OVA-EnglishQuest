@@ -8,20 +8,17 @@
       <div class="accion">
         <span v-if="ataque?.final" class="penumbra" aria-hidden="true" />
         <div class="luchador caballero" :class="[caballero, { esperando, 'en-guardia': enGuardia, victoria, tenso: urgente }]" role="img" aria-label="Caballero con hacha y escudo solar">
-          <img v-for="pose in [...posesCaballero, ...intermediosCaballero, ...posesNuevasCaballero]" :key="pose" class="pose"
+          <img v-for="pose in [...posesCaballero, ...posesNuevasCaballero]" :key="pose" class="pose"
             :class="[pose, { amp: medidas[`caballero/${pose}`] }]" :style="estiloAmp('caballero', pose)"
             :src="`/images/personajes-mate/caballero/${pose}.${extension(pose)}`" alt="" draggable="false" />
         </div>
-        <div class="luchador guardian" :class="[guardian, { esperando, 'con-derrota': nivel.derrota, c1: faseCarga === 1, c2: faseCarga === 2 }]"
+        <div class="luchador guardian" :class="[guardian, { esperando, 'con-derrota': nivel.derrota, c1: faseCarga === 1, c2: faseCarga === 2, 'desde-carga': cargaPrevia > 0 }]"
           :style="{ '--carga': carga ?? 0 }" role="img" :aria-label="nivel.guardian">
-          <img v-for="pose in [...posesGuardian, ...intermediosGuardian, ...posesNuevasGuardian]" :key="pose" class="pose"
+          <img v-for="pose in [...posesGuardian, ...posesNuevasGuardian]" :key="pose" class="pose"
             :class="[pose, { amp: medidas[`${carpetaGuardian}/${pose}`] }]" :style="estiloAmp(carpetaGuardian, pose)"
             :src="`${nivel.arte}/${pose}.${extension(pose)}`" alt="" draggable="false" />
-          <!-- Ecos del ataque: estela que queda atrás cuando el enemigo se lanza -->
-          <template v-if="ataqueRival">
-            <img v-for="n in 2" :key="`eco-${n}`" class="pose eco" :class="[`eco-${n}`, { amp: medidas[`${carpetaGuardian}/ataque`] }]" :style="estiloAmp(carpetaGuardian, 'ataque')"
-              :src="`${nivel.arte}/ataque.webp`" alt="" draggable="false" />
-          </template>
+          <!-- Chorro (veneno / aliento): nace en la boca del sprite «ataque» y viaja con el jefe, sin depender del tamaño de la escena -->
+          <img v-if="ataqueRival && chorro" class="chorro" :class="`chorro-${nivel.numero}`" :src="chorro" alt="" draggable="false" />
           <span class="onda-suelo" aria-hidden="true" />
           <span class="particulas-carga" aria-hidden="true">
             <span v-for="(p, i) in particulasCarga" :key="i" class="p" :style="p" />
@@ -35,7 +32,7 @@
         </template>
         <template v-if="ataque">
           <span class="pulso-impacto" aria-hidden="true" @animationstart.self="alImpactar" />
-          <CombatEfectos :class="`nivel-${nivel.numero}`" :ataque="ataque" :estela="efecto"
+          <CombatEfectos :class="`nivel-${nivel.numero}`" :nivel="nivel.numero" :ataque="ataque" :estela="efecto"
             :dano="danoAplicado" :curacion="curacion" />
         </template>
       </div>
@@ -66,17 +63,18 @@ const posesCaballero = [
   'preparacion-rayo', 'impacto-rayo', 'preparacion-fenix', 'impacto-fenix',
   'salida-hachazo', 'salida-barrido', 'salida-escudo', 'salida-magia', ...posesReaccion
 ]
-// Cuadros intermedios (generados con interpolación) para que el golpe no «salte» de una pose a otra.
-const ataquesCaballero = ['hachazo', 'barrido', 'escudo', 'rayo', 'fenix']
-const intermediosCaballero = ataquesCaballero.flatMap((id) => [1, 2, 3].map((n) => `tw-${id}-${n}`))
-const intermediosGuardian = ['tw-1', 'tw-2', 'tw-3']
+// Los cuadros intermedios «tw-*» (mezclas translúcidas de dos poses) ya no se usan: al verse a la vez dos siluetas
+// el golpe parecía superpuesto. Ahora solo hay una pose visible en cada instante y el movimiento lo da el desplazamiento.
 const posesGuardian = ['reposo', 'preparacion', 'impacto', ...posesReaccion]
 // Poses nuevas: vienen recortadas a su tamaño real, no en el lienzo fijo de las poses de reposo.
 const posesNuevasCaballero = ['guardia', 'final-1', 'final-2', 'final-3', 'golpeado', 'anticipacion', 'esquiva']
 const posesNuevasGuardian = computed(() => ['carga-1', 'carga-2', 'ataque', ...(props.nivel.derrota ? ['derrota-1', 'derrota-2'] : [])])
 const nuevas = new Set([...posesNuevasCaballero, 'carga-1', 'carga-2', 'ataque', 'derrota-1', 'derrota-2'])
-const extension = (pose) => (pose.startsWith('tw-') || nuevas.has(pose) ? 'webp' : 'png')
+const extension = (pose) => (nuevas.has(pose) ? 'webp' : 'png')
 const carpetaGuardian = computed(() => props.nivel.arte.split('/').pop())
+// Los jefes 2 y 4 lanzan un chorro desde la boca; el 1 lanza una bola (se dibuja en CombatEfectos) y el 3 invoca un rayo.
+const chorros = { 2: '/images/jefes/rio/ola-venenosa.png', 4: '/images/jefes/real/aliento-fuego.png' }
+const chorro = computed(() => chorros[props.nivel.numero])
 // Medidas en unidades del lienzo de referencia (512 de alto): ancho, alto, desvío horizontal y distancia al suelo.
 const medidas = {"caballero/golpeado": {"w": 0.7617, "h": 0.6738, "dx": 0.0, "by": 0.0279}, "caballero/anticipacion": {"w": 0.6758, "h": 0.5781, "dx": 0.0, "by": 0.0279}, "caballero/esquiva": {"w": 0.6504, "h": 0.6406, "dx": 0.0, "by": 0.0279}, "caballero/guardia": {"w": 0.625, "h": 0.5898, "dx": -0.001, "by": 0.0279}, "caballero/final-1": {"w": 0.5879, "h": 0.7168, "dx": -0.001, "by": 0.0279}, "caballero/final-2": {"w": 0.7676, "h": 0.7148, "dx": -0.001, "by": 0.0279}, "caballero/final-3": {"w": 0.7051, "h": 0.5469, "dx": -0.001, "by": 0.0279}, "grifo/carga-1": {"w": 0.6855, "h": 0.5352, "dx": -0.001, "by": 0.1669}, "grifo/carga-2": {"w": 0.9199, "h": 0.8926, "dx": -0.001, "by": 0.1669}, "grifo/ataque": {"w": 0.9629, "h": 0.5293, "dx": -0.001, "by": 0.1669}, "grifo/derrota-1": {"w": 0.8945, "h": 0.7012, "dx": -0.001, "by": 0.1669}, "grifo/derrota-2": {"w": 0.8359, "h": 0.4805, "dx": -0.001, "by": 0.1669}}
 function estiloAmp(carpeta, pose) {
@@ -112,6 +110,14 @@ const enGuardia = computed(() => esperando.value && props.carga > 0.06)
 const urgente = computed(() => esperando.value && props.carga >= 0.7)
 const victoria = computed(() => props.vidaRival === 0 && props.vidaCaballero > 0 && !props.ataque)
 const ataqueRival = computed(() => props.ataque?.id === 'rival')
+
+// Cuánta carga llevaba el enemigo cuando empezó su ataque: si ya estaba cargado, no «retrocede» a una pose anterior.
+let ultimaCarga = 0
+const cargaPrevia = ref(0)
+watch(() => props.carga, (valor) => { if (valor !== null) ultimaCarga = valor }, { immediate: true })
+watch(() => props.ataque, (nuevo) => {
+  if (nuevo?.id === 'rival') cargaPrevia.value = ultimaCarga >= 0.66 ? 2 : ultimaCarga >= 0.33 ? 1 : 0
+})
 
 // Pausa de impacto: en el contacto la imagen se congela una fracción de segundo, como en los juegos de pelea
 const congelado = ref(false)
@@ -251,10 +257,10 @@ const efecto = computed(() => {
 }
 .nivel-1 .escudo .caballero { --alcance-escudo: clamp(26%, calc(112% - var(--alto) * 0.83), 53%); }
 .magia .caballero { animation: conjurar var(--duracion) ease-out both, deformar-magia var(--duracion) ease-in-out both; }
-.rival .guardian { --avance: -20%; animation: avance-guardian var(--duracion) ease-out both, deformar var(--duracion) ease-in-out both; }
-.nivel-2 .rival .guardian { --avance: -31%; }
+.rival .guardian { --avance: -13%; animation: avance-rival var(--duracion) ease-out both, deformar-rival var(--duracion) ease-in-out both; }
+.nivel-2 .rival .guardian { --avance: -20%; }
 .nivel-3 .rival .guardian { --avance: -40%; --altura: -18%; }
-.nivel-4 .rival .guardian { --avance: -11%; }
+.nivel-4 .rival .guardian { --avance: -5%; }
 .receptor {
   --retroceso: 13%;
   --inclinacion: 5deg;
@@ -281,20 +287,13 @@ const efecto = computed(() => {
 .emisor .reposo { animation: reposo-atacante var(--duracion) step-end both; }
 .rival .emisor .reposo { animation-name: reposo-guardian; }
 .receptor .reposo { animation: reposo-rival 1ms step-start var(--momento-impacto) forwards; }
-.hachazo .preparacion-hachazo, .barrido .preparacion-barrido, .escudo .preparacion-escudo, .rival .guardian .preparacion { animation: preparar var(--duracion) step-end both; }
+.hachazo .preparacion-hachazo, .barrido .preparacion-barrido, .escudo .preparacion-escudo { animation: preparar var(--duracion) step-end both; }
 .hachazo .anticipacion, .barrido .anticipacion { animation: anticipar var(--duracion) step-end both; }
 .hachazo .preparacion-hachazo, .barrido .preparacion-barrido { animation-name: preparar-tarde; }
-.hachazo .impacto-hachazo, .barrido .impacto-barrido, .escudo .impacto-escudo { animation: golpear var(--duracion) step-end both; }
-.rival .guardian .impacto { animation: golpear-guardian var(--duracion) step-end both; }
+/* El golpe entra con una pose limpia y un breve «trazo» (inclinación + desenfoque) en lugar de mezclar dos poses */
+.hachazo .impacto-hachazo, .barrido .impacto-barrido, .escudo .impacto-escudo { animation: golpear var(--duracion) step-end both, trazo-golpe var(--duracion) ease-out both; }
 .rayo .preparacion-rayo, .fenix .preparacion-fenix { animation: cargar-conjuro var(--duracion) step-end both; }
-.rayo .impacto-rayo, .fenix .impacto-fenix { animation: lanzar-conjuro var(--duracion) step-end both; }
-.hachazo .tw-hachazo-1, .barrido .tw-barrido-1, .escudo .tw-escudo-1, .rival .guardian .tw-1 { animation: inter-1 var(--duracion) step-end both; }
-.hachazo .tw-hachazo-2, .barrido .tw-barrido-2, .escudo .tw-escudo-2, .rival .guardian .tw-2 { animation: inter-2 var(--duracion) step-end both; }
-.hachazo .tw-hachazo-3, .barrido .tw-barrido-3, .escudo .tw-escudo-3 { animation: inter-3 var(--duracion) step-end both; }
-.rival .guardian .tw-3 { animation: inter-3-guardian var(--duracion) step-end both; }
-.rayo .tw-rayo-1, .fenix .tw-fenix-1 { animation: inter-1-magia var(--duracion) step-end both; }
-.rayo .tw-rayo-2, .fenix .tw-fenix-2 { animation: inter-2-magia var(--duracion) step-end both; }
-.rayo .tw-rayo-3, .fenix .tw-fenix-3 { animation: inter-3 var(--duracion) step-end both; }
+.rayo .impacto-rayo, .fenix .impacto-fenix { animation: lanzar-conjuro var(--duracion) step-end both, trazo-conjuro var(--duracion) ease-out both; }
 .hachazo .salida-hachazo, .barrido .salida-barrido, .escudo .salida-escudo, .magia .salida-magia { animation: recoger-golpe var(--duracion) step-end both; }
 .receptor .pose:not(.reposo) {
   animation-duration: var(--duracion-reaccion);
@@ -378,19 +377,68 @@ const efecto = computed(() => {
 .secuencia.congelado, .secuencia.congelado * { animation-play-state: paused !important; }
 @keyframes temblar { 25% { translate: -2px 1px; } 50% { translate: 2px -1px; } 75% { translate: -1px -1px; } }
 
-/* El enemigo ataca desde su carga y se lanza hacia el caballero */
-.rival .guardian :is(.preparacion, .impacto, .tw-1, .tw-2, .tw-3) { display: none; }
-.rival .guardian .carga-2 { animation: preparar-rival var(--duracion) step-end both; }
-.rival .guardian .ataque { animation: golpear-rival var(--duracion) step-end both; }
+/* El enemigo ataca desde su carga: carga-1 → carga-2 → «ataque» (se suelta el golpe en el 36 %) → reposo.
+   Solo hay una pose visible a la vez (se quitaron los «ecos» translúcidos que dejaban al jefe con aspecto fantasmal). */
+.rival .guardian :is(.preparacion, .impacto) { display: none; }
+.rival .guardian .carga-1 { animation: rival-carga-1 var(--duracion) step-end both; }
+.rival .guardian .carga-2 { animation: rival-carga-2 var(--duracion) step-end both; }
+.rival .guardian.desde-carga .carga-1 { animation: none; }
+.rival .guardian.desde-carga .carga-2 { animation-name: rival-carga-2-directa; }
+.rival .guardian .ataque { animation: golpear-rival var(--duracion) step-end both, trazo-rival var(--duracion) ease-out both; }
 .rival .guardian::after { opacity: 0.6; animation: aura-ataque var(--duracion) ease-out both; }
-.rival .guardian .eco { filter: brightness(1.6) saturate(0.7) drop-shadow(0 0 10px var(--aura, #ffd85a)); }
-.rival .guardian .eco-1 { animation: eco-1 var(--duracion) linear both; }
-.rival .guardian .eco-2 { animation: eco-2 var(--duracion) linear both; }
 @keyframes aura-ataque { 0% { opacity: 0.55; scale: 1; } 35% { opacity: 1; scale: 1.28; } 42% { opacity: 0.9; scale: 1.15; } 62%, 100% { opacity: 0; scale: 1; } }
-@keyframes eco-1 { 0%, 37% { opacity: 0; transform: none; } 40% { opacity: 0.5; transform: translateX(7%); } 50% { opacity: 0.32; transform: translateX(18%); } 58%, 100% { opacity: 0; transform: translateX(24%); } }
-@keyframes eco-2 { 0%, 38% { opacity: 0; transform: none; } 41% { opacity: 0.32; transform: translateX(15%); } 51% { opacity: 0.18; transform: translateX(34%); } 59%, 100% { opacity: 0; transform: translateX(42%); } }
-@keyframes preparar-rival { 0% { opacity: 1; } 36%, 100% { opacity: 0; } }
+@keyframes rival-carga-1 { 0% { opacity: 1; } 12%, 100% { opacity: 0; } }
+@keyframes rival-carga-2 { 0%, 100% { opacity: 0; } 12% { opacity: 1; } 36% { opacity: 0; } }
+@keyframes rival-carga-2-directa { 0% { opacity: 1; } 36%, 100% { opacity: 0; } }
 @keyframes golpear-rival { 0%, 88%, 100% { opacity: 0; } 36% { opacity: 1; } }
+/* Entrada del «ataque»: el jefe llega ya inclinado hacia delante y se asienta en su pose */
+@keyframes trazo-rival {
+  0%, 35.9% { transform: translateX(4%) skewX(7deg) scaleX(1.05); filter: drop-shadow(0 2px 3px #15141660) blur(1.2px); }
+  41%, 100% { transform: none; filter: drop-shadow(0 2px 3px #15141660); }
+}
+
+/* Chorro de veneno (nivel 2) y aliento (nivel 4). Medidas en cqh del jefe (1 px del sprite = 100/512 cqh):
+   la punta de cada imagen se coloca sobre la boca del sprite «ataque», así siempre sale de donde toca. */
+.chorro {
+  position: absolute;
+  z-index: 3;
+  max-width: none;
+  opacity: 0;
+  pointer-events: none;
+  object-fit: fill;
+}
+.chorro-4 {
+  height: 36cqh; width: 108cqh;           /* misma proporción que aliento-fuego.png (3:1) */
+  left: calc(50cqw - 152.9cqh);           /* borde derecho = boca: 50cqw - 44.9cqh */
+  bottom: 35.7cqh;                         /* la punta de la llama está al 61,5 % de la altura de la imagen */
+  transform-origin: 99.8% 61.5%;
+  filter: drop-shadow(0 0 10px #ff5722cc) drop-shadow(0 0 22px #ffc107a6);
+  animation: chorro-fuego var(--duracion) linear both;
+}
+.chorro-2 {
+  height: 40cqh; width: 120cqh;           /* ola-venenosa.png (3:1) */
+  left: calc(50cqw - 164.9cqh);
+  bottom: 21.9cqh;                         /* la cola de la ola está al 79 % de la altura de la imagen */
+  transform-origin: 99.4% 79%;
+  filter: drop-shadow(0 0 14px #00e676cc);
+  animation: chorro-ola var(--duracion) linear both;
+}
+@keyframes chorro-fuego {
+  0%, 35% { opacity: 0; transform: scale(0.05, 0.3); }
+  37%     { opacity: 1; transform: scale(0.14, 0.45); }
+  46%     { opacity: 1; transform: scale(0.72, 0.9); }
+  54%, 68% { opacity: 1; transform: scale(1, 1); }
+  80%     { opacity: 0.75; transform: scale(1.02, 0.82); }
+  92%, 100% { opacity: 0; transform: scale(1.04, 0.5); }
+}
+@keyframes chorro-ola {
+  0%, 35% { opacity: 0; transform: scale(0.05, 0.25); }
+  37%     { opacity: 1; transform: scale(0.12, 0.35); }
+  47%     { opacity: 1; transform: scale(0.7, 0.85); }
+  55%, 70% { opacity: 1; transform: scale(1, 1); }
+  82%     { opacity: 0.7; transform: scale(1.02, 0.8); }
+  94%, 100% { opacity: 0; transform: scale(1.04, 0.55); }
+}
 
 /* ---------- Golpe final: el caballero salta, remata y el enemigo cae ---------- */
 .secuencia.final.activa { transform-origin: 62% 62%; animation-name: camara-final; animation-timing-function: ease-in-out; }
@@ -431,8 +479,9 @@ const efecto = computed(() => {
 
 /* Enemigo con secuencia de derrota propia: queda herido, cae de rodillas y se deshace en luz */
 .secuencia.final .receptor.con-derrota :is(.retroceso, .dolor, .tambaleo, .recuperacion, .caida) { display: none; }
-.receptor.con-derrota .derrota-1 { animation: derrota-1 var(--duracion-reaccion) step-end var(--momento-impacto) forwards; }
-.receptor.con-derrota .derrota-2 { animation: derrota-2 var(--duracion-reaccion) ease-in var(--momento-impacto) forwards; }
+/* Solo en el golpe final: antes se disparaba también con golpes normales y se sumaba a la reacción habitual */
+.secuencia.final .receptor.con-derrota .derrota-1 { animation: derrota-1 var(--duracion-reaccion) step-end var(--momento-impacto) forwards; }
+.secuencia.final .receptor.con-derrota .derrota-2 { animation: derrota-2 var(--duracion-reaccion) ease-in var(--momento-impacto) forwards; }
 .guardian.con-derrota.tendido:not(.receptor) .caida { opacity: 0; }
 
 .rotulo-final {
@@ -461,22 +510,24 @@ const efecto = computed(() => {
 }
 
 /* Ritmo de cada golpe (en % de la duración):
-   preparación → 2 cuadros intermedios → impacto → intermedio → salida → reposo */
-@keyframes preparar { 0% { opacity: 1; } 30%, 100% { opacity: 0; } }
+   anticipación → preparación → impacto (cambio de pose en el 34 %, cuando el cuerpo empieza a lanzarse) → salida → reposo */
+@keyframes preparar { 0% { opacity: 1; } 34%, 100% { opacity: 0; } }
 @keyframes anticipar { 0% { opacity: 1; } 17%, 100% { opacity: 0; } }
-@keyframes preparar-tarde { 0%, 16.9% { opacity: 0; } 17% { opacity: 1; } 30%, 100% { opacity: 0; } }
-@keyframes inter-1 { 0%, 100% { opacity: 0; } 30% { opacity: 1; } 34% { opacity: 0; } }
-@keyframes inter-2 { 0%, 100% { opacity: 0; } 34% { opacity: 1; } 38% { opacity: 0; } }
-@keyframes golpear { 0%, 69%, 100% { opacity: 0; } 38% { opacity: 1; } }
-@keyframes inter-3 { 0%, 100% { opacity: 0; } 69% { opacity: 1; } 73% { opacity: 0; } }
-@keyframes golpear-guardian { 0%, 78%, 100% { opacity: 0; } 38% { opacity: 1; } }
-@keyframes inter-3-guardian { 0%, 100% { opacity: 0; } 78% { opacity: 1; } 83% { opacity: 0; } }
-/* Magia: el conjuro se carga antes, así que sus cuadros llegan antes */
-@keyframes cargar-conjuro { 0% { opacity: 1; } 24%, 100% { opacity: 0; } }
-@keyframes inter-1-magia { 0%, 100% { opacity: 0; } 24% { opacity: 1; } 28% { opacity: 0; } }
-@keyframes inter-2-magia { 0%, 100% { opacity: 0; } 28% { opacity: 1; } 32% { opacity: 0; } }
-@keyframes lanzar-conjuro { 0%, 69%, 100% { opacity: 0; } 32% { opacity: 1; } }
-@keyframes recoger-golpe { 0% { opacity: 0; } 73% { opacity: 1; } 88%, 100% { opacity: 0; } }
+@keyframes preparar-tarde { 0%, 16.9% { opacity: 0; } 17% { opacity: 1; } 34%, 100% { opacity: 0; } }
+@keyframes golpear { 0%, 70%, 100% { opacity: 0; } 34% { opacity: 1; } }
+/* Magia: el conjuro se carga antes, así que su pose de lanzamiento llega antes */
+@keyframes cargar-conjuro { 0% { opacity: 1; } 32%, 100% { opacity: 0; } }
+@keyframes lanzar-conjuro { 0%, 70%, 100% { opacity: 0; } 32% { opacity: 1; } }
+/* «Trazo»: al cambiar de pose la figura va inclinada hacia delante y algo desenfocada, y se asienta en pocos cuadros */
+@keyframes trazo-golpe {
+  0%, 33.9% { transform: translateX(-4%) skewX(-8deg) scaleX(1.05); filter: drop-shadow(0 2px 3px #15141660) blur(1.3px); }
+  39%, 100% { transform: none; filter: drop-shadow(0 2px 3px #15141660); }
+}
+@keyframes trazo-conjuro {
+  0%, 31.9% { transform: translateY(2%) scale(0.97, 1.03); }
+  37%, 100% { transform: none; }
+}
+@keyframes recoger-golpe { 0% { opacity: 0; } 70% { opacity: 1; } 88%, 100% { opacity: 0; } }
 @keyframes reposo-atacante { 0% { opacity: 0; } 88%, 100% { opacity: 1; } }
 @keyframes reposo-guardian { 0% { opacity: 0; } 88%, 100% { opacity: 1; } }
 @keyframes reposo-rival { 0% { opacity: 1; } 100% { opacity: 0; } }
@@ -519,14 +570,17 @@ const efecto = computed(() => {
   94% { transform: translateX(1.5%); }
   100% { transform: translate(0, 0) rotate(0deg); }
 }
-@keyframes avance-guardian {
-  16% { transform: translateY(2%); }
-  35% { transform: translate(8%, var(--altura, -2%)); }
-  44% { transform: translateX(calc(var(--avance) * 0.55)); }
+/* Se agacha mientras carga, queda en su sitio al soltar el golpe (36 %), se lanza y regresa */
+@keyframes avance-rival {
+  0%   { transform: translate(0, 0); }
+  18%  { transform: translateY(1.8%); }
+  30%  { transform: translateY(1%); }
+  36%  { transform: translate(0, var(--altura, 0%)); }
+  46%  { transform: translateX(calc(var(--avance) * 0.55)); }
   54%, 58% { transform: translateX(var(--avance)); }
-  70% { transform: translate(-12%, 1.5%); }
-  83% { transform: translateX(-4.5%); }
-  94% { transform: translateX(-1%); }
+  70%  { transform: translate(calc(var(--avance) * 0.6), 1%); }
+  83%  { transform: translateX(calc(var(--avance) * 0.22)); }
+  94%  { transform: translateX(calc(var(--avance) * 0.05)); }
   100% { transform: translate(0, 0); }
 }
 @keyframes recibir {
@@ -618,6 +672,14 @@ const efecto = computed(() => {
   63% { scale: 0.99 1.02; }
   76% { scale: 1 1; }
 }
+@keyframes deformar-rival {
+  0%, 100% { scale: 1 1; }
+  20% { scale: 1.03 0.97; }
+  36% { scale: 1 1; }
+  46% { scale: 0.97 1.04; }
+  54% { scale: 1.04 0.97; }
+  66% { scale: 1 1; }
+}
 @keyframes deformar-magia {
   0%, 100% { scale: 1 1; }
   24% { scale: 1.03 0.95; }
@@ -650,7 +712,7 @@ const efecto = computed(() => {
   .secuencia.final.activa { animation-name: reloj; }
   .penumbra, .secuencia.final .accion::before, .chispa-final, .rotulo-final { display: none; }
   .guardian.esperando::after { animation: none; }
-  .ambiente, .particulas-carga, .onda-suelo, .descarga, .peligro, .eco { display: none; }
+  .ambiente, .particulas-carga, .onda-suelo, .descarga, .peligro, .chorro { display: none; }
   .secuencia.urgente { animation: none; }
   .receptor .caida { animation-name: quedar-tendido; }
   @keyframes reloj { to { opacity: 1; } }

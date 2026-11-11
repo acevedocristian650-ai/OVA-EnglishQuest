@@ -6,31 +6,30 @@
       <img class="residuo" :src="`/images/magia/${ataque.id}.svg`" alt="" />
     </template>
     <template v-else-if="ataque.id === 'rival'">
-      <!-- Nivel 1: Grifo del Alba (Bola de Fuego Solar) -->
-      <div class="ataque-rival-1 bola-fuego-rival">
-        <div class="fuego-cola" />
-        <div class="fuego-aura" />
-        <div class="fuego-nucleo" />
-        <span v-for="n in 6" :key="n" class="chispa-vuelo" :style="estiloChispa(n)" />
+      <!-- Nivel 1: Grifo del Alba (bola de fuego solar). El ancla tiene la misma caja que el grifo. Mientras se ve
+           «carga-2» el orbe lo pinta el sprite (solo se le añade brillo); al cambiar a «ataque» (36 %) la bola nace
+           delante del pico con un fogonazo, para que nunca haya dos bolas a la vez ni tape la cabeza del grifo. -->
+      <div v-if="nivel === 1" class="ancla-grifo">
+        <span class="brillo-orbe" />
+        <span class="fogonazo" />
+        <div class="bola-fuego">
+          <div class="fuego-cola" />
+          <div class="fuego-aura" />
+          <div class="fuego-nucleo" />
+          <span v-for="n in 6" :key="n" class="chispa-vuelo" :style="estiloChispa(n)" />
+        </div>
       </div>
 
-      <!-- Nivel 2: Basilisco del Río (Ola Venenosa / Torrente Acuático) -->
-      <div class="ataque-rival-2 ola-venenosa-rival">
-        <img src="/images/jefes/rio/ola-venenosa.png" alt="Ola Venenosa" class="ola-img" draggable="false" />
-      </div>
+      <!-- Nivel 2 (veneno) y nivel 4 (aliento): el chorro se dibuja dentro del jefe (CombatEscena) para que salga de su boca. -->
 
-      <!-- Nivel 3: Águila de la Tormenta (Relámpago Celestial) -->
-      <div class="ataque-rival-3 relampago-rival">
+      <!-- Nivel 3: Águila de la Tormenta (relámpago celestial) -->
+      <div v-if="nivel === 3" class="relampago-rival">
         <div class="resplandor-cielo" />
-        <img src="/images/jefes/viento/relampago-tormenta.png" alt="Relámpago de Tormenta" class="relampago-img" draggable="false" />
+        <img src="/images/jefes/viento/relampago-tormenta.png" alt="" class="relampago-img" draggable="false" />
       </div>
 
-      <!-- Nivel 4: Dragón Real (Aliento de Fuego Continuo) -->
-      <div class="ataque-rival-4 aliento-rival">
-        <img src="/images/jefes/real/aliento-fuego.png" alt="Aliento de Dragón" class="aliento-img" draggable="false" />
-      </div>
-
-      <img class="estela" :src="estela" alt="" />
+      <!-- Las garras solo acompañan al picado del águila; los ataques de fuego y veneno ya tienen su propio impacto. -->
+      <img v-if="nivel === 3" class="estela" :src="estela" alt="" />
     </template>
     <template v-else>
       <span class="amago" />
@@ -57,6 +56,7 @@
 const props = defineProps({
   ataque: { type: Object, required: true },
   estela: String,
+  nivel: { type: Number, default: 0 },
   dano: { type: Number, default: null },
   curacion: { type: Number, default: 0 }
 })
@@ -98,157 +98,140 @@ function estiloChispa(n) {
 .nivel-3.rival { --lumbre: #e0f7fa; --halo: #00e5ff88; }
 .nivel-4.rival { --lumbre: #ffccbc; --halo: #ff572288; }
 
-/* Activar el ataque único de cada nivel */
-.ataque-rival-1, .ataque-rival-2, .ataque-rival-3, .ataque-rival-4 {
-  display: none;
-}
-.nivel-1 .ataque-rival-1 { display: block; }
-.nivel-2 .ataque-rival-2 { display: block; }
-.nivel-3 .ataque-rival-3 { display: block; }
-.nivel-4 .ataque-rival-4 { display: block; }
-
-/* Nivel 1: Bola de Fuego lanzada por el Grifo */
-.bola-fuego-rival {
+/* Nivel 1: bola de fuego del Grifo.
+   .ancla-grifo repite la caja de .guardian del nivel 1 (left 51 %, ancho 46 %, alto 99 %, bottom -4 %) y las posiciones
+   se dan en cqh/cqw de esa caja. Un píxel del sprite equivale a 100/512 cqh.
+   Orbe de «carga-2» (471×457 px, orbe en x84 y280):
+     x = 50cqw + dx − w/2 + 84·(100/512) = 50cqw − 29,7cqh      y (desde abajo) = by + (457−280)·(100/512) = 51,3cqh
+   Pico de «ataque» (493×271 px, punta en x43 y138; la bola se centra en x20 y145, saliendo de la boca):
+     x = 50cqw − 0,1cqh − 48,15cqh + 20·(100/512) = 50cqw − 44,35cqh      y = 16,69cqh + (271−145)·(100/512) = 41,3cqh
+   Objetivo: el frente del caballero (34 % × 55 % de la escena) = (−37cqw, 49,5cqh) en esa caja. */
+.ancla-grifo {
   position: absolute;
-  width: min(85px, 12vw);
-  height: min(85px, 12vw);
+  left: 51%;
+  bottom: -4%;
+  width: 46%;
+  height: 99%;
+  container-type: size;
   pointer-events: none;
   z-index: 15;
-  will-change: transform, opacity, left, top;
-  animation: disparar-fuego var(--duracion) cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
-
+/* Brillo sobre el orbe pintado en «carga-2»: solo luz (modo screen), nunca una segunda bola.
+   Sigue el agachado del grifo (avance-rival baja 1,8 % de su alto = 1,8cqh). */
+.brillo-orbe {
+  position: absolute;
+  left: calc(50cqw - 44.7cqh);   /* centro en el orbe (50cqw − 29,7cqh), ancho 30cqh */
+  bottom: 36.3cqh;
+  width: 30cqh;
+  height: 30cqh;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff8d8cc 0, #ffc94a80 30%, #ff8a2a33 55%, transparent 70%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: brillar-orbe var(--duracion) ease-in both;
+}
+@keyframes brillar-orbe {
+  0%, 6%   { opacity: 0; scale: 0.6; translate: 0 0; }
+  18%      { opacity: 0.55; scale: 0.9; translate: 0 1.8cqh; }
+  26%      { opacity: 0.4; scale: 0.85; translate: 0 1.4cqh; }
+  33%      { opacity: 0.95; scale: 1.15; translate: 0 0.6cqh; }
+  35.9%    { opacity: 1; scale: 1.25; translate: 0 0; }
+  36%, 100% { opacity: 0; scale: 1.25; translate: 0 0; }
+}
+/* Fogonazo en el pico en el instante en que suelta la bola; se queda atrás a medida que el grifo embiste */
+.fogonazo {
+  position: absolute;
+  left: calc(50cqw - 57.35cqh);  /* centro en el pico (50cqw − 44,35cqh), ancho 26cqh */
+  bottom: 28.3cqh;
+  width: 26cqh;
+  height: 26cqh;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0, #ffe9a0 18%, #ffb347aa 38%, #ff6a2a44 56%, transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: fogonazo var(--duracion) ease-out both;
+}
+@keyframes fogonazo {
+  0%, 35.9% { opacity: 0; scale: 0.3; translate: 0 0; }
+  36.6%     { opacity: 1; scale: 1; translate: 0 0; }
+  44%, 100% { opacity: 0; scale: 1.7; translate: -5cqw 0; }
+}
+.bola-fuego {
+  position: absolute;
+  left: calc(50cqw - 54.85cqh);  /* centro delante del pico: (50cqw − 44,35cqh) − medio ancho */
+  bottom: 30.8cqh;               /* 41,3cqh − media altura */
+  width: 21cqh;
+  height: 21cqh;
+  opacity: 0;
+  will-change: translate, scale, opacity;
+  animation: disparar-fuego var(--duracion) linear both;
+}
+/* 0–36 %: no se ve (el orbe lo pinta el sprite) · 36 %: el sprite suelta el orbe y la bola sale del pico
+   · arco ligero hacia el caballero · 54 %: contacto (desplazamiento hasta el objetivo: 44,35cqh − 87cqw, −8,2cqh) */
 @keyframes disparar-fuego {
-  0% {
-    opacity: 0;
-    left: 66%;
-    top: 45%;
-    transform: scale(0.2);
-  }
-  20% {
-    opacity: 1;
-    left: 64%;
-    top: 44%;
-    transform: scale(1.05);
-  }
-  38% {
-    opacity: 1;
-    left: 52%;
-    top: 48%;
-    transform: scale(1.18);
-  }
-  53% {
-    opacity: 1;
-    left: 34%;
-    top: 53%;
-    transform: scale(1.35);
-  }
-  64% {
-    opacity: 0.4;
-    left: 33%;
-    top: 53%;
-    transform: scale(1.85);
-  }
-  75%, 100% {
-    opacity: 0;
-    left: 33%;
-    top: 53%;
-    transform: scale(2.1);
-  }
+  0%, 35.9% { opacity: 0; translate: 0 0; scale: 0.5; }
+  36%       { opacity: 1; translate: 0 0; scale: 0.75; }
+  38.5%     { opacity: 1; translate: calc((44.35cqh - 87cqw) * 0.06) -1cqh; scale: 1.08; }
+  46%       { opacity: 1; translate: calc((44.35cqh - 87cqw) * 0.45) -9cqh; scale: 1.16; }
+  54%       { opacity: 1; translate: calc(44.35cqh - 87cqw) -8.2cqh; scale: 1.3; }
+  60%       { opacity: 0.55; translate: calc(44.35cqh - 87cqw) -8.2cqh; scale: 2.1; }
+  68%, 100% { opacity: 0; translate: calc(44.35cqh - 87cqw) -8.2cqh; scale: 2.6; }
 }
-
 .fuego-aura {
   position: absolute;
-  inset: -20%;
+  inset: -22%;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 110, 50, 0.7) 0%, rgba(255, 190, 60, 0.3) 45%, transparent 70%);
   animation: pulso-fuego 0.3s ease-in-out infinite alternate;
 }
-
 .fuego-nucleo {
   position: absolute;
-  inset: 12%;
+  inset: 10%;
   border-radius: 50%;
-  background: radial-gradient(circle, #ffffff 15%, #ffe57f 40%, #ff5722 80%, #b71c1c 100%);
+  background: radial-gradient(circle, #ffffff 15%, #ffe57f 40%, #ff9a2a 78%, #ff5722 100%);
   box-shadow: 0 0 16px #ff9800, 0 0 32px #ff5722;
 }
-
 .fuego-cola {
   position: absolute;
-  left: 55%;
-  top: 22%;
-  width: 140%;
-  height: 56%;
+  left: 50%;
+  top: 20%;
+  width: 190%;
+  height: 60%;
   background: linear-gradient(to right, rgba(255, 87, 34, 0.95) 0%, rgba(255, 193, 7, 0.5) 50%, transparent 100%);
   border-radius: 0 50% 50% 0;
   transform-origin: left center;
   filter: blur(2px);
   animation: aleteo-cola 0.15s ease-in-out infinite alternate;
 }
-
 .chispa-vuelo {
   position: absolute;
+  left: 60%;
   border-radius: 50%;
   background: #ffe082;
   box-shadow: 0 0 6px #ff9800;
   animation: soltar-chispa 0.4s linear infinite;
   animation-delay: var(--delay);
 }
-
 @keyframes aleteo-cola {
   from { transform: scaleY(0.85); }
   to { transform: scaleY(1.2); }
 }
-
 @keyframes pulso-fuego {
   from { transform: scale(0.92); }
   to { transform: scale(1.1); }
 }
-
 @keyframes soltar-chispa {
   0% { opacity: 1; transform: translate(0, 0) scale(1); }
-  100% { opacity: 0; transform: translate(40px, -10px) scale(0.2); }
-}
-
-/* Nivel 2: Ola Venenosa del Basilisco */
-.ola-venenosa-rival {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 60%;
-  pointer-events: none;
-  z-index: 15;
-  overflow: hidden;
-}
-
-.ola-img {
-  position: absolute;
-  right: -15%;
-  bottom: -4%;
-  width: 110%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(0, 230, 118, 0.8));
-  animation: arrastre-ola var(--duracion) cubic-bezier(0.2, 0.75, 0.25, 1) both;
-}
-
-@keyframes arrastre-ola {
-  0% { opacity: 0; transform: translateX(50%) scaleY(0.7); }
-  22% { opacity: 0.95; transform: translateX(20%) scaleY(0.95); }
-  52% { opacity: 1; transform: translateX(-22%) scaleY(1.05); }
-  68% { opacity: 0.85; transform: translateX(-36%) scaleY(1); }
-  85% { opacity: 0.35; transform: translateX(-46%) scaleY(0.9); }
-  100% { opacity: 0; transform: translateX(-54%) scaleY(0.75); }
+  100% { opacity: 0; transform: translate(56px, -10px) scale(0.2); }
 }
 
 /* Nivel 3: Relámpago de Tormenta del Águila */
 .relampago-rival {
   position: absolute;
-  left: 18%;
+  left: 11%;
   top: -8%;
   width: 32%;
-  height: 108%;
+  height: 100%;
   pointer-events: none;
   z-index: 16;
 }
@@ -287,36 +270,6 @@ function estiloChispa(n) {
   68% { opacity: 0.55; transform: scale(1.02); }
   85% { opacity: 0.2; transform: scale(1.04); }
   100% { opacity: 0; transform: scale(1.06); }
-}
-
-/* Nivel 4: Aliento de Fuego Continuo del Dragón */
-.aliento-rival {
-  position: absolute;
-  right: 18%;
-  top: 34%;
-  width: 72%;
-  height: 42%;
-  pointer-events: none;
-  z-index: 15;
-}
-
-.aliento-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform-origin: right center;
-  filter: drop-shadow(0 0 20px rgba(255, 87, 34, 0.9)) drop-shadow(0 0 45px rgba(255, 193, 7, 0.65));
-  opacity: 0;
-  animation: llamarada-dragon var(--duracion) cubic-bezier(0.22, 0.85, 0.3, 1) both;
-}
-
-@keyframes llamarada-dragon {
-  0%, 18% { opacity: 0; transform: scaleX(0.1) scaleY(0.4); }
-  30% { opacity: 0.9; transform: scaleX(0.55) scaleY(0.85); }
-  48%, 62% { opacity: 1; transform: scaleX(1) scaleY(1.05); filter: brightness(1.2); }
-  76% { opacity: 0.75; transform: scaleX(1.02) scaleY(0.92); }
-  90% { opacity: 0.3; transform: scaleX(1.04) scaleY(0.7); }
-  100% { opacity: 0; transform: scaleX(1.06) scaleY(0.5); }
 }
 
 /* Los efectos de contacto permanecen ocultos durante la espera. */
@@ -495,7 +448,7 @@ function estiloChispa(n) {
 @keyframes arrastre { 0%, 64%, 98%, 100% { opacity: 0; transform: scale(0.65); } 75% { opacity: 0.6; transform: scale(1.2) translateY(-10%); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .proyectil, .onda, .polvo, .chispa, .gota, .restauracion, .residuo, .arrastre, .luz, .amago { display: none; }
+  .proyectil, .onda, .polvo, .chispa, .gota, .restauracion, .residuo, .arrastre, .luz, .amago, .brillo-orbe, .fogonazo { display: none; }
   .sello { animation-name: invocar-suave; }
   .cantidad { animation-name: estela; }
   .estela { animation-name: estela !important; clip-path: none; }

@@ -1,5 +1,7 @@
 <template>
   <section class="desafio">
+    <AudioEfecto :ruta="golpeSonido.ruta" :disparo="golpeSonido.disparo" />
+    <AudioEfecto :ruta="vozJefe.ruta" :disparo="vozJefe.disparo" :volumen="0.75" />
     <header class="cabecera">
       <AudioSonidoBoton @click="emit('volver')">
         <v-btn variant="text" color="amber-lighten-3">Volver al mapa</v-btn>
@@ -183,8 +185,21 @@ function agotar() {
   iniciarAtaque(ataqueRival())
 }
 
+// Dos canales para que la voz del jefe y el golpe puedan sonar a la vez
+const golpeSonido = reactive({ ruta: '', disparo: 0 })
+const vozJefe = reactive({ ruta: '', disparo: 0 })
+const sonidosJefe = computed(() => `/audio/combate/jefe-${props.nivel.numero}`)
+
+function sonar(canal, ruta) {
+  canal.ruta = ruta
+  canal.disparo++
+}
+
 watch([fase, indice], () => (fase.value === 'pregunta' ? arrancarReloj() : pararReloj()))
-onMounted(arrancarReloj)
+onMounted(() => {
+  arrancarReloj()
+  sonar(vozJefe, `${sonidosJefe.value}-grito.mp3`)
+})
 onBeforeUnmount(pararReloj)
 
 function ataqueRival() {
@@ -235,6 +250,7 @@ function iniciarAtaque(movimiento) {
   danoAplicado.value = null
   curacionAplicada.value = 0
   fase.value = 'ataque'
+  if (movimiento.id === 'rival') sonar(vozJefe, `${sonidosJefe.value}-grito.mp3`)
 }
 
 function impactar() {
@@ -255,6 +271,10 @@ function impactar() {
       vidaCaballero.value += curacionAplicada.value
     }
   }
+
+  if (golpe.id === 'rival') sonar(golpeSonido, `${sonidosJefe.value}-golpe.mp3`)
+  else sonar(golpeSonido, `/audio/combate/${golpe.final ? 'golpe-final' : golpe.id}.mp3`)
+  if (vidaRival.value === 0) sonar(vozJefe, `${sonidosJefe.value}-derrota.mp3`)
 }
 
 function terminarAtaque() {
