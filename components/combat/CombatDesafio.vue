@@ -7,6 +7,12 @@
         <v-btn variant="text" color="amber-lighten-3">Volver al mapa</v-btn>
       </AudioSonidoBoton>
       <h1>{{ nivel.nombre }} <small>{{ nivel.tema }}</small></h1>
+      <AudioSonidoBoton v-if="modoPruebas" @click="superarPrueba">
+        <v-btn variant="tonal" color="amber-lighten-3">Superar prueba</v-btn>
+      </AudioSonidoBoton>
+      <AudioSonidoBoton v-if="modoPruebas" @click="probarRemate">
+        <v-btn variant="tonal" color="amber-lighten-3" :disabled="!puedeProbarRemate">Probar golpe final</v-btn>
+      </AudioSonidoBoton>
     </header>
 
     <p class="giro">Gira tu celular para pelear</p>
@@ -15,7 +21,29 @@
       <div>
         <CombatEscena :nivel="nivel" :ataque="ataque" :dano-aplicado="danoAplicado"
           :curacion="curacionAplicada" :vida-caballero="vidaCaballero" :vida-rival="vidaRival" :carga="carga"
+          :posicion-esquiva="posicionEsquiva" :lado-golpe="ataque?.lado"
+          :sin-arma="rondaHacha && (fase === 'pregunta' || fase === 'intercepcion' || fase === 'ataque' && ataque?.id === 'rival')"
           @impactar="impactar" @terminar="terminarAtaque">
+          <template #actividad>
+            <CombatHacha v-if="rondaHacha && ['pregunta', 'intercepcion'].includes(fase)"
+              :key="indice" :pregunta="pregunta" :nivel="nivel.numero"
+              :restante="tiempoRestante" :total="tiempoTotal" @cortar="cortarAtaque" />
+            <CombatCortar v-if="rondaCortes && ['pregunta', 'elegir'].includes(fase)"
+              :key="indice" :pregunta="pregunta" @responder="responder" />
+            <CombatClasificar v-if="fase === 'pregunta' && pregunta.tipo === 'clasificar'" :key="indice" :pregunta="pregunta"
+              @impacto="aplicarPalabra" @error="palabraIncorrecta" @completar="completarPalabras" />
+            <CombatConjuro v-if="rondaConjuro && ['invocacion', 'pregunta', 'conjuro'].includes(fase)"
+              :key="indice" :pregunta="pregunta" :invocando="fase === 'invocacion'"
+              :resuelto="fase === 'conjuro'" @responder="resolverConjuro" />
+            <CombatEsquiva v-if="rondaEsquiva && fase === 'pregunta'" :key="indice" :pregunta="pregunta"
+              @mover-heroe="desplazamientoEsquiva = $event" @esquivar="esquivar" @completar="completarAviso" />
+            <p v-if="ataque?.lado && pregunta.tipo === 'esquivar'" class="aviso-completado" lang="en">{{ pregunta.texto }}</p>
+            <p v-if="ataque?.esquivado && pregunta.tipo === 'esquiva-frase'" class="aviso-completado" lang="en">
+              It <strong>{{ respuesta }}</strong> attack!
+            </p>
+            <div v-if="efectoPalabra" :key="efectoPalabra.id" class="efecto-palabra"
+              :class="[efectoPalabra.destino, efectoPalabra.tipo]" role="status">{{ efectoPalabra.texto }}</div>
+          </template>
           <template #hud>
             <div class="marcador" aria-live="polite">
               <div>
@@ -39,7 +67,7 @@
       <aside class="panel" aria-label="Desafío de inglés">
         <div class="panel-cabecera">
           <p class="etiqueta">DESAFÍO {{ indice + 1 }} / {{ nivel.preguntas.length }}</p>
-          <p v-if="fase === 'pregunta'" class="pista">Si aciertas, eliges un ataque. Si fallas o se acaba el tiempo, el guardián te ataca.</p>
+          <p v-if="fase === 'pregunta'" class="pista">{{ instruccion }}</p>
         </div>
         <div v-if="fase === 'pregunta'" class="reloj" :class="{ urgente: tiempoRestante <= 3 }" role="timer" aria-label="Tiempo restante">
           <span class="reloj-barra"><span :style="{ transform: `scaleX(${tiempoRestante / tiempoTotal})` }" /></span>
@@ -47,7 +75,20 @@
         </div>
 
         <template v-if="fase === 'pregunta'">
-          <CombatPreguntaDuelo :key="indice" :pregunta="pregunta" @responder="responder" />
+          <CombatPreguntaDuelo v-if="!rondaHacha && !rondaCortes && !rondaConjuro && !rondaEsquiva && pregunta.tipo !== 'clasificar'" :key="indice" :pregunta="pregunta" @responder="responder" />
+        </template>
+
+        <template v-else-if="fase === 'intercepcion'">
+          <p>¡Cortaste los tres ataques! Prepara tu contraataque.</p>
+        </template>
+
+        <template v-else-if="fase === 'invocacion'">
+          <p role="status">El guardián invoca a un gigante…</p>
+        </template>
+
+        <template v-else-if="fase === 'conjuro'">
+          <h2>{{ pregunta.tipo === 'romper-hechizo' ? '¡Hechizo roto!' : '¡Promesa cumplida!' }}</h2>
+          <p>{{ pregunta.tipo === 'romper-hechizo' ? 'La magia se devuelve al guardián. Prepara tu contraataque.' : 'El aliado está protegido. Tu escudo reducirá el próximo golpe.' }}</p>
         </template>
 
         <template v-else-if="fase === 'elegir'">
@@ -69,11 +110,11 @@
 
         <template v-else-if="fase === 'ataque'">
           <h2>{{ ataque.nombre }}</h2>
-          <p role="status">{{ danoAplicado === null ? 'Preparando el ataque…' : '¡Impacto!' }}</p>
+          <p role="status">{{ danoAplicado === null ? 'Preparando el ataque…' : ataque.esquivado ? '¡Esquivaste el ataque!' : '¡Impacto!' }}</p>
         </template>
 
         <template v-else-if="fase === 'revision'">
-          <h2>{{ ultimaRespuesta.acierto ? '¡Buen golpe!' : ultimaRespuesta.agotado ? 'Se acabó el tiempo' : 'El guardián te alcanzó' }}</h2>
+          <h2>{{ ultimaRespuesta.acierto ? (rondaEsquiva ? '¡Esquiva lograda!' : '¡Buen golpe!') : ultimaRespuesta.agotado ? 'Se acabó el tiempo' : 'El guardián te alcanzó' }}</h2>
           <p>Respuesta correcta <strong lang="en">{{ pregunta.correcta }}</strong></p>
           <p>{{ pregunta.explicacion }}</p>
           <AudioSonidoBoton @click="siguiente">
@@ -82,24 +123,26 @@
         </template>
 
         <template v-else>
-          <h2>{{ vidaRival === 0 ? '¡Victoria!' : 'Fin del desafío' }}</h2>
-          <p>{{ mensajeFinal }}</p>
-          <p>Aciertos {{ aciertos }} de {{ historial.length }}.</p>
-          <template v-if="!ultimaRespuesta.acierto">
-            <p>Respuesta correcta <strong lang="en">{{ pregunta.correcta }}</strong></p>
-            <p>{{ pregunta.explicacion }}</p>
+          <h2>{{ pruebaRemate ? 'Prueba de remate completada' : vidaRival === 0 ? '¡Victoria!' : 'Fin del desafío' }}</h2>
+          <template v-if="!pruebaRemate">
+            <p>{{ mensajeFinal }}</p>
+            <p>Aciertos {{ aciertos }} de {{ historial.length }}.</p>
+            <template v-if="!ultimaRespuesta.acierto">
+              <p>Respuesta correcta <strong lang="en">{{ pregunta.correcta }}</strong></p>
+              <p>{{ pregunta.explicacion }}</p>
+            </template>
+            <details>
+              <summary>Revisar respuestas</summary>
+              <ol>
+                <li v-for="(registro, posicion) in historial" :key="posicion">
+                  <strong lang="en">{{ registro.pregunta.texto }}</strong>
+                  <p>Tu respuesta <span lang="en">{{ registro.respuesta || 'Sin respuesta' }}</span></p>
+                  <p>Respuesta correcta <strong lang="en">{{ registro.pregunta.correcta }}</strong></p>
+                  <p>{{ registro.pregunta.explicacion }}</p>
+                </li>
+              </ol>
+            </details>
           </template>
-          <details>
-            <summary>Revisar respuestas</summary>
-            <ol>
-              <li v-for="(registro, posicion) in historial" :key="posicion">
-                <strong lang="en">{{ registro.pregunta.texto }}</strong>
-                <p>Tu respuesta <span lang="en">{{ registro.respuesta || 'Sin respuesta' }}</span></p>
-                <p>Respuesta correcta <strong lang="en">{{ registro.pregunta.correcta }}</strong></p>
-                <p>{{ registro.pregunta.explicacion }}</p>
-              </li>
-            </ol>
-          </details>
           <div class="opciones">
             <AudioSonidoBoton @click="emit('volver')">
               <v-btn block color="amber-lighten-3" variant="flat">Regresar al mapa</v-btn>
@@ -115,8 +158,24 @@
 </template>
 
 <script setup>
+import CombatClasificar from './CombatClasificar.vue'
+import CombatEsquiva from './CombatEsquiva.vue'
+import CombatHacha from './CombatHacha.vue'
+import CombatCortar from './CombatCortar.vue'
+import CombatConjuro from './CombatConjuro.vue'
+
 const props = defineProps({ nivel: { type: Object, required: true } })
 const emit = defineEmits(['victoria', 'volver', 'reintentar'])
+
+const modoPruebas = import.meta.dev
+const pruebaRemate = ref(false)
+const puedeProbarRemate = computed(() => modoPruebas && vidaRival.value > 0 &&
+  fase.value !== 'ataque' && fase.value !== 'resultado')
+
+function superarPrueba() {
+  emit('victoria')
+  emit('volver')
+}
 
 const ataques = [
   { id: 'hachazo', nombre: 'Hachazo descendente', dano: 24, duracion: 2400, sangre: true, descripcion: 'Golpe pesado' },
@@ -126,9 +185,9 @@ const ataques = [
   { id: 'fenix', nombre: 'Llama del Fénix', dano: 20, duracion: 3200, magia: true, curacion: 12, descripcion: 'Recupera hasta 12 de vida' }
 ]
 
-// Tiempo para responder (en segundos). Un nivel puede cambiarlo con la propiedad «tiempo».
-const TIEMPO_OPCIONES = 10
-const TIEMPO_ORDENAR = 18
+const TIEMPO_MAXIMO = 10
+const DANO_PALABRA = 14
+const CURACION_PALABRA = 8
 
 const fase = ref('pregunta')
 const indice = ref(0)
@@ -142,9 +201,32 @@ const curacionAplicada = ref(0)
 const rayoUsado = ref(false)
 const historial = ref([])
 const agotado = ref(false)
+const efectoPalabra = ref(null)
+let idEfectoPalabra = 0
 
 const pregunta = computed(() => props.nivel.preguntas[indice.value])
-const tiempoTotal = computed(() => props.nivel.tiempo ?? (pregunta.value.tipo === 'ordenar' ? TIEMPO_ORDENAR : TIEMPO_OPCIONES))
+const rondaHacha = computed(() => pregunta.value.tipo === 'hacha')
+const rondaCortes = computed(() => pregunta.value.tipo === 'cortar')
+const rondaEsquiva = computed(() => ['esquivar', 'esquiva-frase'].includes(pregunta.value.tipo))
+const rondaConjuro = computed(() => ['romper-hechizo', 'proteger-aliado'].includes(pregunta.value.tipo))
+let temporizadorConjuro = null
+const desplazamientoEsquiva = ref(0)
+const posicionEsquiva = computed(() => {
+  if (ataque.value?.lado) return ataque.value.posicion
+  if (fase.value === 'pregunta' && rondaEsquiva.value) return desplazamientoEsquiva.value
+  return null
+})
+const instruccion = computed(() => {
+  if (rondaCortes.value) return 'Desliza sobre las dos fichas incorrectas. Deja intacta la correcta.'
+  if (rondaHacha.value) return 'Arrastra el hacha y corta las tres bolas antes de que lleguen al caballero.'
+  if (pregunta.value.tipo === 'romper-hechizo') return 'Arrastra not al lugar correcto del hechizo para devolver su magia.'
+  if (pregunta.value.tipo === 'proteger-aliado') return 'Une las palabras de la promesa en un trazo. Si te equivocas, suelta y vuelve a empezar.'
+  if (pregunta.value.tipo === 'esquivar') return 'Lee el aviso y arrastra al héroe hacia un lado del puente.'
+  if (pregunta.value.tipo === 'esquiva-frase') return 'Arrastra la ficha al espacio del aviso para activar la esquiva.'
+  if (pregunta.value.tipo === 'clasificar') return 'Suelta las palabras sobre los personajes antes de que ataque el guardián.'
+  return 'Si aciertas, eliges un ataque. Si fallas o se acaba el tiempo, el guardián te ataca.'
+})
+const tiempoTotal = computed(() => Math.min(props.nivel.tiempo ?? TIEMPO_MAXIMO, TIEMPO_MAXIMO))
 const tiempoRestante = ref(tiempoTotal.value)
 // El enemigo carga su ataque a medida que se acaba el tiempo
 const carga = computed(() => {
@@ -169,7 +251,7 @@ function pararReloj() {
 
 function tick() {
   const ahora = performance.now()
-  const transcurrido = Math.min(ahora - ultimoTick, 250)
+  const transcurrido = ahora - ultimoTick
   ultimoTick = ahora
   // El tiempo no corre con la pestaña oculta ni con el aviso de girar el celular
   if (document.hidden || window.matchMedia('(orientation: portrait) and (pointer: coarse)').matches) return
@@ -182,7 +264,8 @@ function agotar() {
   pararReloj()
   agotado.value = true
   respuesta.value = ''
-  iniciarAtaque(ataqueRival())
+  if (rondaEsquiva.value) lanzarColetazo(false)
+  else iniciarAtaque(ataqueRival())
 }
 
 // Dos canales para que la voz del jefe y el golpe puedan sonar a la vez
@@ -200,7 +283,10 @@ onMounted(() => {
   arrancarReloj()
   sonar(vozJefe, `${sonidosJefe.value}-grito.mp3`)
 })
-onBeforeUnmount(pararReloj)
+onBeforeUnmount(() => {
+  pararReloj()
+  clearTimeout(temporizadorConjuro)
+})
 
 function ataqueRival() {
   return { id: 'rival', nombre: props.nivel.golpe, dano: props.nivel.dano, duracion: 2600, sangre: props.nivel.corte }
@@ -217,17 +303,117 @@ function fuerza(movimiento) {
   return movimiento.dano + (props.nivel.debilidad === movimiento.id ? 4 : 0)
 }
 
+function normalizar(texto) {
+  return texto.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[.?!]+$/, '').trimEnd().replace(/\s+/g, ' ')
+}
+
 function responder(opcion) {
   if (fase.value !== 'pregunta') return
   respuesta.value = opcion
   agotado.value = false
 
-  if (opcion === pregunta.value.correcta) {
+  const { correcta, alternativas = [] } = pregunta.value
+  const solucion = normalizar(opcion)
+  if ([correcta, ...alternativas].some((valida) => normalizar(valida) === solucion)) {
     fase.value = 'elegir'
     return
   }
 
   iniciarAtaque(ataqueRival())
+}
+
+function resolverConjuro(opcion) {
+  if (fase.value !== 'pregunta') return
+  pararReloj()
+  respuesta.value = opcion
+  agotado.value = false
+  if (normalizar(opcion) !== normalizar(pregunta.value.correcta)) {
+    iniciarAtaque(ataqueRival())
+    return
+  }
+
+  fase.value = 'conjuro'
+  if (pregunta.value.tipo === 'romper-hechizo') {
+    const dano = Math.min(12, vidaRival.value)
+    vidaRival.value -= dano
+    mostrarEfectoPalabra('monstruo', 'dano', `−${dano} PV`)
+    sonar(golpeSonido, '/audio/combate/rayo.mp3')
+    if (vidaRival.value === 0) sonar(vozJefe, `${sonidosJefe.value}-derrota.mp3`)
+  } else {
+    escudoPreparado.value = true
+    sonar(golpeSonido, '/audio/combate/escudo.mp3')
+  }
+
+  temporizadorConjuro = setTimeout(() => {
+    temporizadorConjuro = null
+    if (vidaRival.value === 0) {
+      historial.value.push({ pregunta: pregunta.value, respuesta: respuesta.value, acierto: true, agotado: false })
+      cerrarRonda()
+    } else {
+      fase.value = 'elegir'
+    }
+  }, 850)
+}
+
+function lanzarColetazo(esquivado, posicion = 0) {
+  const lado = pregunta.value.lado ?? 'derecha'
+  pararReloj()
+  iniciarAtaque({ ...ataqueRival(), duracion: 1500, lado, posicion, esquivado, sangre: false })
+}
+
+function cortarAtaque() {
+  if (!rondaHacha.value || fase.value !== 'pregunta') return
+  pararReloj()
+  respuesta.value = pregunta.value.correcta
+  agotado.value = false
+  fase.value = 'intercepcion'
+  sonar(golpeSonido, '/audio/combate/escudo.mp3')
+  temporizadorConjuro = setTimeout(() => {
+    temporizadorConjuro = null
+    fase.value = 'elegir'
+  }, 500)
+}
+
+function esquivar(lado) {
+  if (fase.value !== 'pregunta') return
+  respuesta.value = lado === 'izquierda' ? 'Move left.' : 'Move right.'
+  lanzarColetazo(lado !== pregunta.value.lado, lado === 'izquierda' ? -15 : 15)
+}
+
+function completarAviso(ficha) {
+  if (fase.value !== 'pregunta') return
+  respuesta.value = ficha
+  const esquivado = ficha === pregunta.value.correcta
+  lanzarColetazo(esquivado, esquivado ? -15 : 0)
+}
+
+function mostrarEfectoPalabra(destino, tipo, texto) {
+  efectoPalabra.value = { destino, tipo, texto, id: ++idEfectoPalabra }
+}
+
+function aplicarPalabra(destino) {
+  if (fase.value !== 'pregunta') return
+  if (destino === 'heroe') {
+    const recuperado = Math.min(100 - vidaCaballero.value, CURACION_PALABRA)
+    vidaCaballero.value += recuperado
+    mostrarEfectoPalabra(destino, 'cura', recuperado ? `+${recuperado} PV` : 'Vida al máximo')
+    return
+  }
+
+  const dano = Math.min(vidaRival.value, DANO_PALABRA)
+  vidaRival.value -= dano
+  mostrarEfectoPalabra(destino, 'dano', `−${dano} PV`)
+  sonar(golpeSonido, '/audio/combate/escudo.mp3')
+}
+
+function palabraIncorrecta(destino) {
+  if (fase.value === 'pregunta') mostrarEfectoPalabra(destino, 'error', 'Prueba con el otro personaje')
+}
+
+function completarPalabras() {
+  if (fase.value !== 'pregunta') return
+  historial.value.push({ pregunta: pregunta.value, respuesta: pregunta.value.correcta, acierto: true, agotado: false })
+  cerrarRonda()
 }
 
 function atacar(movimiento) {
@@ -239,10 +425,33 @@ function atacar(movimiento) {
   const dano = fuerza(movimiento)
   // El golpe que remata al guardián se convierte en una secuencia final
   if (dano >= vidaRival.value) {
-    iniciarAtaque({ id: 'hachazo', nombre: '¡Golpe final!', dano, duracion: 5600, sangre: true, final: true })
+    iniciarRemate(dano)
     return
   }
   iniciarAtaque({ ...movimiento, dano })
+}
+
+function probarRemate() {
+  if (!puedeProbarRemate.value) return
+  pararReloj()
+  clearTimeout(temporizadorConjuro)
+  temporizadorConjuro = null
+  efectoPalabra.value = null
+  pruebaRemate.value = true
+  iniciarRemate(vidaRival.value)
+}
+
+function iniciarRemate(dano) {
+  const remate = props.nivel.remate
+  const nombresRemate = {
+    solar: '¡Ascensión solar!',
+    cruzado: '¡Corte cruzado!',
+    sombras: '¡Alzaos, sombras!'
+  }
+  iniciarAtaque({
+    id: 'hachazo', nombre: nombresRemate[remate] ?? '¡Golpe final!',
+    dano, duracion: remate === 'solar' ? 14000 : 5600, sangre: !remate, final: true, remate
+  })
 }
 
 function iniciarAtaque(movimiento) {
@@ -257,7 +466,9 @@ function impactar() {
   if (fase.value !== 'ataque' || danoAplicado.value !== null) return
   const golpe = ataque.value
 
-  if (golpe.id === 'rival') {
+  if (golpe.esquivado) {
+    danoAplicado.value = 0
+  } else if (golpe.id === 'rival') {
     const mitigacion = escudoPreparado.value ? 12 : 0
     danoAplicado.value = Math.min(vidaCaballero.value, golpe.dano - mitigacion)
     vidaCaballero.value -= danoAplicado.value
@@ -280,9 +491,25 @@ function impactar() {
 function terminarAtaque() {
   if (fase.value !== 'ataque') return
   impactar()
-  historial.value.push({ pregunta: pregunta.value, respuesta: respuesta.value, acierto: ataque.value.id !== 'rival', agotado: agotado.value })
+  if (pruebaRemate.value) {
+    ataque.value = null
+    fase.value = 'resultado'
+    return
+  }
+  const esquivado = ataque.value.esquivado
+  if (!esquivado) {
+    historial.value.push({ pregunta: pregunta.value, respuesta: respuesta.value, acierto: ataque.value.id !== 'rival', agotado: agotado.value })
+  }
   ataque.value = null
 
+  if (esquivado) {
+    fase.value = 'elegir'
+    return
+  }
+  cerrarRonda()
+}
+
+function cerrarRonda() {
   const terminado = vidaRival.value === 0 || vidaCaballero.value === 0 || historial.value.length === props.nivel.preguntas.length
   fase.value = terminado ? 'resultado' : 'revision'
   if (vidaRival.value === 0) emit('victoria')
@@ -290,8 +517,18 @@ function terminarAtaque() {
 
 function siguiente() {
   if (fase.value !== 'revision') return
+  efectoPalabra.value = null
+  desplazamientoEsquiva.value = 0
   indice.value++
-  fase.value = 'pregunta'
+  if (pregunta.value.invocacion) {
+    fase.value = 'invocacion'
+    temporizadorConjuro = setTimeout(() => {
+      temporizadorConjuro = null
+      fase.value = 'pregunta'
+    }, 1200)
+  } else {
+    fase.value = 'pregunta'
+  }
 }
 </script>
 
@@ -367,6 +604,50 @@ details { margin-block: 0.55rem; font-size: 0.82rem; }
 summary { cursor: pointer; color: #ffe09a; }
 ol { padding-left: 1.2rem; }
 li { margin-block: 0.55rem; }
+.aviso-completado {
+  position: absolute;
+  inset: 2.65rem 0.45rem auto;
+  z-index: 2;
+  width: fit-content;
+  margin-inline: auto;
+  padding: 0.28rem 0.55rem;
+  border: 1px solid #83bc90;
+  border-radius: 6px;
+  background: #101928f5;
+  color: #dcf4df;
+  font: 700 clamp(0.82rem, 2vw, 1.12rem) Georgia, serif;
+  pointer-events: none;
+}
+.efecto-palabra {
+  position: absolute;
+  z-index: 11;
+  top: 46%;
+  left: 25%;
+  translate: -50% -50%;
+  padding: 0.15rem 0.5rem;
+  border-radius: 5px;
+  background: #101928ec;
+  color: #a8efb6;
+  font-weight: 800;
+  text-align: center;
+  pointer-events: none;
+  animation: impacto-palabra 850ms ease-out both;
+}
+.efecto-palabra.monstruo { left: 74%; }
+.efecto-palabra.dano { color: #ff9988; }
+.efecto-palabra.error { color: #ffe09a; font-size: 0.78rem; }
+@keyframes impacto-palabra {
+  0% { opacity: 0; }
+  15%, 70% { opacity: 1; }
+  100% { opacity: 0; translate: -50% -120%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .efecto-palabra { animation-name: fundido-palabra; }
+  @keyframes fundido-palabra {
+    0%, 80% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+}
 .giro { display: none; }
 
 @media (min-width: 530px) {

@@ -1,42 +1,88 @@
 <template>
-  <div class="escenario" :class="[`nivel-${nivel.numero}`, { urgente }]" :style="{ '--fondo': `url('${nivel.fondo}')`, '--carga': carga ?? 0 }">
-    <div class="secuencia" :class="[ataque?.id, { activa: ataque, magia: ataque?.magia, final: ataque?.final, urgente, congelado }]" :style="tiempos"
+  <div class="escenario" :class="[`nivel-${nivel.numero}`, { urgente, 'arena-esquiva': posicionEsquiva !== null, 'esquiva-exitosa': ataque?.esquivado }]" :style="{ '--fondo': `url('${nivel.fondo}')`, '--carga': carga ?? 0, '--posicion-esquiva': posicionEsquiva === null ? null : posicionEsquiva + '%' }">
+    <div class="secuencia" :class="[ataque?.id, ataque?.final && ataque.remate, { activa: ataque, magia: ataque?.magia, final: ataque?.final, urgente, congelado }]" :style="tiempos"
       @animationend.self="emit('terminar')">
       <span class="ambiente" aria-hidden="true">
         <span v-for="(m, i) in motas" :key="i" class="mota" :style="m" />
       </span>
       <div class="accion">
         <span v-if="ataque?.final" class="penumbra" aria-hidden="true" />
-        <div class="luchador caballero" :class="[caballero, { esperando, 'en-guardia': enGuardia, victoria, tenso: urgente }]" role="img" aria-label="Caballero con hacha y escudo solar">
-          <img v-for="pose in [...posesCaballero, ...posesNuevasCaballero]" :key="pose" class="pose"
+        <div class="luchador caballero" data-destino-palabra="heroe" :class="[caballero, { esperando, 'en-guardia': enGuardia, victoria, tenso: urgente, 'esquiva-lograda': ataque?.esquivado }]" role="img" :aria-label="sinArma ? 'Caballero sin arma' : 'Caballero con hacha y escudo solar'">
+          <img v-for="pose in [...posesCaballero, ...posesNuevasCaballero]" v-show="!sinArma" :key="pose" class="pose"
             :class="[pose, { amp: medidas[`caballero/${pose}`] }]" :style="estiloAmp('caballero', pose)"
             :src="`/images/personajes-mate/caballero/${pose}.${extension(pose)}`" alt="" draggable="false" />
+          <img v-if="sinArma" class="pose sin-arma" src="/images/personajes-mate/caballero/sin-arma.webp" alt="" draggable="false" />
+          <template v-if="remateSolar">
+            <span class="aura-solar" aria-hidden="true" />
+            <img class="pose ascension" src="/images/personajes-mate/caballero/impacto-rayo.png" alt="" draggable="false" />
+          </template>
         </div>
-        <div class="luchador guardian" :class="[guardian, { esperando, 'con-derrota': nivel.derrota, c1: faseCarga === 1, c2: faseCarga === 2, 'desde-carga': cargaPrevia > 0 }]"
+        <div class="luchador guardian" data-destino-palabra="monstruo" :class="[guardian, { esperando, 'con-derrota': nivel.derrota, c1: faseCarga === 1, c2: faseCarga === 2, 'desde-carga': cargaPrevia > 0 }]"
           :style="{ '--carga': carga ?? 0 }" role="img" :aria-label="nivel.guardian">
           <img v-for="pose in [...posesGuardian, ...posesNuevasGuardian]" :key="pose" class="pose"
             :class="[pose, { amp: medidas[`${carpetaGuardian}/${pose}`] }]" :style="estiloAmp(carpetaGuardian, pose)"
             :src="`${nivel.arte}/${pose}.${extension(pose)}`" alt="" draggable="false" />
           <!-- Chorro (veneno / aliento): nace en la boca del sprite «ataque» y viaja con el jefe, sin depender del tamaño de la escena -->
-          <img v-if="ataqueRival && chorro" class="chorro" :class="`chorro-${nivel.numero}`" :src="chorro" alt="" draggable="false" />
+          <img v-if="ataqueRival && chorro && !ladoGolpe" class="chorro" :class="`chorro-${nivel.numero}`" :src="chorro" alt="" draggable="false" />
           <span class="onda-suelo" aria-hidden="true" />
           <span class="particulas-carga" aria-hidden="true">
             <span v-for="(p, i) in particulasCarga" :key="i" class="p" :style="p" />
           </span>
         </div>
         <template v-if="ataque?.final">
-          <span class="rotulo-final" aria-hidden="true">¡Golpe final!</span>
+          <span class="rotulo-final" aria-hidden="true">{{ ataque.nombre }}</span>
+          <div v-if="remateSolar" class="descarga-solar" aria-hidden="true">
+            <span class="esfera-solar" />
+            <span class="rayo-solar" />
+          </div>
+          <template v-if="remateSolar">
+            <span class="pulso-solar pulso-transformacion" aria-hidden="true" @animationstart.self="reproducirSolar(audioTransformacion)" />
+            <span class="pulso-solar pulso-carga" aria-hidden="true" @animationstart.self="reproducirSolar(audioCarga)" />
+          </template>
+          <div v-if="remateCruzado" class="corte-cruzado" aria-hidden="true">
+            <span class="tajo-cruzado primero" />
+            <span class="tajo-cruzado segundo" />
+          </div>
+          <div v-if="remateSombras" class="invocacion-sombras" aria-hidden="true">
+            <span class="portal-sombras" />
+            <template v-for="i in 3" :key="i">
+              <div class="guerrero-sombra" :style="{ '--fila': i - 2, '--adelanto': (3 - i) * 240 + 'ms' }">
+                <img class="sombra-guardia" src="/images/personajes-mate/caballero/guardia.webp" alt="" draggable="false" />
+                <img class="sombra-golpe" src="/images/personajes-mate/caballero/impacto-hachazo.png" alt="" draggable="false" />
+              </div>
+              <span class="impacto-sombras" :style="{
+                '--contacto': 'calc(var(--momento-impacto) - ' + (3 - i) * 240 + 'ms)',
+                '--altura-tajo': (45 + i * 5) + '%',
+                '--giro-tajo': (i % 2 ? -38 : 28) + 'deg'
+              }">
+                <i v-for="chispa in 6" :key="chispa" class="chispa-sombra" :style="{ '--angulo': (chispa - 3) * 44 + 'deg' }" />
+              </span>
+            </template>
+          </div>
           <template v-if="nivel.derrota">
             <span v-for="(estilo, i) in chispasFinal" :key="i" class="chispa-final" :style="estilo" aria-hidden="true" />
           </template>
         </template>
         <template v-if="ataque">
           <span class="pulso-impacto" aria-hidden="true" @animationstart.self="alImpactar" />
-          <CombatEfectos :class="`nivel-${nivel.numero}`" :nivel="nivel.numero" :ataque="ataque" :estela="efecto"
+          <div v-if="ladoGolpe" class="zona-coletazo" :class="ladoGolpe" aria-hidden="true">
+            <span class="advertencia-coletazo" />
+            <img :src="nivel.efecto" alt="" />
+          </div>
+          <CombatEfectos v-else-if="!ataque.remate" :class="`nivel-${nivel.numero}`" :nivel="nivel.numero" :ataque="ataque" :estela="efecto"
             :dano="danoAplicado" :curacion="curacion" />
         </template>
       </div>
     </div>
+    <slot name="actividad" />
+    <template v-if="nivel.remate === 'solar'">
+      <audio ref="audioTransformacion" src="/audio/combate/solar-transformacion.mp3" preload="auto" />
+      <audio ref="audioCarga" src="/audio/combate/solar-carga.mp3" preload="auto" />
+    </template>
+    <span v-if="ataque?.lado && danoAplicado !== null" class="resultado-esquiva"
+      :class="{ acierto: ataque.esquivado }" role="status">
+      {{ ataque.esquivado ? '¡Esquiva! · Contraataca' : '−' + danoAplicado + ' PV' }}
+    </span>
     <span class="peligro" aria-hidden="true" />
     <div class="indicadores">
       <slot name="hud" />
@@ -50,6 +96,9 @@ const props = defineProps({
   ataque: { type: Object, default: null },
   danoAplicado: { type: Number, default: null },
   curacion: { type: Number, default: 0 },
+  posicionEsquiva: { type: Number, default: null },
+  ladoGolpe: { type: String, default: null },
+  sinArma: Boolean,
   vidaCaballero: { type: Number, required: true },
   vidaRival: { type: Number, required: true },
   // Progreso de la carga del enemigo mientras el estudiante piensa (0 a 1). null cuando no hay pregunta en curso.
@@ -110,6 +159,18 @@ const enGuardia = computed(() => esperando.value && props.carga > 0.06)
 const urgente = computed(() => esperando.value && props.carga >= 0.7)
 const victoria = computed(() => props.vidaRival === 0 && props.vidaCaballero > 0 && !props.ataque)
 const ataqueRival = computed(() => props.ataque?.id === 'rival')
+const remateSolar = computed(() => props.ataque?.final && props.ataque.remate === 'solar')
+const audioTransformacion = ref(null)
+const audioCarga = ref(null)
+
+function reproducirSolar(audio) {
+  if (!remateSolar.value || !audio) return
+  audio.currentTime = 0
+  audio.volume = 0.75
+  audio.play().catch(() => {})
+}
+const remateCruzado = computed(() => props.ataque?.final && props.ataque.remate === 'cruzado')
+const remateSombras = computed(() => props.ataque?.final && props.ataque.remate === 'sombras')
 
 // Cuánta carga llevaba el enemigo cuando empezó su ataque: si ya estaba cargado, no «retrocede» a una pose anterior.
 let ultimaCarga = 0
@@ -129,8 +190,14 @@ function alImpactar() {
   temporizadorPausa = setTimeout(() => (congelado.value = false), props.ataque?.final ? 150 : 95)
 }
 
-onBeforeUnmount(() => { clearTimeout(temporizadorPausa) })
-const caballero = computed(() => estadoLuchador(props.vidaCaballero, 100, ataqueRival.value))
+onBeforeUnmount(() => {
+  clearTimeout(temporizadorPausa)
+  audioTransformacion.value?.pause()
+  audioCarga.value?.pause()
+})
+const caballero = computed(() => props.ataque?.esquivado
+  ? { herido: props.vidaCaballero / 100 <= 0.34 }
+  : estadoLuchador(props.vidaCaballero, 100, ataqueRival.value))
 const guardian = computed(() => estadoLuchador(props.vidaRival, props.nivel.vida, !ataqueRival.value))
 
 function estadoLuchador(vida, maxima, recibe) {
@@ -146,7 +213,7 @@ const tiempos = computed(() => {
   if (!props.ataque) return null
   const duracion = props.ataque.duracion
   // El 54 % es el contacto en las animaciones de avance y de proyectil (el golpe final lo adelanta al 46 %).
-  const impacto = Math.round(duracion * (props.ataque.final ? 0.46 : 0.54))
+  const impacto = Math.round(duracion * (remateSolar.value ? 0.84 : props.ataque.final ? 0.46 : 0.54))
   return {
     '--duracion': `${duracion}ms`,
     '--momento-impacto': `${impacto}ms`,
@@ -155,7 +222,7 @@ const tiempos = computed(() => {
 })
 
 const efecto = computed(() => {
-  if (!props.ataque || props.ataque.magia) return undefined
+  if (!props.ataque || props.ataque.magia || props.ataque.remate) return undefined
   const id = props.ataque?.id
   if (id === 'rival') return props.nivel.efecto
   return id === 'hachazo' ? '/images/bosque-del-alba/hachazo.svg' : `/images/caballero/${id}.svg`
@@ -190,6 +257,66 @@ const efecto = computed(() => {
 .indicadores { position: absolute; z-index: 1; inset: 0.55rem clamp(0.8rem, 2.4vw, 2rem) auto; pointer-events: none; }
 .secuencia.activa { transform-origin: 60% 62%; animation: camara var(--duracion) ease-out both; }
 .secuencia.rival { transform-origin: 38% 62%; }
+.arena-esquiva .secuencia.rival { --sacudida: 0px; }
+.arena-esquiva .secuencia.rival .guardian { --avance: -8%; }
+.resultado-esquiva {
+  position: absolute;
+  z-index: 12;
+  left: 29%;
+  top: 62%;
+  translate: -50% -50%;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #df8b78;
+  background: #25141bf2;
+  color: #ffb09e;
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
+  font-weight: 800;
+  pointer-events: none;
+}
+.resultado-esquiva.acierto { border-color: #95d9ba; background: #112b26f2; color: #c3ffe2; }
+@media (prefers-reduced-motion: no-preference) {
+  .arena-esquiva .secuencia.rival .caballero { transition: left 180ms ease-out; }
+}
+.arena-esquiva .secuencia.activa .accion::after { display: none; }
+.arena-esquiva .accion { width: 100%; }
+.arena-esquiva .caballero { left: calc(6.5% + var(--posicion-esquiva)); z-index: 1; }
+.arena-esquiva .caballero.esquiva-lograda .pose { opacity: 0; animation: none; }
+.arena-esquiva .caballero.esquiva-lograda .pose.esquiva { opacity: 1; }
+.arena-esquiva .caballero.esquiva-lograda :is(.guardia, .dolor) { opacity: 0; }
+.zona-coletazo {
+  position: absolute;
+  inset: 29% 71% 4% 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.zona-coletazo.derecha { inset-inline: 29% 42%; }
+.advertencia-coletazo {
+  position: absolute;
+  inset: 20% 4% 0;
+  border-bottom: 4px solid #efaa65;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center bottom, #d65b354d, transparent 75%);
+  animation: aviso-coletazo var(--momento-impacto) ease-in both;
+}
+.zona-coletazo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  animation: coletazo-lateral 600ms ease-out var(--momento-impacto) both;
+}
+@keyframes aviso-coletazo {
+  from { opacity: 0; }
+  75% { opacity: 1; }
+  to { opacity: 0; }
+}
+.zona-coletazo.derecha img { scale: -1 1; }
+@keyframes coletazo-lateral {
+  0%, 100% { opacity: 0; }
+  30%, 60% { opacity: 1; }
+}
 /* Intensidad y color del impacto según el ataque */
 .secuencia { --sacudida: 6px; --tinte: #fff3cf; --fx: 62%; --fy: 57%; }
 .secuencia.hachazo { --sacudida: 9px; --fy: 69%; }
@@ -242,6 +369,8 @@ const efecto = computed(() => {
   filter: drop-shadow(0 2px 3px #15141660);
 }
 .pose.reposo { opacity: 1; }
+.caballero .pose.sin-arma { inset: auto 0 2.8%; height: 67%; opacity: 1; }
+.arena-esquiva .caballero.esquiva-lograda .pose.sin-arma { opacity: 1; }
 /* Respiración en espera: los luchadores ya no se quedan congelados entre ataques */
 .luchador:not(.emisor, .receptor, .tendido) { transform-origin: center bottom; animation: respirar 3.2s ease-in-out infinite, mecer 5.3s ease-in-out infinite; }
 .guardian:not(.emisor, .receptor, .tendido) { animation-duration: 3.8s, 6.1s; animation-delay: -1.4s, -2.2s; }
@@ -310,6 +439,9 @@ const efecto = computed(() => {
 .receptor.tendido .caida { visibility: visible; }
 
 .pulso-impacto { position: absolute; visibility: hidden; animation: pulso 1ms linear var(--momento-impacto); }
+.pulso-solar { position: absolute; visibility: hidden; animation: pulso 1ms linear; }
+.pulso-transformacion { animation-delay: 450ms; }
+.pulso-carga { animation-delay: 5450ms; }
 
 /* ---------- Poses nuevas (recortadas a su tamaño, a la misma escala que el reposo) ---------- */
 .pose.amp {
@@ -467,12 +599,205 @@ const efecto = computed(() => {
   animation-duration: 560ms;
 }
 .secuencia.final .luchador.caballero { animation: heroe-final var(--duracion) ease-in-out both, deformar var(--duracion) ease-in-out both; }
-.secuencia.final .luchador.caballero .pose:not(.reposo, .anticipacion, .final-1, .final-2, .final-3) { display: none; }
+.secuencia.final .luchador.caballero .pose:not(.reposo, .anticipacion, .final-1, .final-2, .final-3, .ascension) { display: none; }
 .secuencia.final .luchador.caballero .reposo { animation: final-reposo var(--duracion) step-end both; }
 .secuencia.final .luchador.caballero .anticipacion { animation: final-guardia var(--duracion) step-end both; }
 .secuencia.final .luchador.caballero .final-1 { animation: final-pose-1 var(--duracion) step-end both; }
 .secuencia.final .luchador.caballero .final-2 { animation: final-pose-2 var(--duracion) step-end both; }
 .secuencia.final .luchador.caballero .final-3 { animation: final-pose-3 var(--duracion) step-end both; }
+.secuencia.final.sombras .luchador.caballero { animation: none; }
+.secuencia.final.sombras .caballero .pose:not(.anticipacion) { display: none; }
+.secuencia.final.sombras .caballero .anticipacion {
+  animation: none;
+  opacity: 1;
+  filter: drop-shadow(0 0 10px #a378f3);
+}
+.invocacion-sombras { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.portal-sombras {
+  position: absolute;
+  inset: auto 47% 12% 21%;
+  height: 17%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #080512 28%, #7346b4 48%, #9d71d76e 60%, transparent 73%);
+  animation: abrir-portal var(--duracion) ease-out both;
+}
+.guerrero-sombra {
+  position: absolute;
+  left: calc(25% + var(--fila) * 4%);
+  bottom: calc(12% + var(--fila) * 7%);
+  width: min(24%, calc(var(--alto) * .52));
+  aspect-ratio: 1;
+  filter: grayscale(1) brightness(.43) sepia(1) hue-rotate(215deg) saturate(2)
+    drop-shadow(0 0 7px #a06bff);
+  animation: avanzar-sombra var(--duracion) ease-in-out calc(-1 * var(--adelanto)) both;
+}
+.guerrero-sombra img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
+.sombra-guardia { animation: guardia-sombra var(--duracion) step-end calc(-1 * var(--adelanto)) both; }
+.sombra-golpe { animation: golpe-sombra var(--duracion) step-end calc(-1 * var(--adelanto)) both; }
+@keyframes guardia-sombra { 0%, 51%, 100% { opacity: 1; } 46% { opacity: 0; } }
+@keyframes golpe-sombra { 0%, 51%, 100% { opacity: 0; } 46% { opacity: 1; } }
+.impacto-sombras {
+  position: absolute;
+  left: 74%;
+  top: var(--altura-tajo);
+  width: min(34%, calc(var(--alto) * .8));
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #efe3ff, #8f57df88 36%, transparent 68%);
+  animation: estallido-sombras 330ms ease-out var(--contacto) both;
+}
+.impacto-sombras::before, .impacto-sombras::after {
+  content: '';
+  position: absolute;
+  inset: 46% 4% auto;
+  height: 7%;
+  border-radius: 50%;
+  background: #f4dbff;
+  box-shadow: 0 0 16px #a16bff;
+  rotate: var(--giro-tajo);
+}
+.impacto-sombras::after { translate: 0 145%; height: 2%; }
+.chispa-sombra {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 18%;
+  height: 2px;
+  transform-origin: left;
+  background: linear-gradient(90deg, #f9eaff, #ab71ff00);
+  animation: chispa-sombra 330ms ease-out var(--contacto) both;
+}
+@keyframes chispa-sombra {
+  from { transform: rotate(var(--angulo)) translateX(15%); }
+  to { transform: rotate(var(--angulo)) translateX(185%); }
+}
+@keyframes abrir-portal {
+  0%, 5% { opacity: 0; scale: .35; }
+  18%, 45% { opacity: 1; scale: 1; }
+  72%, 100% { opacity: 0; scale: .55; }
+}
+@keyframes avanzar-sombra {
+  0%, 8% { opacity: 0; translate: 0 15%; }
+  22%, 29% { opacity: 1; translate: 0 0; }
+  46% { opacity: 1; left: calc(63% + var(--fila) * 5%); translate: 0 -18%; rotate: 9deg; }
+  59% { opacity: .75; left: calc(67% + var(--fila) * 5%); translate: 0 -7%; }
+  75%, 100% { opacity: 0; left: calc(69% + var(--fila) * 5%); translate: 0 0; }
+}
+@keyframes estallido-sombras {
+  0% { opacity: 0; scale: .58; }
+  13% { opacity: 1; scale: 1; }
+  45% { opacity: .85; }
+  100% { opacity: 0; scale: 1.16; }
+}
+.secuencia.final.cruzado .luchador.caballero {
+  animation: avance-cruzado var(--duracion) ease-in-out both;
+}
+.corte-cruzado {
+  position: absolute;
+  z-index: 4;
+  left: 74%;
+  top: 57%;
+  width: min(37%, calc(var(--alto) * .83));
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+.tajo-cruzado {
+  position: absolute;
+  inset: 46% -12% auto;
+  height: 8%;
+  border-radius: 50%;
+  background: linear-gradient(transparent, #85e5de 24%, #fff9e5 48%, #fff 52%, #85e5de 76%, transparent);
+  box-shadow: 0 0 17px #55dfcda0;
+  rotate: 42deg;
+  animation: dibujar-tajo 850ms ease-out calc(var(--momento-impacto) - 220ms) both;
+}
+.tajo-cruzado.segundo {
+  rotate: -42deg;
+  animation-delay: var(--momento-impacto);
+}
+@keyframes dibujar-tajo {
+  0% { opacity: 0; clip-path: inset(-100% 100% -100% 0); }
+  18%, 67% { opacity: 1; clip-path: inset(-100% -15%); }
+  100% { opacity: 0; clip-path: inset(-100% -15%); }
+}
+@keyframes avance-cruzado {
+  0%, 18%, 100% { transform: none; }
+  30% { transform: translateX(-8%) rotate(-6deg); }
+  42% { transform: translateX(64%) rotate(6deg); }
+  46%, 51% { transform: translateX(78%); }
+  71% { transform: none; }
+}
+.secuencia.final.solar .luchador.caballero { animation: none; }
+.secuencia.final.solar.activa { animation-name: reloj; }
+@keyframes reloj { to { opacity: 1; } }
+.secuencia.final.solar .caballero .pose { display: none; }
+.secuencia.final.solar .caballero :is(.reposo, .ascension) { display: block; }
+.secuencia.final.solar .caballero .reposo { animation: antes-de-ascender var(--duracion) step-end both; }
+.secuencia.final.solar .caballero .ascension {
+  animation: ascender var(--duracion) ease-out both;
+}
+.aura-solar {
+  position: absolute;
+  inset: 25% 9% 2%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #fff1a74d, #ff9a202b 45%, transparent 70%);
+  animation: aura-solar var(--duracion) ease-in-out both;
+}
+.descarga-solar {
+  /* La mano está cerca de (400, 255) en el lienzo cuadrado de 512 px. */
+  --lienzo-solar: min(45%, var(--alto) * 1.03);
+  --origen-solar: calc(25.5% + var(--lienzo-solar) * .28);
+  --altura-solar: calc(90% - min(50cqw * .45, var(--alto) * .517));
+  container-type: inline-size;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.esfera-solar {
+  position: absolute;
+  left: var(--origen-solar);
+  top: var(--altura-solar);
+  width: clamp(15px, 5%, 55px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(circle, #fff 20%, #fff3b0 48%, #fca343 70%);
+  box-shadow: 0 0 22px 7px #ffc152;
+  animation: esfera-solar var(--duracion) ease-in both;
+}
+.rayo-solar {
+  position: absolute;
+  inset: var(--altura-solar) 24% auto var(--origen-solar);
+  height: clamp(12px, 8%, 60px);
+  translate: 0 -50%;
+  transform-origin: left center;
+  border-radius: 35% 55% 55% 35%;
+  background: linear-gradient(transparent, #fba134 16%, #fff2ac 35%, #fff 50%, #fff2ac 65%, #fba134 84%, transparent);
+  box-shadow: 0 0 20px #ffae41;
+  animation: rayo-solar var(--duracion) ease-out both;
+}
+@keyframes antes-de-ascender { 0% { opacity: 1; } 7%, 100% { opacity: 0; } }
+@keyframes ascender {
+  0%, 6.9% { opacity: 0; }
+  7% { opacity: 1; filter: brightness(1.12) drop-shadow(0 0 7px #ffc45b99); }
+  20%, 100% { opacity: 1; filter: drop-shadow(0 0 4px #ffc45b77); }
+}
+@keyframes aura-solar {
+  0%, 3% { opacity: 0; scale: .7; }
+  16%, 86% { opacity: 1; scale: 1.15; }
+  100% { opacity: 0; scale: 1; }
+}
+@keyframes esfera-solar {
+  0%, 38.9% { opacity: 0; scale: .15; }
+  83% { opacity: 1; scale: 1; }
+  85%, 100% { opacity: 0; }
+}
+@keyframes rayo-solar {
+  0%, 83.3% { opacity: 0; scale: 0 .65; }
+  84%, 89% { opacity: 1; scale: 1 1; }
+  96%, 100% { opacity: 0; scale: 1 .2; }
+}
 /* Después del golpe, el caballero se queda en su pose de victoria */
 .luchador.caballero.victoria :is(.reposo, .dolor) { opacity: 0; }
 .luchador.caballero.victoria .final-3 { opacity: 1; }
@@ -710,12 +1035,14 @@ const efecto = computed(() => {
   .secuencia .luchador, .herido:not(.emisor, .receptor) .dolor { animation-name: none !important; }
   .secuencia.activa .accion::after { display: none; }
   .secuencia.final.activa { animation-name: reloj; }
+  .secuencia.final.solar .caballero .reposo { display: none; }
+  .secuencia.final.solar .caballero .ascension { animation: none; opacity: 1; }
+  .aura-solar, .descarga-solar, .corte-cruzado, .invocacion-sombras { display: none; }
   .penumbra, .secuencia.final .accion::before, .chispa-final, .rotulo-final { display: none; }
   .guardian.esperando::after { animation: none; }
   .ambiente, .particulas-carga, .onda-suelo, .descarga, .peligro, .chorro { display: none; }
   .secuencia.urgente { animation: none; }
   .receptor .caida { animation-name: quedar-tendido; }
-  @keyframes reloj { to { opacity: 1; } }
   @keyframes quedar-tendido { 0%, 65.9% { opacity: 0; } 66%, 100% { opacity: 1; } }
 }
 </style>
