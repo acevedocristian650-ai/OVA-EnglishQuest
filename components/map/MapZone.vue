@@ -73,9 +73,25 @@ small {
   box-shadow: 0 0 0 3px #192333, 0 0 14px 4px #ffdb87;
 }
 
+.numero { transition: scale 140ms; }
+.zona:not(:disabled):hover .numero { scale: 1.1; }
+.zona:not(:disabled):active .numero { scale: 0.92; }
+.disponible .numero { animation: latir-zona 1.8s ease-in-out infinite; }
+.completada .numero { animation: sellar 600ms cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes latir-zona {
+  0%, 100% { box-shadow: 0 0 0 3px #192333, 0 0 0 3px #ffdb8700, 0 4px 12px #0009; }
+  50% { box-shadow: 0 0 0 3px #192333, 0 0 0 12px #ffdb8740, 0 4px 12px #0009; }
+}
+@keyframes sellar { 0% { scale: 0.4; } 60% { scale: 1.25; } }
+
 .bloqueada { cursor: default; }
 .bloqueada .numero { background: #29394d; border-color: #a5b4c4; }
 .completada .numero { background: #89d6ad; border-color: #ccf8dc; }
+
+@media (prefers-reduced-motion: reduce) {
+  .numero { transition: none; }
+  .disponible .numero, .completada .numero { animation: none; }
+}
 
 @media (max-width: 480px) {
   .rotulo { padding-inline: 4px; }

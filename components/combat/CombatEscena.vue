@@ -8,6 +8,8 @@
       <div class="accion">
         <span v-if="ataque?.final" class="penumbra" aria-hidden="true" />
         <div class="luchador caballero" data-destino-palabra="heroe" :class="[caballero, { esperando, 'en-guardia': enGuardia, victoria, tenso: urgente, 'esquiva-lograda': ataque?.esquivado }]" role="img" :aria-label="sinArma ? 'Caballero sin arma' : 'Caballero con hacha y escudo solar'">
+          <span v-if="furia" class="aura-furia" aria-hidden="true" />
+          <span v-if="bloqueando" class="barrera-bloqueo" aria-hidden="true"><b>¡Bloqueado!</b></span>
           <img v-for="pose in [...posesCaballero, ...posesNuevasCaballero]" v-show="!sinArma" :key="pose" class="pose"
             :class="[pose, { amp: medidas[`caballero/${pose}`] }]" :style="estiloAmp('caballero', pose)"
             :src="`/images/personajes-mate/caballero/${pose}.${extension(pose)}`" alt="" draggable="false" />
@@ -19,6 +21,7 @@
         </div>
         <div class="luchador guardian" data-destino-palabra="monstruo" :class="[guardian, { esperando, 'con-derrota': nivel.derrota, c1: faseCarga === 1, c2: faseCarga === 2, 'desde-carga': cargaPrevia > 0 }]"
           :style="{ '--carga': carga ?? 0 }" role="img" :aria-label="nivel.guardian">
+          <span v-if="enfurecido" class="aura-ira" aria-hidden="true" />
           <img v-for="pose in [...posesGuardian, ...posesNuevasGuardian]" :key="pose" class="pose"
             :class="[pose, { amp: medidas[`${carpetaGuardian}/${pose}`] }]" :style="estiloAmp(carpetaGuardian, pose)"
             :src="`${nivel.arte}/${pose}.${extension(pose)}`" alt="" draggable="false" />
@@ -70,9 +73,14 @@
             <img :src="nivel.efecto" alt="" />
           </div>
           <CombatEfectos v-else-if="!ataque.remate" :class="`nivel-${nivel.numero}`" :nivel="nivel.numero" :ataque="ataque" :estela="efecto"
-            :dano="danoAplicado" :curacion="curacion" />
+            :dano="bloqueando ? null : danoAplicado" :curacion="curacion" />
         </template>
       </div>
+      <!-- Profundidad: niebla baja y partículas que pasan por delante de los luchadores -->
+      <span class="bruma-frontal" aria-hidden="true" />
+      <span class="polvo-frontal" aria-hidden="true">
+        <span v-for="(m, i) in primerPlano" :key="i" class="mota-frontal" :style="m" />
+      </span>
     </div>
     <slot name="actividad" />
     <template v-if="nivel.remate === 'solar'">
@@ -83,6 +91,7 @@
       :class="{ acierto: ataque.esquivado }" role="status">
       {{ ataque.esquivado ? '¡Esquiva! · Contraataca' : '−' + danoAplicado + ' PV' }}
     </span>
+    <span v-if="vidaBaja" class="vida-baja" aria-hidden="true" />
     <span class="peligro" aria-hidden="true" />
     <div class="indicadores">
       <slot name="hud" />
@@ -101,6 +110,10 @@ const props = defineProps({
   sinArma: Boolean,
   vidaCaballero: { type: Number, required: true },
   vidaRival: { type: Number, required: true },
+  // Furia al máximo (aura dorada en el caballero), guardián en su segunda fase y bloqueo del contraataque
+  furia: Boolean,
+  enfurecido: Boolean,
+  bloqueado: Boolean,
   // Progreso de la carga del enemigo mientras el estudiante piensa (0 a 1). null cuando no hay pregunta en curso.
   carga: { type: Number, default: null }
 })
@@ -153,6 +166,15 @@ const motas = Array.from({ length: 12 }, (_, i) => ({
   '--d': (i * 1.7).toFixed(1),
   '--v': `${((i * 29) % 44) - 22}px`
 }))
+// Partículas de primer plano: más grandes y rápidas que las del fondo, para dar sensación de profundidad.
+const primerPlano = Array.from({ length: 7 }, (_, i) => ({
+  '--y': `${38 + ((i * 17) % 50)}%`,
+  '--s': `${5 + ((i * 3) % 9)}px`,
+  '--t': `${7 + ((i * 5) % 6)}s`,
+  '--d': (i * 1.9).toFixed(1),
+  '--v': `${((i * 23) % 40) - 20}px`
+}))
+const vidaBaja = computed(() => props.vidaCaballero > 0 && props.vidaCaballero <= 30)
 const esperando = computed(() => props.carga !== null && !props.ataque)
 const faseCarga = computed(() => (!esperando.value ? 0 : props.carga >= 0.66 ? 2 : props.carga >= 0.33 ? 1 : 0))
 const enGuardia = computed(() => esperando.value && props.carga > 0.06)
@@ -195,7 +217,9 @@ onBeforeUnmount(() => {
   audioTransformacion.value?.pause()
   audioCarga.value?.pause()
 })
-const caballero = computed(() => props.ataque?.esquivado
+// Un golpe bloqueado no hace reaccionar al caballero (igual que una esquiva)
+const bloqueando = computed(() => props.bloqueado && props.ataque?.id === 'rival')
+const caballero = computed(() => props.ataque?.esquivado || bloqueando.value
   ? { herido: props.vidaCaballero / 100 <= 0.34 }
   : estadoLuchador(props.vidaCaballero, 100, ataqueRival.value))
 const guardian = computed(() => estadoLuchador(props.vidaRival, props.nivel.vida, !ataqueRival.value))
@@ -230,8 +254,16 @@ const efecto = computed(() => {
 </script>
 
 <style scoped>
+/* --alto se registra como longitud para que se calcule una sola vez en .escenario
+   (en píxeles) y los hijos con container-type no lo reinterpreten. */
+@property --alto {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 300px;
+}
 .escenario {
-  --alto: clamp(175px, 60dvh, 610px);
+  /* CombatDesafio pasa --alto-escena con el alto libre de la pantalla */
+  --alto: var(--alto-escena, clamp(175px, 60dvh, 610px));
   position: relative;
   height: var(--alto);
   overflow: hidden;
@@ -504,6 +536,108 @@ const efecto = computed(() => {
 .ambiente { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .mota { position: absolute; left: var(--x); bottom: -4%; width: var(--s); height: var(--s); border-radius: 50%; background: var(--aura, #ffd85a); opacity: 0; animation: flotar-mota var(--t) linear infinite; animation-delay: calc(var(--d) * -1s); }
 @keyframes flotar-mota { 0% { opacity: 0; translate: 0 0; } 15% { opacity: 0.55; } 85% { opacity: 0.25; } 100% { opacity: 0; translate: var(--v) calc(var(--alto) * -1.05); } }
+
+/* Profundidad: niebla baja delante de los pies y partículas de primer plano */
+.bruma-frontal {
+  position: absolute;
+  inset: auto -10% 0;
+  height: 26%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 38% 70% at 28% 100%, #e6ecf040, transparent 70%),
+    radial-gradient(ellipse 42% 60% at 74% 100%, #e6ecf033, transparent 70%);
+  filter: blur(5px);
+  animation: derivar-bruma 14s ease-in-out infinite alternate;
+}
+@keyframes derivar-bruma { from { translate: -4% 0; } to { translate: 4% -2%; } }
+.polvo-frontal { position: absolute; inset: 0; overflow: hidden; pointer-events: none; container-type: size; }
+.mota-frontal {
+  position: absolute;
+  left: 0;
+  top: var(--y);
+  width: var(--s);
+  height: var(--s);
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffb, var(--aura, #ffe9b0) 55%, transparent 72%);
+  filter: blur(1.2px);
+  opacity: 0;
+  animation: cruzar-mota var(--t) linear infinite;
+  animation-delay: calc(var(--d) * -1s);
+}
+@keyframes cruzar-mota {
+  0% { opacity: 0; translate: -6cqw 0; }
+  10% { opacity: 0.7; }
+  50% { translate: 50cqw var(--v); }
+  90% { opacity: 0.45; }
+  100% { opacity: 0; translate: 108cqw calc(var(--v) * -1); }
+}
+
+/* Respiración sutil de la cámara mientras no hay ataque ni urgencia (amplitud pequeña: al empezar un ataque no se nota el salto) */
+.secuencia:not(.activa, .urgente, .congelado) { transform-origin: 55% 62%; animation: deriva-camara 10s ease-in-out infinite alternate; }
+@keyframes deriva-camara { from { transform: scale(1); } to { transform: scale(1.012) translateX(-0.4%); } }
+
+/* Borde rojo que late cuando al caballero le queda poca vida */
+.vida-baja {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: inset 0 0 clamp(30px, 9vw, 110px) 6px #d32f2fa6;
+  animation: latido-vida 1.3s ease-in-out infinite;
+}
+@keyframes latido-vida { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .bruma-frontal, .mota-frontal, .vida-baja { animation: none; }
+  .mota-frontal { display: none; }
+  .vida-baja { opacity: 0.7; }
+  .secuencia:not(.activa, .urgente, .congelado) { animation: none; }
+}
+
+/* Furia del caballero, ira del guardián y bloqueo del contraataque */
+.aura-furia, .aura-ira { position: absolute; left: 6%; right: 6%; bottom: 2%; height: 84%; border-radius: 50%; pointer-events: none; }
+.aura-furia {
+  background: radial-gradient(ellipse at 50% 60%, #ffd54f77 0%, #ffb30033 42%, transparent 70%);
+  animation: pulso-furia 1.1s ease-in-out infinite alternate;
+}
+.aura-ira {
+  background: radial-gradient(ellipse at 50% 58%, #ff3d0066 0%, #b71c1c33 44%, transparent 72%);
+  animation: pulso-furia 0.8s ease-in-out infinite alternate;
+}
+@keyframes pulso-furia { from { scale: 0.92; opacity: 0.7; } to { scale: 1.08; opacity: 1; } }
+.barrera-bloqueo {
+  position: absolute;
+  z-index: 5;
+  left: 48%;
+  top: 16%;
+  width: 52%;
+  height: 68%;
+  border: 4px solid #ffe9a8;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7 0%, #ffd54f44 55%, transparent 74%);
+  box-shadow: 0 0 22px #ffd54f;
+  opacity: 0;
+  pointer-events: none;
+  animation: bloqueo-flash 600ms ease-out var(--momento-impacto, 700ms) both;
+}
+.barrera-bloqueo b {
+  position: absolute;
+  left: 50%;
+  top: -24%;
+  translate: -50% 0;
+  white-space: nowrap;
+  color: #fff6d8;
+  font: 900 clamp(0.8rem, 2.4vw, 1.2rem) Georgia, serif;
+  text-shadow: 0 0 8px #ffb300, 0 2px 4px #000;
+}
+@keyframes bloqueo-flash {
+  0% { opacity: 0; scale: 0.5; }
+  15% { opacity: 1; scale: 1.1; }
+  100% { opacity: 0; scale: 1.25; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aura-furia, .aura-ira { animation: none; }
+  .barrera-bloqueo { display: none; }
+}
 
 /* Pausa de impacto */
 .secuencia.congelado, .secuencia.congelado * { animation-play-state: paused !important; }
@@ -1021,13 +1155,9 @@ const efecto = computed(() => {
 }
 @keyframes destello-golpe { 0% { opacity: 0.6; } 100% { opacity: 0; } }
 
-@media (orientation: landscape) and (max-height: 510px) {
-  .secuencia { background-size: auto, 100% 132%; background-position: center, center 48%; }
-}
-
-@media (orientation: portrait) and (pointer: coarse) {
-  .secuencia { --reproduccion: paused; }
-  .secuencia, .secuencia * { animation-play-state: paused !important; }
+/* Arenas pequeñas (celular): marcador y rótulos más compactos para no tapar a los luchadores */
+@media (max-height: 520px) and (orientation: landscape), (max-width: 600px) {
+  .indicadores { inset: 0.4rem 0.6rem auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

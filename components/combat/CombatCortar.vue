@@ -10,11 +10,12 @@
       </button>
     </div>
     <span v-if="trazo" class="tajo" :style="trazo" aria-hidden="true" />
+    <p v-if="sugerencia" class="sugerencia" role="status">↔ Desliza el dedo sobre la ficha para cortarla</p>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['responder'])
@@ -22,7 +23,11 @@ const fichas = ref(null)
 const cortadas = ref([])
 const terminado = ref(false)
 const trazo = ref(null)
+const sugerencia = ref(false)
 let gesto = null
+let temporizadorSugerencia = null
+
+onBeforeUnmount(() => clearTimeout(temporizadorSugerencia))
 
 function iniciar(evento) {
   if (terminado.value || gesto || evento.button !== 0) return
@@ -36,6 +41,7 @@ function mover(evento) {
   const dy = evento.clientY - gesto.y
   const distancia = Math.hypot(dx, dy)
   if (distancia < 7) return
+  gesto.movio = true
 
   const arena = evento.currentTarget.getBoundingClientRect()
   trazo.value = {
@@ -65,6 +71,12 @@ function soltar(evento) {
 
 function cancelar(evento) {
   if (gesto?.id !== evento.pointerId) return
+  // Un toque sin deslizar no corta nada: se recuerda cómo se juega
+  if (!gesto.movio && !terminado.value && evento.type === 'pointerup') {
+    sugerencia.value = true
+    clearTimeout(temporizadorSugerencia)
+    temporizadorSugerencia = setTimeout(() => { sugerencia.value = false }, 1800)
+  }
   gesto = null
   if (!terminado.value) trazo.value = null
 }
@@ -87,9 +99,26 @@ function cortar(indice) {
 
 <style scoped>
 .cortes { position: absolute; inset: 0; z-index: 3; touch-action: none; user-select: none; }
+.sugerencia {
+  position: absolute;
+  inset: auto 0.5rem 5%;
+  width: fit-content;
+  margin-inline: auto;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid #ffe09a;
+  border-radius: 6px;
+  background: #101928f0;
+  color: #fff0cd;
+  font-size: 0.85rem;
+  text-align: center;
+  pointer-events: none;
+  animation: aparecer-pista 200ms ease-out;
+}
+@keyframes aparecer-pista { from { opacity: 0; translate: 0 8px; } }
+@media (prefers-reduced-motion: reduce) { .sugerencia { animation: none; } }
 .enunciado {
   position: absolute;
-  inset: 2.7rem 0.5rem auto;
+  inset: 3.5rem 0.5rem auto;
   width: fit-content;
   margin-inline: auto;
   padding: 0.35rem 0.65rem;
@@ -116,6 +145,11 @@ function cortar(indice) {
   cursor: crosshair;
   touch-action: none;
 }
+.fichas button { animation: entrar 320ms cubic-bezier(.2, 1.4, .4, 1) backwards; transition: border-color 120ms; }
+.fichas button:nth-child(2) { animation-delay: 70ms; }
+.fichas button:nth-child(3) { animation-delay: 140ms; }
+.fichas button:not(:disabled):hover { border-color: #ffe09a; }
+@keyframes entrar { from { opacity: 0; translate: 0 12px; scale: 0.7; } }
 .fichas button:focus-visible { outline: 2px solid #ffe09a; outline-offset: 3px; }
 .fichas button.partida {
   background: linear-gradient(155deg, #251c22 48%, #ffc079 49% 51%, #251c22 52%);
@@ -132,10 +166,11 @@ function cortar(indice) {
   pointer-events: none;
 }
 @keyframes partir {
-  40% { scale: 1.05; filter: brightness(1.7); }
-  to { opacity: .65; }
+  30% { scale: 1.12; filter: brightness(1.9); }
+  to { opacity: .55; scale: 0.94; rotate: -3deg; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fichas button.partida { animation: none; opacity: .65; }
+  .fichas button, .fichas button.partida { animation: none; }
+  .fichas button.partida { opacity: .65; }
 }
 </style>

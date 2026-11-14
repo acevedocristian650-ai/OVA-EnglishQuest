@@ -482,4 +482,39 @@ onUnmounted(() => {
     height: 52px;
   }
 }
+
+/* Celular en horizontal (poca altura): la escena y el banner no pueden pisarse.
+   La pantalla pasa a columna: la escena toma el alto libre entre el título
+   (que ahora sube desde abajo, sobre la barra de cine) y el borde superior. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .encuentro-pantalla {
+    flex-direction: column;
+  }
+  .duelo-escena {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+  }
+  .avatar-wrap {
+    width: min(220px, 34vw, 40dvh);
+    height: min(220px, 34vw, 40dvh);
+  }
+  .cinta-contenedor {
+    width: min(210px, 28vw);
+    height: 48px;
+    margin-top: -6px;
+  }
+  .emblema-vs-wrap {
+    width: min(130px, 18vw, 26dvh);
+    height: min(130px, 18vw, 26dvh);
+  }
+  .banner-zona {
+    position: static;
+    /* Deja libre la barra de cine (8vh) y, con notch, la zona segura inferior */
+    margin-bottom: max(8vh + 6px, env(safe-area-inset-bottom) + 10px);
+  }
+  .etiqueta-zona { font-size: 0.72rem; }
+  .titulo-zona { font-size: clamp(1.1rem, 3.2vw, 1.7rem); }
+  .tema-desafio { font-size: 0.8rem; }
+}
 </style>

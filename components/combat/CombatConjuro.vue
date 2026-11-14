@@ -277,7 +277,7 @@ function soltar(evento) {
   45% { scale: 1.04; }
   100% { filter: drop-shadow(0 0 4px #8ce4b5); }
 }
-.peticion { position: absolute; inset: 2.6rem 0.5rem auto; width: fit-content; margin: auto; padding: 0.25rem 0.55rem; background: #101928f2; border-radius: 6px; font-size: clamp(0.78rem, 1.8vw, 1rem); }
+.peticion { position: absolute; inset: 3.5rem 0.5rem auto; width: fit-content; margin: auto; padding: 0.25rem 0.55rem; background: #101928f2; border-radius: 6px; font-size: clamp(0.78rem, 1.8vw, 1rem); }
 .aliado { position: absolute; inset: 31% auto 40% 44%; width: 16%; min-width: 70px; }
 .aliado img { width: 100%; height: 100%; object-fit: contain; filter: sepia(0.5) hue-rotate(125deg) drop-shadow(0 0 6px #7ff2e9); opacity: 0.85; pointer-events: none; }
 .nombre-aliado { position: absolute; inset: auto -15% -1.2rem; text-align: center; color: #b6f3ee; font-size: 0.72rem; pointer-events: none; }

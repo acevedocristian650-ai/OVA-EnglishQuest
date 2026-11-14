@@ -245,8 +245,9 @@ onUnmounted(() => {
 /* Vórtice Central con Cámara acelerando suavemente hacia adelante */
 .vortice-camara {
   position: relative;
-  width: min(75vw, 460px);
-  height: min(75vw, 460px);
+  /* dvh: en celulares en horizontal el portal no puede ser más alto que la pantalla */
+  width: min(75vw, 92dvh, 460px);
+  height: min(75vw, 92dvh, 460px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -368,7 +369,8 @@ onUnmounted(() => {
 /* Texto Cinemático */
 .mensaje-cinematico {
   position: absolute;
-  bottom: 12vh;
+  /* Sobre la barra de cine y, con notch, sobre la zona segura inferior */
+  bottom: max(12vh, calc(env(safe-area-inset-bottom) + 10px));
   text-align: center;
   z-index: 25;
   pointer-events: none;

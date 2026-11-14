@@ -63,6 +63,11 @@ const showOptions = ref(false);
   to   { opacity: 1; transform: none; }
 }
 
+/* Celular en horizontal: botones más juntos */
+@media (max-height: 520px) and (orientation: landscape) {
+  .home-menu { gap: 8px; max-width: 340px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-menu__item { animation: none; }
 }

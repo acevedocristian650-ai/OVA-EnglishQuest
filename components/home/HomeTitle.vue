@@ -133,6 +133,13 @@
   to   { opacity: 1; letter-spacing: 0.26em; }
 }
 
+/* Celular en horizontal (poca altura): título más bajo para que el menú quepa */
+@media (max-height: 520px) and (orientation: landscape) {
+  .home-title__nombre { font-size: clamp(1.7rem, 10dvh, 2.6rem); }
+  .home-title__adorno { margin: 8px 0 6px; max-width: 300px; }
+  .home-title__subtitulo { font-size: 0.72rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-title__nombre, .palabra, .linea, .rombo, .home-title__subtitulo { animation: none; }
 }

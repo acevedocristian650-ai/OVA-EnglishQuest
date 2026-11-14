@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'iniciando-viaje': viajando }">
-    <MusicaHome ruta="/audio/interfazentrada.mp3" />
+    <AudioMusicaHome ruta="/audio/interfazentrada.mp3" />
     <HomeHero>
       <template #title>
         <HomeTitle />

@@ -1,0 +1,67 @@
+/*
+  responsive.css - REGLAS GLOBALES PARA MÓVIL Y TÁCTIL
+
+  · Vuetify fuerza `html { overflow-y: scroll }`, que deja siempre visible una barra
+    de scroll aunque no haga falta. Aquí se cambia a `auto` y se ocultan las barras:
+    cada pantalla del juego está pensada para caber en la ventana.
+  · En táctil: sin zoom por doble toque, sin el recuadro azul al tocar, sin
+    "tirar para recargar" mientras se arrastra en una actividad.
+  · Las pantallas del juego respetan la zona segura (notch, barra de gestos).
+*/
+
+html {
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Sin barra de scroll visible (Firefox) */
+  scrollbar-width: none;
+}
+
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Sin barra de scroll visible (Chrome, Edge, Safari), en la página y en cualquier caja */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.sin-barra::-webkit-scrollbar,
+.v-overlay__content::-webkit-scrollbar,
+.v-card::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.sin-barra,
+.v-overlay__content,
+.v-card {
+  scrollbar-width: none;
+}
+
+/* Toques rápidos: sin espera de 300 ms ni zoom por doble toque en controles */
+button,
+a,
+[role='button'],
+.v-btn,
+summary,
+label {
+  touch-action: manipulation;
+}
+
+/* Imágenes del juego: que no se arrastren ni se seleccionen al mantener pulsado */
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Ventanas (Cómo jugar, Opciones) que siempre caben en pantallas bajas */
+.v-dialog > .v-overlay__content {
+  max-height: calc(100dvh - 24px) !important;
+  max-width: calc(100vw - 24px) !important;
+}

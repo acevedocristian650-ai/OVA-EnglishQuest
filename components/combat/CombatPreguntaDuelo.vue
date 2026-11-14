@@ -4,13 +4,29 @@
     <p v-if="pregunta.contexto" class="contexto" lang="en">{{ pregunta.contexto }}</p>
 
     <template v-if="pregunta.tipo === 'ordenar'">
-      <p class="ayuda">Toca las fichas para colocarlas o quitarlas.</p>
+      <p v-if="pregunta.modelo" class="modelo" lang="en">
+        <small>{{ pregunta.modelo.endsWith('…') ? 'Empieza así' : 'Frase base' }}</small>
+        <strong>{{ pregunta.modelo }}</strong>
+      </p>
+      <div class="barra-orden">
+        <p class="ayuda">Toca las fichas para colocarlas o quitarlas. <span class="contador-fichas" aria-live="polite">{{ orden.length }} de {{ pregunta.fichas.length }}</span></p>
+        <span class="acciones-orden">
+          <AudioSonidoBoton @click="orden.pop()">
+            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">↶ Deshacer</v-btn>
+          </AudioSonidoBoton>
+          <AudioSonidoBoton @click="orden.splice(0)">
+            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">Borrar todo</v-btn>
+          </AudioSonidoBoton>
+        </span>
+      </div>
       <div class="frase fichas" role="group" aria-label="Tu frase" lang="en">
-        <span v-if="!orden.length" class="ayuda">Tu frase aparecerá aquí.</span>
-        <AudioSonidoBoton v-for="(indice, posicion) in orden" :key="indice" @click="orden.splice(posicion, 1)">
-          <v-btn type="button" variant="tonal" color="amber-lighten-3"
-            :aria-label="'Quitar ' + pregunta.fichas[indice]">{{ pregunta.fichas[indice] }}</v-btn>
-        </AudioSonidoBoton>
+        <template v-for="posicion in pregunta.fichas.length" :key="posicion">
+          <AudioSonidoBoton v-if="orden[posicion - 1] !== undefined" @click="orden.splice(posicion - 1, 1)">
+            <v-btn type="button" variant="tonal" color="amber-lighten-3"
+              :aria-label="'Quitar ' + pregunta.fichas[orden[posicion - 1]]">{{ pregunta.fichas[orden[posicion - 1]] }}</v-btn>
+          </AudioSonidoBoton>
+          <span v-else class="hueco" aria-hidden="true" />
+        </template>
       </div>
       <div class="fichas" role="group" aria-label="Fichas disponibles" lang="en">
         <AudioSonidoBoton v-for="(palabra, indice) in pregunta.fichas" :key="indice" @click="orden.push(indice)">
@@ -90,7 +106,23 @@ h2 { margin: 0.2rem 0 0.4rem; color: #fff0cc; font: 600 clamp(1rem, 2.5vw, 1.3re
   background: #262722;
 }
 .editor { width: 100%; }
-.modelo { color: #e3d4bd; }
+.modelo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin: 0.15rem 0 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-left: 3px solid #e6b96e;
+  background: #1c2330;
+  color: #e3d4bd;
+}
+.modelo small { color: #c8c0b3; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.modelo strong { color: #fff0cc; font: 600 clamp(0.95rem, 2.3vw, 1.1rem) Georgia, serif; }
+.barra-orden { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0 0.5rem; }
+.barra-orden .ayuda { margin: 0.1rem 0; }
+.acciones-orden { display: inline-flex; gap: 0.1rem; }
+.contador-fichas { color: #ffe09a; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hueco { display: inline-block; min-width: 44px; height: 36px; border: 2px dashed #b3955c66; border-radius: 6px; }
 .fichas { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; margin-top: 0.35rem; }
 .tablero { padding: 0.5rem; border: 1px solid #74634d; border-radius: 6px; background: #151a22; }
 .señal { display: grid; place-items: center; margin-bottom: 0.45rem; }
@@ -119,5 +151,20 @@ h2 { margin: 0.2rem 0 0.4rem; color: #fff0cc; font: 600 clamp(1rem, 2.5vw, 1.3re
 .zona[aria-pressed="true"] { border: 2px solid #ffdc96; background: #5b462b; }
 .marcador-zona { position: absolute; inset-block-start: 0; inset-inline-end: 0.25rem; color: #ffdc96; font-size: 1rem; }
 .confirmar { margin-top: 0.45rem; }
+.confirmar:not(.v-btn--disabled) { animation: llamar 1.6s ease-in-out infinite; }
+.frase :deep(.v-btn) { animation: colocar 220ms cubic-bezier(.2, 1.5, .4, 1) backwards; }
+.zona { transition: scale 120ms, border-color 120ms; }
+.zona:active { scale: 0.96; }
+.zona[aria-pressed="true"] { animation: elegir-zona 260ms ease-out; }
+@keyframes colocar { from { opacity: 0; scale: 0.7; translate: 0 8px; } }
+@keyframes elegir-zona { 50% { scale: 1.07; } }
+@keyframes llamar {
+  0% { box-shadow: 0 0 0 0 #ffe09a66; }
+  70%, 100% { box-shadow: 0 0 0 9px #ffe09a00; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .confirmar:not(.v-btn--disabled), .frase :deep(.v-btn), .zona[aria-pressed="true"] { animation: none; }
+  .zona { transition: none; }
+}
 .pregunta :is(button, input):focus-visible { outline: 2px solid #ffe09a; outline-offset: 2px; }
 </style>

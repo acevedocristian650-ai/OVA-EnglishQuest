@@ -15,13 +15,13 @@
 -->
 
 <template>
-  <v-img src="/images/arenas/puerta-real-animado.svg" alt="Puerta del reino al atardecer" height="100vh" position="50% 60%"
-    cover gradient="to right, rgba(8, 10, 18, 0.88), rgba(8, 10, 18, 0.5) 38%, rgba(8, 10, 18, 0.08) 68%">
-    <v-container fluid class="fill-height px-6 px-md-12">
+  <v-img src="/images/arenas/puerta-real-animado.svg" alt="Puerta del reino al atardecer" height="100dvh" position="50% 60%"
+    class="portada" cover gradient="to right, rgba(8, 10, 18, 0.88), rgba(8, 10, 18, 0.5) 38%, rgba(8, 10, 18, 0.08) 68%">
+    <v-container fluid class="fill-height px-6 px-md-12 contenedor-portada">
       <v-row class="fill-height" align="center">
-        <v-col cols="12" md="4" align-self="center">
+        <v-col cols="12" sm="7" md="4" align-self="center">
           <slot name="title" />
-          <div class="mt-8 mt-md-12">
+          <div class="mt-8 mt-md-12 hueco-menu">
             <slot name="menu" />
           </div>
         </v-col>
@@ -66,6 +66,19 @@ const brasas = [
 </script>
 
 <style scoped>
+/* La portada ocupa exactamente la pantalla visible (dvh descuenta la barra del navegador móvil) */
+.portada { height: 100vh; height: 100dvh; }
+.contenedor-portada {
+  padding-top: max(12px, env(safe-area-inset-top));
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-left: max(24px, env(safe-area-inset-left)) !important;
+}
+
+/* Celular en horizontal: menos separación para que título y menú quepan sin scroll */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hueco-menu { margin-top: 12px !important; }
+}
+
 /* Cuadrado del mismo tamaño que la imagen (512x512) para que los % coincidan con el arte */
 .escena-heroe {
   position: relative;

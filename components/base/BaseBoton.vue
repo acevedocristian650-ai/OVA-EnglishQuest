@@ -55,6 +55,8 @@ defineProps({
   color: #f3e3bd;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
   cursor: pointer;
+  min-height: 44px;
+  user-select: none;
   transition: transform 0.2s, color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
@@ -101,13 +103,6 @@ defineProps({
   animation: brillo-boton 5.5s ease-in-out 2.6s infinite;
 }
 
-.base-boton--principal:hover {
-  color: #fff;
-  background: linear-gradient(to right, rgba(120, 70, 10, 0.85), rgba(20, 12, 6, 0.4));
-  box-shadow: 0 0 30px rgba(255, 179, 71, 0.65), inset 0 0 24px rgba(255, 179, 71, 0.25);
-  transform: translateX(8px);
-  animation: none;   /* en hover manda el resplandor fijo de arriba */
-}
 
 /* ---------- Secundario: solo texto + línea ---------- */
 .base-boton--secundario {
@@ -131,30 +126,67 @@ defineProps({
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.base-boton--secundario:hover {
-  color: #ffd770;
-  border-bottom-color: #ffc247;
-  transform: translateX(8px);
-}
-
-.base-boton--secundario:hover::after,
 .base-boton--secundario:focus-visible::after {
   transform: scaleX(1);
 }
 
-.base-boton--secundario:hover .base-boton__marca,
 .base-boton:focus-visible .base-boton__marca {
   opacity: 1;
   transform: none;
 }
 
-/* El rombo gira un cuarto de vuelta al pasar el mouse */
-.base-boton:hover .base-boton__marca {
-  transform: rotate(90deg) scale(1.15);
+/* Efectos de "pasar el mouse": solo en equipos con mouse.
+   En táctil, :hover se queda pegado después de tocar y el botón quedaba desplazado. */
+@media (hover: hover) and (pointer: fine) {
+  .base-boton--principal:hover {
+    color: #fff;
+    background: linear-gradient(to right, rgba(120, 70, 10, 0.85), rgba(20, 12, 6, 0.4));
+    box-shadow: 0 0 30px rgba(255, 179, 71, 0.65), inset 0 0 24px rgba(255, 179, 71, 0.25);
+    transform: translateX(8px);
+    animation: none;   /* en hover manda el resplandor fijo de arriba */
+  }
+
+  .base-boton--secundario:hover {
+    color: #ffd770;
+    border-bottom-color: #ffc247;
+    transform: translateX(8px);
+  }
+
+  .base-boton--secundario:hover::after {
+    transform: scaleX(1);
+  }
+
+  .base-boton--secundario:hover .base-boton__marca {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* El rombo gira un cuarto de vuelta al pasar el mouse */
+  .base-boton:hover .base-boton__marca {
+    transform: rotate(90deg) scale(1.15);
+  }
 }
 
+/* Al tocar o hacer clic: se hunde un poco y se ilumina (sirve igual en táctil) */
 .base-boton:active {
-  transform: translateX(8px) scale(0.98);
+  transform: scale(0.98);
+  color: #fff;
+}
+
+.base-boton--secundario:active .base-boton__marca {
+  opacity: 1;
+  transform: none;
+}
+
+/* Pantallas estrechas: el texto puede partirse en dos líneas antes que salirse */
+@media (max-width: 360px) {
+  .base-boton { white-space: normal; }
+}
+
+/* Celular en horizontal (poca altura): botones más compactos para que quepa el menú */
+@media (max-height: 520px) and (orientation: landscape) {
+  .base-boton--principal { padding: 10px 18px; font-size: 1rem; }
+  .base-boton--secundario { padding: 6px 6px 8px; font-size: 0.95rem; }
 }
 
 /* Se ve al navegar con teclado (accesibilidad, lección 13) */

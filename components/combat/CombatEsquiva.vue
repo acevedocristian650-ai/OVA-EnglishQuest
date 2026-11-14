@@ -116,7 +116,7 @@ function confirmarConTeclado(evento, ficha) {
 .esquiva-actividad { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .aviso {
   position: absolute;
-  inset: 2.65rem 0.45rem auto;
+  inset: 3.5rem 0.45rem auto;
   width: fit-content;
   margin-inline: auto;
   padding: 0.28rem 0.55rem;

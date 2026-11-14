@@ -2,7 +2,7 @@
   <div class="palabras-combate" @pointermove="mover" @pointerup="soltar" @pointercancel="cancelar" @lostpointercapture="cancelar">
     <p class="instruccion">{{ pregunta.texto }}</p>
     <div class="fichas-arena">
-      <div v-for="(palabra, indice) in pregunta.palabras" :key="palabra.texto" class="espacio-ficha">
+      <div v-for="(palabra, indice) in pregunta.palabras" :key="palabra.texto" class="espacio-ficha" :style="{ '--n': indice }">
         <button v-if="!usadas.includes(indice)" type="button" class="palabra" lang="en"
           :class="{ arrastrando: arrastre?.indice === indice }"
           :style="arrastre?.indice === indice ? { transform: `translate(${arrastre.dx}px, ${arrastre.dy}px)` } : null"
@@ -15,15 +15,49 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['impacto', 'error', 'completar'])
 const usadas = ref([])
 const arrastre = ref(null)
 
+// Marca visualmente los dos destinos mientras se arrastra, y resalta con más fuerza el que está bajo el dedo.
+let resaltado = null
+
+function destinos(arena) {
+  return Array.from(arena?.querySelectorAll('[data-destino-palabra]') ?? [])
+}
+
+function marcarDestinos(arena, activos) {
+  destinos(arena).forEach((destino) => {
+    if (activos) destino.setAttribute('data-zona-palabra', 'activa')
+    else {
+      destino.removeAttribute('data-zona-palabra')
+      destino.removeAttribute('data-sobre')
+    }
+  })
+  if (!activos) resaltado = null
+}
+
+function destinoBajo(evento, arena) {
+  return destinos(arena).find((luchador) => {
+    const rect = luchador.getBoundingClientRect()
+    return evento.clientX >= rect.left && evento.clientX <= rect.right &&
+      evento.clientY >= rect.top && evento.clientY <= rect.bottom
+  })
+}
+
+function resaltar(destino) {
+  if (resaltado === destino) return
+  resaltado?.removeAttribute('data-sobre')
+  destino?.setAttribute('data-sobre', 'true')
+  resaltado = destino ?? null
+}
+
 function tomar(evento, indice) {
   if (arrastre.value || evento.button !== 0) return
+  marcarDestinos(evento.currentTarget.closest('.escenario'), true)
   evento.currentTarget.setPointerCapture(evento.pointerId)
   arrastre.value = { indice, puntero: evento.pointerId, x: evento.clientX, y: evento.clientY, dx: 0, dy: 0 }
 }
@@ -33,22 +67,29 @@ function mover(evento) {
   if (ficha?.puntero !== evento.pointerId) return
   ficha.dx = evento.clientX - ficha.x
   ficha.dy = evento.clientY - ficha.y
+  resaltar(destinoBajo(evento, evento.currentTarget.closest('.escenario')) ?? null)
 }
 
 function cancelar(evento) {
-  if (arrastre.value?.puntero === evento.pointerId) arrastre.value = null
+  if (arrastre.value?.puntero !== evento.pointerId) return
+  arrastre.value = null
+  marcarDestinos(evento.currentTarget.closest('.escenario'), false)
 }
+
+onBeforeUnmount(() => {
+  document.querySelectorAll('[data-zona-palabra]').forEach((destino) => {
+    destino.removeAttribute('data-zona-palabra')
+    destino.removeAttribute('data-sobre')
+  })
+})
 
 function soltar(evento) {
   const ficha = arrastre.value
   if (ficha?.puntero !== evento.pointerId) return
   arrastre.value = null
   const arena = evento.currentTarget.closest('.escenario')
-  const destino = Array.from(arena.querySelectorAll('[data-destino-palabra]')).find((luchador) => {
-    const rect = luchador.getBoundingClientRect()
-    return evento.clientX >= rect.left && evento.clientX <= rect.right &&
-      evento.clientY >= rect.top && evento.clientY <= rect.bottom
-  })?.dataset.destinoPalabra
+  const destino = destinoBajo(evento, arena)?.dataset.destinoPalabra
+  marcarDestinos(arena, false)
   if (!destino || Math.hypot(evento.clientX - ficha.x, evento.clientY - ficha.y) < 8) return
 
   const correcto = destino === (props.pregunta.palabras[ficha.indice].futuro ? 'heroe' : 'monstruo')
@@ -67,7 +108,7 @@ function soltar(evento) {
 .palabras-combate { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
 .instruccion {
   position: absolute;
-  inset: 2.25rem 0.4rem auto;
+  inset: 3.5rem 0.4rem auto;
   width: fit-content;
   margin-inline: auto;
   padding: 0.2rem 0.5rem;
@@ -103,5 +144,33 @@ function soltar(evento) {
   user-select: none;
   cursor: grab;
 }
-.arrastrando { z-index: 1; background: #4f371a; box-shadow: 0 0 12px #ffe09a; cursor: grabbing; }
+.palabra { animation: entrar-ficha 380ms cubic-bezier(.2, 1.4, .4, 1) calc(var(--n, 0) * 70ms) backwards; }
+.palabra:not(.arrastrando) { transition: scale 150ms, rotate 150ms; }
+.palabra:active { scale: 0.96; }
+.arrastrando { z-index: 1; rotate: -4deg; scale: 1.1; background: #4f371a; box-shadow: 0 0 12px #ffe09a, 0 8px 14px #0008; cursor: grabbing; }
+@keyframes entrar-ficha {
+  from { opacity: 0; translate: 0 14px; scale: 0.6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .palabra { animation: none; transition: none !important; }
+  .arrastrando { rotate: none; }
+}
+</style>
+
+<!-- Sin scoped: los destinos pertenecen a CombatEscena, pero este componente decide cuándo resaltarlos. -->
+<style>
+[data-destino-palabra][data-zona-palabra="activa"] {
+  outline: 2px dashed #ffe09a66;
+  outline-offset: -6px;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 62%, #ffe09a1f, transparent 68%);
+  transition: outline-color 120ms, background-color 120ms;
+}
+[data-destino-palabra][data-sobre="true"] {
+  outline: 3px solid #ffe09a;
+  background: radial-gradient(ellipse at 50% 62%, #ffe09a55, transparent 72%);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-destino-palabra][data-zona-palabra="activa"] { transition: none; }
+}
 </style>
