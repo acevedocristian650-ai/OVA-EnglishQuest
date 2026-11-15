@@ -5,17 +5,17 @@
 
     <div v-if="hayVoz" class="voz">
       <AudioSonidoBoton @click="hablar(false)">
-        <v-btn type="button" variant="tonal" color="amber-lighten-3">🔊 Escuchar otra vez</v-btn>
+        <v-btn type="button" variant="tonal" color="amber-lighten-3">🔊 {{ t('Escuchar otra vez') }}</v-btn>
       </AudioSonidoBoton>
       <AudioSonidoBoton @click="hablar(true)">
-        <v-btn type="button" variant="outlined" color="amber-lighten-3">🐢 Despacio</v-btn>
+        <v-btn type="button" variant="outlined" color="amber-lighten-3">🐢 {{ t('Despacio') }}</v-btn>
       </AudioSonidoBoton>
     </div>
     <p v-else class="sin-voz" lang="en">
-      Tu navegador no tiene voz. Lee la frase: <strong>{{ pregunta.audio }}</strong>
+      {{ t('Tu navegador no tiene voz. Lee la frase:') }} <strong>{{ pregunta.audio }}</strong>
     </p>
 
-    <div class="opciones" role="group" aria-label="Opciones" lang="en">
+    <div class="opciones" role="group" :aria-label="t('Opciones')" lang="en">
       <AudioSonidoBoton v-for="opcion in pregunta.opciones" :key="opcion" @click="elegir(opcion)">
         <v-btn block type="button" variant="outlined" color="amber-lighten-3" :disabled="elegida !== ''">{{ opcion }}</v-btn>
       </AudioSonidoBoton>
@@ -26,20 +26,32 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+const { t } = useLanguage()
 // Datos: { audio: 'frase que se pronuncia', opciones: [...], correcta: '...' }
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['responder'])
 const hayVoz = ref(true)
 const elegida = ref('')
+const audioEnPrimerPlano = useState('audio-en-primer-plano', () => false)
+let vozActiva = null
 
 function hablar(lento = false) {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
-  window.speechSynthesis.cancel()
   const voz = new SpeechSynthesisUtterance(props.pregunta.audio)
+  vozActiva = voz
+  audioEnPrimerPlano.value = true
+  window.speechSynthesis.cancel()
   voz.lang = 'en-US'
   voz.rate = lento ? 0.55 : 0.85
   const ingles = window.speechSynthesis.getVoices().find((v) => v.lang?.toLowerCase().startsWith('en'))
   if (ingles) voz.voice = ingles
+  const liberarAudio = () => {
+    if (vozActiva !== voz) return
+    vozActiva = null
+    audioEnPrimerPlano.value = false
+  }
+  voz.onend = liberarAudio
+  voz.onerror = liberarAudio
   window.speechSynthesis.speak(voz)
 }
 
@@ -56,6 +68,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel()
+  vozActiva = null
+  audioEnPrimerPlano.value = false
 })
 </script>
 

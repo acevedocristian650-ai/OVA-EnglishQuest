@@ -6,12 +6,12 @@
       It <span ref="hueco" class="hueco" :class="{ resaltado: sobreHueco }">___</span> attack!
     </p>
     <div v-if="pregunta.tipo === 'esquivar'" class="carriles" aria-hidden="true">
-      <span :class="{ elegido: ladoElegido === 'izquierda' }">← Izquierda</span>
-      <span :class="{ elegido: ladoElegido === 'derecha' }">Derecha →</span>
+      <span :class="{ elegido: ladoElegido === 'izquierda' }">← {{ t('Izquierda') }}</span>
+      <span :class="{ elegido: ladoElegido === 'derecha' }">{{ t('Derecha') }} →</span>
     </div>
     <button v-if="pregunta.tipo === 'esquivar'" type="button" class="control-heroe"
       :style="{ '--desplazamiento-control': gesto ? Math.max(-gesto.ancho * 0.15, Math.min(gesto.ancho * 0.15, gesto.dx)) + 'px' : null }"
-      aria-label="Arrastra al héroe o usa las flechas izquierda y derecha."
+      :aria-label="t('Arrastra al héroe o usa las flechas izquierda y derecha.')"
       @pointerdown="tomar" @keydown.left.prevent="emit('esquivar', 'izquierda')"
       @keydown.right.prevent="emit('esquivar', 'derecha')">
       <span aria-hidden="true">↔</span>
@@ -30,6 +30,7 @@
 <script setup>
 import { computed, ref, shallowRef } from 'vue'
 
+const { t } = useLanguage()
 defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['mover-heroe', 'esquivar', 'completar'])
 const gesto = ref(null)
@@ -118,14 +119,15 @@ function confirmarConTeclado(evento, ficha) {
   position: absolute;
   inset: 3.5rem 0.45rem auto;
   width: fit-content;
+  max-width: calc(100% - 1rem);
   margin-inline: auto;
-  padding: 0.28rem 0.55rem;
+  padding: 0.4rem 0.75rem;
   border: 1px solid #b58c51;
   border-radius: 6px;
   background: #101928f5;
   color: #fff1d0;
   text-align: center;
-  font: 700 clamp(0.82rem, 2vw, 1.12rem) Georgia, serif;
+  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
 }
 .carriles {
   position: absolute;

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="activo && nivel" class="encuentro-pantalla" aria-live="assertive" :aria-label="`Enfrentamiento contra ${nivel.guardian}`">
+  <div v-if="activo && nivel" class="encuentro-pantalla" aria-live="assertive" :aria-label="`${t('Enfrentamiento contra')} ${nivel.guardian}`">
     <!-- Barras cinemáticas letterbox -->
     <div class="letterbox barra-superior" />
     <div class="letterbox barra-inferior" />
@@ -17,13 +17,13 @@
       <!-- Lado del Caballero -->
       <div class="luchador-bloque bloque-caballero">
         <div class="avatar-wrap">
-          <img src="/images/personajes-mate/caballero/reposo.png" alt="Caballero del Sol" class="avatar-luchador avatar-caballero" />
+          <img src="/images/personajes-mate/caballero/reposo.png" :alt="t('Caballero del Sol')" class="avatar-luchador avatar-caballero" />
         </div>
         <div class="cinta-contenedor">
           <img src="/images/transiciones/cinta-nombre.png" alt="" class="cinta-bg" draggable="false" />
           <div class="cinta-texto">
-            <span class="sub-rol">Héroe</span>
-            <h3 class="nombre-luchador">Caballero del Sol</h3>
+            <span class="sub-rol">{{ t('Héroe') }}</span>
+            <h3 class="nombre-luchador">{{ t('Caballero del Sol') }}</h3>
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <div class="cinta-contenedor">
           <img src="/images/transiciones/cinta-nombre.png" alt="" class="cinta-bg" draggable="false" />
           <div class="cinta-texto">
-            <span class="sub-rol">Guardián de la Zona</span>
+            <span class="sub-rol">{{ t('Guardián de la Zona') }}</span>
             <h3 class="nombre-luchador">{{ nivel.guardian }}</h3>
           </div>
         </div>
@@ -51,9 +51,9 @@
 
     <!-- Banner inferior: Zona y Desafío -->
     <div class="banner-zona">
-      <span class="etiqueta-zona">ZONA {{ nivel.numero }}</span>
+      <span class="etiqueta-zona">{{ t('ZONA') }} {{ nivel.numero }}</span>
       <h2 class="titulo-zona">{{ nivel.nombre }}</h2>
-      <p class="tema-desafio">Misión: <strong lang="en">{{ nivel.tema }}</strong></p>
+      <p class="tema-desafio">{{ t('Misión:') }} <strong lang="en">{{ nivel.tema }}</strong></p>
     </div>
 
     <!-- Flash final de choque de combate -->
@@ -72,6 +72,8 @@ const props = defineProps({
     default: null
   }
 })
+
+const { t } = useLanguage()
 
 const emit = defineEmits(['listo'])
 

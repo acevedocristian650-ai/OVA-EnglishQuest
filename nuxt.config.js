@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   // (si usas la carpeta app/ de Nuxt 4, borra esta línea)
   srcDir: '.',
 
-  devtools: { enabled: false },
+  devtools: { enabled: true },
 
   // Reglas globales para móvil y táctil (barra de scroll, toques, zona segura)
   css: ['~/assets/css/responsive.css'],

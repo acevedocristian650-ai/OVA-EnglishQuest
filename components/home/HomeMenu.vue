@@ -13,20 +13,20 @@
 
 <template>
   <div>
-    <nav class="home-menu" aria-label="Menú principal">
+    <nav class="home-menu" :aria-label="t('Menú principal')">
       <div class="home-menu__item" style="--i: 0">
         <AudioSonidoBoton @click="emit('start')">
-          <BaseBoton variante="principal">Comenzar aventura</BaseBoton>
+          <BaseBoton variante="principal">{{ t('Comenzar aventura') }}</BaseBoton>
         </AudioSonidoBoton>
       </div>
       <div class="home-menu__item" style="--i: 1">
         <AudioSonidoBoton @click="showHowToPlay = true">
-          <BaseBoton>Cómo jugar</BaseBoton>
+          <BaseBoton>{{ t('Cómo jugar') }}</BaseBoton>
         </AudioSonidoBoton>
       </div>
       <div class="home-menu__item" style="--i: 2">
         <AudioSonidoBoton @click="showOptions = true">
-          <BaseBoton>Opciones</BaseBoton>
+          <BaseBoton>{{ t('Opciones') }}</BaseBoton>
         </AudioSonidoBoton>
       </div>
     </nav>
@@ -44,6 +44,7 @@ const emit = defineEmits(["start"]);
 // ¿Qué ventana está abierta?
 const showHowToPlay = ref(false);
 const showOptions = ref(false);
+const { t } = useLanguage()
 </script>
 
 <style scoped>

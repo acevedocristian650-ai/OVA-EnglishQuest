@@ -7,12 +7,12 @@
     <div class="contenido">
       <header class="cabecera-mapa">
         <AudioSonidoBoton>
-          <v-btn to="/" variant="text" color="amber-lighten-3" class="volver">Volver al inicio</v-btn>
+          <v-btn to="/" variant="text" color="amber-lighten-3" class="volver">{{ t('Volver al inicio') }}</v-btn>
         </AudioSonidoBoton>
 
-        <h1>Mapa del Reino</h1>
-        <p>Sigue el camino dorado. Toca un marcador para entrar en la zona.</p>
-        <p v-if="nivelDesbloqueado > niveles.length" class="conquista">Completaste las cuatro zonas del reino.</p>
+        <h1>{{ t('Mapa del Reino') }}</h1>
+        <p>{{ t('Sigue el camino dorado. Toca un marcador para entrar en la zona.') }}</p>
+        <p v-if="nivelDesbloqueado > niveles.length" class="conquista">{{ t('Completaste las cuatro zonas del reino.') }}</p>
       </header>
       <!-- El tablero se escala para caber completo en el espacio que queda (sin scroll) -->
       <div class="zona-mapa">
@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+const { language, t, translateContent } = useLanguage()
 const pantalla = ref('mapa')
 const nivelActual = ref(null)
 const nivelSeleccionado = ref(null)
@@ -46,7 +47,7 @@ const enTransicion = ref(false)
 const nivelDesbloqueado = ref(1)
 const intento = ref(0)
 
-const niveles = [
+const nivelesBase = [
   {
     "numero": 1,
     "nombre": "Bosque del Alba",
@@ -967,9 +968,13 @@ const niveles = [
   }
 ]
 
+const niveles = computed(() => language.value === 'en'
+  ? translateContent(nivelesBase)
+  : nivelesBase)
+
 function entrar(numero) {
   if (numero > nivelDesbloqueado.value || enTransicion.value) return
-  const nivel = niveles.find((zona) => zona.numero === numero)
+  const nivel = niveles.value.find((zona) => zona.numero === numero)
   if (!nivel) return
 
   nivelSeleccionado.value = nivel
@@ -992,7 +997,7 @@ function prepararNivel(nivel) {
 }
 
 function reintentar() {
-  nivelActual.value = prepararNivel(niveles.find((zona) => zona.numero === nivelActual.value.numero))
+  nivelActual.value = prepararNivel(niveles.value.find((zona) => zona.numero === nivelActual.value.numero))
   intento.value++
 }
 

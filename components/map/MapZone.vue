@@ -2,7 +2,7 @@
   <div class="punto">
     <AudioSonidoBoton @click="emit('elegir', nivel.numero)">
       <button type="button" class="zona" :class="estado" :disabled="estado === 'bloqueada'"
-        :aria-label="`${nivel.numero}. ${nivel.nombre} · ${nivel.tema} · ${estado}`">
+        :aria-label="`${nivel.numero}. ${nivel.nombre} · ${nivel.tema} · ${t(estado)}`">
         <span class="numero">
           <span v-if="estado === 'bloqueada'" aria-hidden="true">🔒</span>
           <span v-else-if="estado === 'completada'" aria-hidden="true">✓</span>
@@ -23,6 +23,7 @@ defineProps({
   estado: { type: String, required: true }
 })
 
+const { t } = useLanguage()
 const emit = defineEmits(['elegir'])
 </script>
 

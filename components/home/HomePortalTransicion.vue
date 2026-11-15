@@ -1,5 +1,5 @@
 <template>
-  <div v-if="activo" class="portal-transicion" aria-live="polite" aria-label="Entrando al reino">
+  <div v-if="activo" class="portal-transicion" aria-live="polite" :aria-label="t('Entrando al reino')">
     <!-- Telón de fondo cinemático -->
     <div class="telon-base" />
 
@@ -63,14 +63,14 @@
 
       <!-- Héroe saltando/sumergiéndose hacia el vórtice (como en The Hunt) -->
       <div class="heroe-inmersion">
-        <img src="/images/personajes-mate/caballero/anticipacion.webp" alt="Caballero entrando al portal" class="caballero-salto" />
+        <img src="/images/personajes-mate/caballero/anticipacion.webp" :alt="t('Caballero entrando al portal')" class="caballero-salto" />
       </div>
     </div>
 
     <!-- Título cinemático centrado -->
     <div class="mensaje-cinematico">
       <p class="subtitulo">English Quest</p>
-      <h2 class="titulo-viaje">Entrando al Reino</h2>
+      <h2 class="titulo-viaje">{{ t('Entrando al Reino') }}</h2>
     </div>
 
     <!-- Flash blanco-dorado de transición final -->
@@ -87,6 +87,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['completo'])
+const { t } = useLanguage()
 
 // Rayos de velocidad optimizados: transform puro acelerado por GPU
 function estiloRayo(i) {

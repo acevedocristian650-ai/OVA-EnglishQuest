@@ -18,12 +18,19 @@ const props = defineProps({
 })
 
 const audio = ref(null)
+const audioEnPrimerPlano = useState('audio-en-primer-plano', () => false)
 
 const iniciarMusica = () => {
-  if (audio.value && audio.value.paused) {
+  if (audio.value && audio.value.paused && !audioEnPrimerPlano.value) {
     audio.value.play().catch(() => {})
   }
 }
+
+watch(audioEnPrimerPlano, (reproducirVoz) => {
+  if (!audio.value) return
+  if (reproducirVoz) audio.value.pause()
+  else iniciarMusica()
+})
 
 onMounted(() => {
   // 2. Usar la propiedad dinámica en lugar de la ruta estática
@@ -31,9 +38,11 @@ onMounted(() => {
   audio.value.loop = true
   audio.value.volume = props.volumen
 
-  audio.value.play().catch(() => {
-    document.addEventListener('click', iniciarMusica, { once: true })
-  })
+  if (!audioEnPrimerPlano.value) {
+    audio.value.play().catch(() => {
+      document.addEventListener('click', iniciarMusica, { once: true })
+    })
+  }
 })
 
 onUnmounted(() => {

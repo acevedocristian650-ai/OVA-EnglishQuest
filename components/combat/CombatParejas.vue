@@ -3,7 +3,7 @@
     <h2 lang="en">{{ pregunta.texto }}</h2>
     <p v-if="pregunta.contexto" class="contexto">{{ pregunta.contexto }}</p>
     <div class="columnas">
-      <div class="columna" role="group" aria-label="Izquierda">
+      <div class="columna" role="group" :aria-label="t('Izquierda')">
         <AudioSonidoBoton v-for="(pareja, i) in pregunta.parejas" :key="'i' + i" @click="tocarIzquierda(i)">
           <button type="button" class="carta" lang="en"
             :class="[{ elegida: izquierda === i, hecha: hechas.includes(i), error: fallo === 'i' + i }, hechas.includes(i) ? 'par-' + i : '']"
@@ -13,7 +13,7 @@
           </button>
         </AudioSonidoBoton>
       </div>
-      <div class="columna" role="group" aria-label="Derecha">
+      <div class="columna" role="group" :aria-label="t('Derecha')">
         <AudioSonidoBoton v-for="i in ordenDerecha" :key="'d' + i" @click="tocarDerecha(i)">
           <button type="button" class="carta" lang="en"
             :class="[{ elegida: derecha === i, hecha: hechas.includes(i), error: fallo === 'd' + i }, hechas.includes(i) ? 'par-' + i : '']"
@@ -23,7 +23,7 @@
         </AudioSonidoBoton>
       </div>
     </div>
-    <p class="intentos" aria-live="polite">Errores permitidos: {{ MAX_FALLOS - fallos }}</p>
+    <p class="intentos" aria-live="polite">{{ t('Errores permitidos:') }} {{ MAX_FALLOS - fallos }}</p>
   </div>
 </template>
 
@@ -33,6 +33,7 @@ import { ref, computed } from 'vue'
 // Datos: { parejas: [{ izq, der, imagen?, alt? }], correcta: 'texto resumen' }
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['responder'])
+const { t } = useLanguage()
 
 const MAX_FALLOS = 2
 const izquierda = ref(null)
@@ -76,7 +77,7 @@ function comprobar() {
   setTimeout(() => { fallo.value = '' }, 350)
   if (fallos.value >= MAX_FALLOS) {
     terminado = true
-    emit('responder', 'Parejas incorrectas')
+    emit('responder', t('Parejas incorrectas'))
   }
 }
 </script>

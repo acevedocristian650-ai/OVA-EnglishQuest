@@ -1,6 +1,6 @@
 <template>
-  <nav class="mapa" aria-label="Zonas del reino">
-    <img class="ilustracion" src="/images/mapa-del-reino.svg" alt="" />
+  <nav class="mapa" :aria-label="t('Zonas del reino')">
+    <img class="ilustracion" :src="language === 'en' ? '/images/mapa-del-reino-en.svg' : '/images/mapa-del-reino.svg'" alt="" />
     <MapZone
       v-for="nivel in niveles"
       :key="nivel.numero"
@@ -19,6 +19,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['elegir'])
+const { language, t } = useLanguage()
 
 function estadoDe(numero) {
   if (numero < props.nivelDesbloqueado) return 'completada'

@@ -110,13 +110,15 @@ function soltar(evento) {
   position: absolute;
   inset: 3.5rem 0.4rem auto;
   width: fit-content;
+  max-width: calc(100% - 1rem);
   margin-inline: auto;
-  padding: 0.2rem 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #b58c51;
   border-radius: 6px;
   background: #101928ed;
-  color: #ffe09a;
+  color: #fff4dc;
   text-align: center;
-  font-size: clamp(0.72rem, 1.8vw, 0.95rem);
+  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
 }
 .fichas-arena {
   position: absolute;

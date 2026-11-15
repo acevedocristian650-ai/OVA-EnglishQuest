@@ -8,10 +8,10 @@
 <template>
   <v-dialog v-model="open" max-width="500">
     <v-card color="brown-darken-4" rounded="lg" border>
-      <v-card-title class="text-amber-lighten-2">📖 Cómo jugar</v-card-title>
+      <v-card-title class="text-amber-lighten-2">📖 {{ t('Cómo jugar') }}</v-card-title>
 
       <v-list bg-color="transparent">
-        <v-list-item v-for="(step, index) in steps" :key="index">
+        <v-list-item v-for="(step, index) in localizedSteps" :key="index">
           <template #prepend>
             <v-avatar color="amber-darken-3" size="28">{{ index + 1 }}</v-avatar>
           </template>
@@ -21,7 +21,7 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn color="amber" variant="flat" @click="open = false">Entendido</v-btn>
+        <v-btn color="amber" variant="flat" @click="open = false">{{ t('Entendido') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -30,6 +30,7 @@
 <script setup>
 // v-model del componente: true = ventana abierta
 const open = defineModel({ type: Boolean, default: false });
+const { t } = useLanguage()
 
 // Pasos que se muestran (array de textos)
 const steps = [
@@ -39,4 +40,6 @@ const steps = [
   "Si fallas, el guardián te ataca. Después puedes revisar la respuesta correcta y su explicación.",
   "Derrota al guardián para desbloquear la siguiente zona."
 ];
+
+const localizedSteps = computed(() => steps.map(t))
 </script>

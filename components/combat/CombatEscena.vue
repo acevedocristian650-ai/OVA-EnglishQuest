@@ -7,16 +7,16 @@
       </span>
       <div class="accion">
         <span v-if="ataque?.final" class="penumbra" aria-hidden="true" />
-        <div class="luchador caballero" data-destino-palabra="heroe" :class="[caballero, { esperando, 'en-guardia': enGuardia, victoria, tenso: urgente, 'esquiva-lograda': ataque?.esquivado }]" role="img" :aria-label="sinArma ? 'Caballero sin arma' : 'Caballero con hacha y escudo solar'">
+        <div class="luchador caballero" data-destino-palabra="heroe" :class="[caballero, { esperando, 'en-guardia': enGuardia, victoria, tenso: urgente, 'esquiva-lograda': ataque?.esquivado }]" role="img" :aria-label="t(sinArma ? 'Caballero sin arma' : 'Caballero con hacha y escudo solar')">
           <span v-if="furia" class="aura-furia" aria-hidden="true" />
-          <span v-if="bloqueando" class="barrera-bloqueo" aria-hidden="true"><b>¡Bloqueado!</b></span>
+          <span v-if="bloqueando" class="barrera-bloqueo" aria-hidden="true"><b>{{ t('¡Bloqueado!') }}</b></span>
           <img v-for="pose in [...posesCaballero, ...posesNuevasCaballero]" v-show="!sinArma" :key="pose" class="pose"
             :class="[pose, { amp: medidas[`caballero/${pose}`] }]" :style="estiloAmp('caballero', pose)"
             :src="`/images/personajes-mate/caballero/${pose}.${extension(pose)}`" alt="" draggable="false" />
           <img v-if="sinArma" class="pose sin-arma" src="/images/personajes-mate/caballero/sin-arma.webp" alt="" draggable="false" />
           <template v-if="remateSolar">
             <span class="aura-solar" aria-hidden="true" />
-            <img class="pose ascension" src="/images/personajes-mate/caballero/impacto-rayo.png" alt="" draggable="false" />
+            <img class="pose ascension" src="/images/personajes-mate/caballero/ascension.webp" alt="" draggable="false" />
           </template>
         </div>
         <div class="luchador guardian" data-destino-palabra="monstruo" :class="[guardian, { esperando, 'con-derrota': nivel.derrota, c1: faseCarga === 1, c2: faseCarga === 2, 'desde-carga': cargaPrevia > 0 }]"
@@ -89,7 +89,7 @@
     </template>
     <span v-if="ataque?.lado && danoAplicado !== null" class="resultado-esquiva"
       :class="{ acierto: ataque.esquivado }" role="status">
-      {{ ataque.esquivado ? '¡Esquiva! · Contraataca' : '−' + danoAplicado + ' PV' }}
+      {{ ataque.esquivado ? t('¡Esquiva! · Contraataca') : '−' + danoAplicado + ' ' + t('PV') }}
     </span>
     <span v-if="vidaBaja" class="vida-baja" aria-hidden="true" />
     <span class="peligro" aria-hidden="true" />
@@ -100,6 +100,7 @@
 </template>
 
 <script setup>
+const { t } = useLanguage()
 const props = defineProps({
   nivel: { type: Object, required: true },
   ataque: { type: Object, default: null },
@@ -237,7 +238,7 @@ const tiempos = computed(() => {
   if (!props.ataque) return null
   const duracion = props.ataque.duracion
   // El 54 % es el contacto en las animaciones de avance y de proyectil (el golpe final lo adelanta al 46 %).
-  const impacto = Math.round(duracion * (remateSolar.value ? 0.84 : props.ataque.final ? 0.46 : 0.54))
+  const impacto = Math.round(duracion * (remateSolar.value ? 0.72 : props.ataque.final ? 0.46 : 0.54))
   return {
     '--duracion': `${duracion}ms`,
     '--momento-impacto': `${impacto}ms`,
@@ -302,7 +303,7 @@ const efecto = computed(() => {
   border: 1px solid #df8b78;
   background: #25141bf2;
   color: #ffb09e;
-  font-size: clamp(0.85rem, 2vw, 1.1rem);
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
   font-weight: 800;
   pointer-events: none;
 }
@@ -473,7 +474,7 @@ const efecto = computed(() => {
 .pulso-impacto { position: absolute; visibility: hidden; animation: pulso 1ms linear var(--momento-impacto); }
 .pulso-solar { position: absolute; visibility: hidden; animation: pulso 1ms linear; }
 .pulso-transformacion { animation-delay: 450ms; }
-.pulso-carga { animation-delay: 5450ms; }
+.pulso-carga { animation-delay: 1600ms; }
 
 /* ---------- Poses nuevas (recortadas a su tamaño, a la misma escala que el reposo) ---------- */
 .pose.amp {
@@ -919,18 +920,18 @@ const efecto = computed(() => {
 }
 @keyframes aura-solar {
   0%, 3% { opacity: 0; scale: .7; }
-  16%, 86% { opacity: 1; scale: 1.15; }
+  16%, 72% { opacity: 1; scale: 1.15; }
   100% { opacity: 0; scale: 1; }
 }
 @keyframes esfera-solar {
-  0%, 38.9% { opacity: 0; scale: .15; }
-  83% { opacity: 1; scale: 1; }
-  85%, 100% { opacity: 0; }
+  0%, 26% { opacity: 0; scale: .15; }
+  64% { opacity: 1; scale: 1; }
+  66%, 100% { opacity: 0; }
 }
 @keyframes rayo-solar {
-  0%, 83.3% { opacity: 0; scale: 0 .65; }
-  84%, 89% { opacity: 1; scale: 1 1; }
-  96%, 100% { opacity: 0; scale: 1 .2; }
+  0%, 64% { opacity: 0; scale: 0 .65; }
+  65%, 71% { opacity: 1; scale: 1 1; }
+  84%, 100% { opacity: 0; scale: 1 .2; }
 }
 /* Después del golpe, el caballero se queda en su pose de victoria */
 .luchador.caballero.victoria :is(.reposo, .dolor) { opacity: 0; }

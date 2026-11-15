@@ -2,7 +2,7 @@
   <div class="errores">
     <h2 lang="en">{{ pregunta.texto }}</h2>
     <p v-if="pregunta.contexto" class="contexto" lang="en">{{ pregunta.contexto }}</p>
-    <div class="frase" role="group" aria-label="Frase con un error" lang="en">
+    <div class="frase" role="group" :aria-label="t('Frase con un error')" lang="en">
       <AudioSonidoBoton v-for="(palabra, posicion) in pregunta.frase" :key="posicion" @click="elegir(posicion)">
         <button type="button" class="palabra" :class="{ elegida: elegida === posicion }"
           :disabled="elegida !== null">{{ palabra }}</button>
@@ -17,6 +17,7 @@ import { ref } from 'vue'
 // Datos: { frase: ['She', 'will', 'goes'], error: 2, correcta: 'She will go.' }
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['responder'])
+const { t } = useLanguage()
 const elegida = ref(null)
 
 function elegir(posicion) {

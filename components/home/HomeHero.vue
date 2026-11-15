@@ -15,7 +15,7 @@
 -->
 
 <template>
-  <v-img src="/images/arenas/puerta-real-animado.svg" alt="Puerta del reino al atardecer" height="100dvh" position="50% 60%"
+  <v-img src="/images/arenas/puerta-real-animado.svg" :alt="t('Puerta del reino al atardecer')" height="100dvh" position="50% 60%"
     class="portada" cover gradient="to right, rgba(8, 10, 18, 0.88), rgba(8, 10, 18, 0.5) 38%, rgba(8, 10, 18, 0.08) 68%">
     <v-container fluid class="fill-height px-6 px-md-12 contenedor-portada">
       <v-row class="fill-height" align="center">
@@ -32,7 +32,7 @@
             <span class="sombra" />
 
             <div class="cuerpo">
-              <img class="heroe" src="/images/personajes-mate/caballero/reposo.png" alt="Caballero del sol" />
+              <img class="heroe" src="/images/personajes-mate/caballero/reposo.png" :alt="t('Caballero del sol')" />
               <!-- Luces recortadas a la silueta del héroe -->
               <span class="luz fria" />
               <span class="luz calida" />
@@ -53,6 +53,7 @@
 </template>
 
 <script setup>
+const { t } = useLanguage()
 // Posiciones fijas (no aleatorias en render) para evitar desajustes de hidratación en Nuxt
 const brasas = [
   { id: 1, x: 8,  t: 7,   d: 0,   dx: 18,  s: 1 },

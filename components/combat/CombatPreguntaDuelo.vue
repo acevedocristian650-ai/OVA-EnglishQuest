@@ -5,30 +5,30 @@
 
     <template v-if="pregunta.tipo === 'ordenar'">
       <p v-if="pregunta.modelo" class="modelo" lang="en">
-        <small>{{ pregunta.modelo.endsWith('…') ? 'Empieza así' : 'Frase base' }}</small>
+        <small>{{ pregunta.modelo.endsWith('…') ? t('Empieza así') : t('Frase base') }}</small>
         <strong>{{ pregunta.modelo }}</strong>
       </p>
       <div class="barra-orden">
-        <p class="ayuda">Toca las fichas para colocarlas o quitarlas. <span class="contador-fichas" aria-live="polite">{{ orden.length }} de {{ pregunta.fichas.length }}</span></p>
+        <p class="ayuda">{{ t('Toca fichas ·') }} <span class="contador-fichas" aria-live="polite">{{ orden.length }}/{{ pregunta.fichas.length }}</span></p>
         <span class="acciones-orden">
           <AudioSonidoBoton @click="orden.pop()">
-            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">↶ Deshacer</v-btn>
+            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">↶ {{ t('Deshacer') }}</v-btn>
           </AudioSonidoBoton>
           <AudioSonidoBoton @click="orden.splice(0)">
-            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">Borrar todo</v-btn>
+            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">{{ t('Borrar todo') }}</v-btn>
           </AudioSonidoBoton>
         </span>
       </div>
-      <div class="frase fichas" role="group" aria-label="Tu frase" lang="en">
+      <div class="frase fichas" role="group" :aria-label="t('Tu frase')" lang="en">
         <template v-for="posicion in pregunta.fichas.length" :key="posicion">
           <AudioSonidoBoton v-if="orden[posicion - 1] !== undefined" @click="orden.splice(posicion - 1, 1)">
             <v-btn type="button" variant="tonal" color="amber-lighten-3"
-              :aria-label="'Quitar ' + pregunta.fichas[orden[posicion - 1]]">{{ pregunta.fichas[orden[posicion - 1]] }}</v-btn>
+              :aria-label="t('Quitar ') + pregunta.fichas[orden[posicion - 1]]">{{ pregunta.fichas[orden[posicion - 1]] }}</v-btn>
           </AudioSonidoBoton>
           <span v-else class="hueco" aria-hidden="true" />
         </template>
       </div>
-      <div class="fichas" role="group" aria-label="Fichas disponibles" lang="en">
+      <div class="fichas" role="group" :aria-label="t('Fichas disponibles')" lang="en">
         <AudioSonidoBoton v-for="(palabra, indice) in pregunta.fichas" :key="indice" @click="orden.push(indice)">
           <v-btn type="button" :disabled="orden.includes(indice)" color="amber-lighten-3"
             variant="outlined">{{ palabra }}</v-btn>
@@ -37,7 +37,7 @@
     </template>
 
     <template v-else>
-      <p class="ayuda">Toca una zona del tablero y confirma.</p>
+      <p class="ayuda">{{ t('Elige zona y confirma.') }}</p>
       <div class="tablero" :class="pregunta.tablero" role="group" :aria-label="pregunta.texto">
         <div v-if="pregunta.señal" class="señal">
           <img v-if="pregunta.señal.imagen" :src="pregunta.señal.imagen" :alt="pregunta.señal.alt" />
@@ -58,7 +58,7 @@
     </template>
 
     <AudioSonidoBoton>
-      <v-btn class="confirmar" type="submit" :disabled="!listo" color="amber-lighten-3">Confirmar</v-btn>
+      <v-btn class="confirmar" type="submit" :disabled="!listo" color="amber-lighten-3">{{ t('Confirmar') }}</v-btn>
     </AudioSonidoBoton>
   </form>
 </template>
@@ -66,6 +66,7 @@
 <script setup>
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['responder'])
+const { t } = useLanguage()
 const orden = ref([])
 const seleccion = ref('')
 const respuesta = computed(() => {

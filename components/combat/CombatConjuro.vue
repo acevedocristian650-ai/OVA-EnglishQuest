@@ -4,11 +4,11 @@
     <template v-if="pregunta.tipo === 'romper-hechizo'">
       <div v-if="pregunta.invocacion" class="invocado" :class="{ repelido: resuelto }">
         <span class="portal" aria-hidden="true" />
-        <img src="/images/personajes-mate/viento/gigante.webp" alt="Gigante invocado" draggable="false" />
+        <img src="/images/personajes-mate/viento/gigante.webp" :alt="t('Gigante invocado')" draggable="false" />
       </div>
       <span v-if="pregunta.invocacion && resuelto" class="retorno" aria-hidden="true" />
       <div v-if="!invocando" class="hechizo" :class="{ roto: resuelto }">
-        <p class="objetivo">{{ resuelto ? '¡Hechizo devuelto!' : 'Rompe el hechizo con not' }}</p>
+        <p class="objetivo">{{ resuelto ? t('¡Hechizo devuelto!') : t('Rompe el hechizo con not') }}</p>
         <div class="oracion" lang="en">
           <template v-for="(palabra, indice) in pregunta.frase" :key="indice">
             <span v-if="!resuelto && (!pregunta.huecos || pregunta.huecos.includes(indice))"
@@ -25,19 +25,19 @@
       </div>
       <button v-if="!resuelto && !invocando" type="button" class="runa" :class="{ arrastrando: gesto }"
         :style="gesto ? { translate: `${gesto.dx}px ${gesto.dy}px` } : null"
-        @pointerdown="tomar" lang="en" aria-label="Arrastra not al lugar que convierte el hechizo en una negación">not</button>
+        @pointerdown="tomar" lang="en" :aria-label="t('Arrastra not al lugar que convierte el hechizo en una negación')">not</button>
     </template>
 
     <template v-else>
       <svg v-if="trazo.length" class="trazo" aria-hidden="true"><polyline :points="trazo.map(p => p.join(',')).join(' ')" /></svg>
       <p class="peticion" lang="en">{{ pregunta.contexto }}</p>
       <div class="aliado" :class="{ protegido: resuelto }">
-        <img src="/images/personajes-mate/caballero/guardia.webp" alt="Espíritu aliado" draggable="false" />
+        <img src="/images/personajes-mate/caballero/guardia.webp" :alt="t('Espíritu aliado')" draggable="false" />
         <span class="barrera" aria-hidden="true" />
-        <span class="nombre-aliado">{{ resuelto ? '¡Aliado protegido!' : 'Aliado' }}</span>
+        <span class="nombre-aliado">{{ resuelto ? t('¡Aliado protegido!') : t('Aliado') }}</span>
       </div>
       <div class="cadena" :class="{ completa: resuelto }" :lang="frasePromesa ? 'en' : 'es'" aria-live="polite">
-        {{ frasePromesa || 'Une las palabras de la promesa' }}
+        {{ frasePromesa || t('Une las palabras de la promesa') }}
       </div>
       <div v-if="!resuelto" class="nodos">
         <button v-for="(palabra, indice) in pregunta.nodos" :key="indice"
@@ -51,6 +51,7 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 
+const { t } = useLanguage()
 const props = defineProps({
   pregunta: { type: Object, required: true },
   invocando: Boolean,
@@ -192,7 +193,7 @@ function soltar(evento) {
   background: radial-gradient(ellipse, #361550f2, #151021c9 65%, transparent 72%);
   filter: drop-shadow(0 0 9px #8e55bc99);
 }
-.objetivo { text-align: center; font-size: 0.75rem; margin: 0 0 0.3rem; }
+.objetivo { margin: 0 0 0.3rem; color: #fff0cf; text-align: center; font-size: clamp(0.95rem, 2vw, 1.1rem); font-weight: 700; }
 .oracion { display: flex; align-items: center; justify-content: center; gap: 2px; font-size: clamp(0.83rem, 2vw, 1.2rem); font-weight: 700; }
 .insercion {
   display: inline-grid;
@@ -277,14 +278,27 @@ function soltar(evento) {
   45% { scale: 1.04; }
   100% { filter: drop-shadow(0 0 4px #8ce4b5); }
 }
-.peticion { position: absolute; inset: 3.5rem 0.5rem auto; width: fit-content; margin: auto; padding: 0.25rem 0.55rem; background: #101928f2; border-radius: 6px; font-size: clamp(0.78rem, 1.8vw, 1rem); }
+.peticion {
+  position: absolute;
+  inset: 3.5rem 0.5rem auto;
+  width: fit-content;
+  max-width: calc(100% - 1rem);
+  margin: auto;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #b58c51;
+  border-radius: 6px;
+  background: #101928f5;
+  color: #fff4dc;
+  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
+  text-align: center;
+}
 .aliado { position: absolute; inset: 31% auto 40% 44%; width: 16%; min-width: 70px; }
 .aliado img { width: 100%; height: 100%; object-fit: contain; filter: sepia(0.5) hue-rotate(125deg) drop-shadow(0 0 6px #7ff2e9); opacity: 0.85; pointer-events: none; }
 .nombre-aliado { position: absolute; inset: auto -15% -1.2rem; text-align: center; color: #b6f3ee; font-size: 0.72rem; pointer-events: none; }
 .barrera { position: absolute; inset: -10%; border: 2px solid #80f3de; border-radius: 50%; opacity: 0; pointer-events: none; }
 .protegido .barrera { opacity: 1; background: radial-gradient(ellipse, transparent 45%, #47cdb344); box-shadow: 0 0 18px #7ce8d5; animation: proteger 700ms ease-out; }
 @keyframes proteger { from { scale: 0.4; opacity: 0; } to { scale: 1; opacity: 1; } }
-.cadena { position: absolute; inset: auto 25% 2% 5%; padding: 0.35rem; border-bottom: 2px solid #85b9dc; background: #101928dd; text-align: center; font-size: clamp(0.8rem, 1.8vw, 1.1rem); }
+.cadena { position: absolute; inset: auto 25% 2% 5%; padding: 0.35rem; border-bottom: 2px solid #85b9dc; background: #101928dd; text-align: center; font-size: clamp(0.95rem, 1.8vw, 1.1rem); font-weight: 600; }
 .cadena.completa { border-color: #80f3de; color: #b6f3ee; }
 .nodos { position: absolute; inset: 0; }
 .nodos button { position: absolute; bottom: 18%; min-width: 55px; min-height: 48px; padding: 0.4rem; border: 1px solid #c7a263; border-radius: 50%; background: #101928f5; color: #fff0cf; touch-action: none; user-select: none; pointer-events: auto; }

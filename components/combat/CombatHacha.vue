@@ -27,19 +27,19 @@
       <i class="flash" />
       <i class="anillo" />
       <i v-for="n in 8" :key="n" class="astilla" :style="{ '--a': n * 45 + 'deg' }" />
-      <b class="texto">{{ destello.texto }}</b>
+      <b class="texto">{{ t(destello.texto) }}</b>
     </div>
 
     <div class="contador" role="status">
       <span class="pips" aria-hidden="true">
         <i v-for="n in bolas.length" :key="n" :class="{ llena: n <= cantidad }" />
       </span>
-      <span>{{ cantidad === bolas.length ? '¡Ataques cortados!' : cantidad + ' / ' + bolas.length + ' bolas cortadas' }}</span>
+      <span>{{ cantidad === bolas.length ? t('¡Ataques cortados!') : cantidad + ' / ' + bolas.length + ' ' + t('bolas cortadas') }}</span>
     </div>
 
     <button type="button" class="hacha" :class="{ moviendo: giro !== 0 }" :disabled="cantidad === bolas.length"
       :style="estiloHacha"
-      aria-label="Arrastra el hacha para cortar las bolas de energía"
+      :aria-label="t('Arrastra el hacha para cortar las bolas de energía')"
       @pointerdown="tomar">
       <span class="mango" aria-hidden="true" />
       <span class="hoja" aria-hidden="true" />
@@ -51,6 +51,7 @@
 import { computed, ref, onBeforeUnmount } from 'vue'
 import AudioEfecto from '../audio/Efecto.vue'
 
+const { t } = useLanguage()
 const props = defineProps({
   pregunta: { type: Object, required: true },
   nivel: { type: Number, required: true },
@@ -58,10 +59,11 @@ const props = defineProps({
   total: { type: Number, required: true }
 })
 const emit = defineEmits(['cortar'])
+const DURACION_TRAYECTORIA = 5
 const bolas = [
-  { id: 0, salida: .65, altura: 56 },
-  { id: 1, salida: 1.65, altura: 68 },
-  { id: 2, salida: 2.65, altura: 45 }
+  { id: 0, salida: .45, altura: 56 },
+  { id: 1, salida: 1.6, altura: 68 },
+  { id: 2, salida: 2.75, altura: 45 }
 ]
 const colores = ['#ffad55', '#9fee68', '#8ed9ff', '#ff8267']
 const textosCorte = ['¡Corte!', '¡Doble!', '¡Triple!']
@@ -89,7 +91,7 @@ let temporizadorGiro = null
 const temporizadores = new Set()
 
 function posicion(bola) {
-  const progreso = (transcurrido.value - bola.salida) / (props.total - bola.salida)
+  const progreso = (transcurrido.value - bola.salida) / DURACION_TRAYECTORIA
   return 77 - 53 * Math.max(0, Math.min(1, progreso))
 }
 
@@ -195,8 +197,13 @@ onBeforeUnmount(() => {
   color: #fff0cd;
   text-align: center;
 }
-.aviso { inset: 3.5rem 8px auto; }
-.contador { inset: auto 8px 4%; display: flex; align-items: center; justify-content: center; font-size: .85rem; }
+.aviso {
+  inset: 3.5rem 8px auto;
+  max-width: calc(100% - 2rem);
+  border: 1px solid #b58c51;
+  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
+}
+.contador { inset: auto 8px 4%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; }
 
 /* Pastillas que se llenan con cada corte */
 .pips { display: inline-flex; gap: 6px; margin-right: .5rem; }

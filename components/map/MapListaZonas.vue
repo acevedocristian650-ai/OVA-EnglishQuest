@@ -5,7 +5,7 @@
   las cuatro zonas con botones grandes. Solo se muestra en vertical (lo decide map.vue).
 -->
 <template>
-  <ol class="lista" aria-label="Zonas del reino">
+  <ol class="lista" :aria-label="t('Zonas del reino')">
     <li v-for="nivel in niveles" :key="nivel.numero">
       <AudioSonidoBoton @click="emit('elegir', nivel.numero)">
         <button type="button" class="fila" :class="estadoDe(nivel.numero)"
@@ -19,7 +19,7 @@
             <strong>{{ nivel.nombre }}</strong>
             <small>{{ nivel.tema }}</small>
           </span>
-          <span class="estado">{{ etiquetas[estadoDe(nivel.numero)] }}</span>
+          <span class="estado">{{ t(etiquetas[estadoDe(nivel.numero)]) }}</span>
         </button>
       </AudioSonidoBoton>
     </li>
@@ -33,6 +33,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['elegir'])
+const { t } = useLanguage()
 
 const etiquetas = { completada: 'Superada', disponible: 'Entrar', bloqueada: 'Bloqueada' }
 

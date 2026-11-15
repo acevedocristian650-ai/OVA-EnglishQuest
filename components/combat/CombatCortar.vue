@@ -10,13 +10,14 @@
       </button>
     </div>
     <span v-if="trazo" class="tajo" :style="trazo" aria-hidden="true" />
-    <p v-if="sugerencia" class="sugerencia" role="status">↔ Desliza el dedo sobre la ficha para cortarla</p>
+    <p v-if="sugerencia" class="sugerencia" role="status">↔ {{ t('Desliza el dedo sobre la ficha para cortarla') }}</p>
   </div>
 </template>
 
 <script setup>
 import { ref, onBeforeUnmount } from 'vue'
 
+const { t } = useLanguage()
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['responder'])
 const fichas = ref(null)
@@ -93,7 +94,7 @@ function cortar(indice) {
   const cortoLaCorrecta = opcion === correcto
   if (!cortoLaCorrecta && cortadas.value.length < props.pregunta.opciones.length - 1) return
   terminado.value = true
-  emit('responder', cortoLaCorrecta ? 'Cortaste la respuesta correcta.' : correcto)
+  emit('responder', cortoLaCorrecta ? t('Cortaste la respuesta correcta.') : correcto)
 }
 </script>
 
@@ -109,7 +110,8 @@ function cortar(indice) {
   border-radius: 6px;
   background: #101928f0;
   color: #fff0cd;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  font-weight: 700;
   text-align: center;
   pointer-events: none;
   animation: aparecer-pista 200ms ease-out;
@@ -120,11 +122,14 @@ function cortar(indice) {
   position: absolute;
   inset: 3.5rem 0.5rem auto;
   width: fit-content;
+  max-width: calc(100% - 1rem);
   margin-inline: auto;
-  padding: 0.35rem 0.65rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #b58c51;
   border-radius: 6px;
   background: #101928f5;
-  color: #fff0cd;
+  color: #fff4dc;
+  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
   text-align: center;
 }
 .fichas {
