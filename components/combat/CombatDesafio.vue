@@ -15,87 +15,93 @@
       </AudioSonidoBoton>
     </header>
 
-    <div class="contenido">
-      <div class="zona-escena">
-        <CombatEscena :nivel="nivel" :ataque="ataque" :dano-aplicado="danoAplicado"
-          :curacion="curacionAplicada" :vida-caballero="vidaCaballero" :vida-rival="vidaRival" :carga="carga"
-          :posicion-esquiva="posicionEsquiva" :lado-golpe="ataque?.lado"
-          :furia="furia >= FURIA_MAXIMA" :enfurecido="enfurecido" :bloqueado="bloqueo === 'perfecto'"
-          :sin-arma="rondaHacha && (fase === 'pregunta' || fase === 'intercepcion' || fase === 'ataque' && ataque?.id === 'rival')"
-          @impactar="impactar" @terminar="terminarAtaque">
-          <template #actividad>
-            <CombatHacha v-if="rondaHacha && ['pregunta', 'intercepcion'].includes(fase)"
-              :key="indice" :pregunta="pregunta" :nivel="nivel.numero"
-              :restante="tiempoRestante" :total="tiempoTotal" @cortar="cortarAtaque" />
-            <CombatCortar v-if="rondaCortes && ['pregunta', 'elegir'].includes(fase)"
-              :key="indice" :pregunta="pregunta" @responder="responder" />
-            <CombatClasificar v-if="fase === 'pregunta' && pregunta.tipo === 'clasificar'" :key="indice" :pregunta="pregunta"
-              @impacto="aplicarPalabra" @error="palabraIncorrecta" @completar="completarPalabras" />
-            <CombatConjuro v-if="rondaConjuro && ['invocacion', 'pregunta', 'conjuro'].includes(fase)"
-              :key="indice" :pregunta="pregunta" :invocando="fase === 'invocacion'"
-              :resuelto="fase === 'conjuro'" @responder="resolverConjuro" />
-            <CombatEsquiva v-if="rondaEsquiva && fase === 'pregunta'" :key="indice" :pregunta="pregunta"
-              @mover-heroe="desplazamientoEsquiva = $event" @esquivar="esquivar" @completar="completarAviso" />
-            <p v-if="ataque?.lado && pregunta.tipo === 'esquivar'" class="aviso-completado" lang="en">{{ pregunta.texto }}</p>
-            <p v-if="ataque?.esquivado && pregunta.tipo === 'esquiva-frase'" class="aviso-completado" lang="en">
-              It <strong>{{ respuesta }}</strong> attack!
-            </p>
-            <div v-if="efectoPalabra" :key="efectoPalabra.id" class="efecto-palabra"
-              :class="[efectoPalabra.destino, efectoPalabra.tipo]" role="status">{{ t(efectoPalabra.texto).replace('PV', t('PV')) }}</div>
-            <p v-if="avisoFase" class="banner-fase" role="status">{{ nivel.guardian }}{{ t(' se enfurece') }}</p>
-            <!-- Parada con tiempo: el anillo se cierra sobre el caballero y hay que tocar el escudo justo cuando lo alcanza -->
-            <div v-if="paradaActiva" class="parada" :style="{ '--t': duracionAnillo + 'ms' }">
-              <button type="button" class="escudo-parada" :class="{ pronto: paradaPronto, logrado: bloqueo !== '' }"
-                :disabled="bloqueo !== ''" :aria-label="t('Alzar el escudo. Toca cuando el anillo lo alcance, o pulsa la barra espaciadora.')"
-                @pointerdown.prevent="parar">
-                <span class="anillo-parada" aria-hidden="true" />
-                <span class="icono-parada" aria-hidden="true">🛡</span>
-              </button>
-            </div>
-          </template>
-          <template #hud>
-            <div class="marcador" aria-live="polite">
-              <div>
-                <p class="identidad"><strong>{{ t('Caballero') }}</strong> <span>{{ vidaCaballero }}/100</span></p>
-                <div class="marco-vida">
-                  <CombatBar :valor="vidaCaballero" color="green-darken-1" :etiqueta="t('Vida del caballero')" />
-                </div>
-                <div class="furia" :class="{ llena: furia >= FURIA_MAXIMA }" role="status"
-                  :aria-label="`${t('Furia')} ${furia} ${t('de')} ${FURIA_MAXIMA}`">
-                  <span class="furia-etiqueta">{{ furia >= FURIA_MAXIMA ? t('¡FURIA! +50 % de daño') : t('Furia') }}</span>
-                  <i v-for="n in FURIA_MAXIMA" :key="n" :class="{ llena: n <= furia }" />
-                </div>
+    <div class="banda-ronda">
+      <p class="etiqueta">{{ t('DESAFÍO') }} {{ indice + 1 }} / {{ nivel.preguntas.length }}</p>
+      <details v-if="fase === 'pregunta'" :key="indice" class="ayuda-desafio" @toggle="ayudaAbierta = $event.currentTarget.open">
+        <summary>{{ t('Cómo jugar') }}</summary>
+        <p>{{ instruccion }}</p>
+      </details>
+      <div v-if="fase === 'pregunta'" class="reloj" :class="{ urgente: tiempoRestante <= 3 }" role="timer" :aria-label="t('Tiempo restante')">
+        <span class="reloj-barra"><span :style="{ transform: `scaleX(${tiempoRestante / tiempoTotal})` }" /></span>
+        <span class="reloj-num" aria-hidden="true">{{ Math.ceil(tiempoRestante) }} s</span>
+      </div>
+    </div>
+
+    <div class="contenido" :class="{ superpuesto: panelSuperpuesto }">
+      <div class="zona-escena" :class="{ 'con-frase': armandoFrase }">
+        <div class="vista-arena">
+          <div class="marcador" aria-live="polite">
+            <div>
+              <p class="identidad"><strong>{{ t('Caballero') }}</strong> <span>{{ vidaCaballero }}/100</span></p>
+              <div class="marco-vida">
+                <CombatBar :valor="vidaCaballero" color="green-darken-1" :etiqueta="t('Vida del caballero')" />
               </div>
-              <div class="marcador-rival">
-                <p class="identidad"><strong>{{ nivel.guardian }}</strong> <span>{{ vidaRival }}/{{ nivel.vida }}</span></p>
-                <div class="marco-vida">
-                  <CombatBar :valor="vidaRival" :maximo="nivel.vida" color="red-darken-2" :etiqueta="t('Vida del guardián')" />
-                </div>
+              <div class="furia" :class="{ llena: furia >= FURIA_MAXIMA }" role="status"
+                :aria-label="`${t('Furia')} ${furia} ${t('de')} ${FURIA_MAXIMA}`">
+                <span class="furia-etiqueta">{{ furia >= FURIA_MAXIMA ? t('¡FURIA! +50 % de daño') : t('Furia') }}</span>
+                <i v-for="n in FURIA_MAXIMA" :key="n" :class="{ llena: n <= furia }" />
               </div>
             </div>
-          </template>
-        </CombatEscena>
-        <p v-if="escudoPreparado" class="proteccion" role="status">{{ t('Escudo preparado · Reduce el próximo golpe recibido.') }}</p>
+            <div class="marcador-rival">
+              <p class="identidad"><strong>{{ nivel.guardian }}</strong> <span>{{ vidaRival }}/{{ nivel.vida }}</span></p>
+              <div class="marco-vida">
+                <CombatBar :valor="vidaRival" :maximo="nivel.vida" color="red-darken-2" :etiqueta="t('Vida del guardián')" />
+              </div>
+            </div>
+          </div>
+          <p v-if="consignaCampo" class="consigna-campo">{{ consignaCampo }}</p>
+          <div class="campo" :class="{ 'campo-escucha': fase === 'pregunta' && pregunta.tipo === 'escuchar' }">
+            <CombatEscena :nivel="nivel" :ataque="ataque" :dano-aplicado="danoAplicado"
+              :curacion="curacionAplicada" :vida-caballero="vidaCaballero" :vida-rival="vidaRival" :carga="carga"
+              :posicion-esquiva="posicionEsquiva" :lado-golpe="ataque?.lado"
+              :furia="furia >= FURIA_MAXIMA" :enfurecido="enfurecido" :bloqueado="bloqueo === 'perfecto'"
+              :sin-arma="rondaHacha && (fase === 'pregunta' || fase === 'intercepcion' || fase === 'ataque' && ataque?.id === 'rival')"
+              @impactar="impactar" @terminar="terminarAtaque">
+              <template #actividad>
+                <CombatEscuchar v-if="fase === 'pregunta' && pregunta.tipo === 'escuchar'"
+                  :key="indice" :pregunta="pregunta" @responder="responder" />
+                <CombatHacha v-if="rondaHacha && ['pregunta', 'intercepcion'].includes(fase)"
+                  :key="indice" :pregunta="pregunta" :nivel="nivel.numero"
+                  :restante="tiempoRestante" :total="tiempoTotal" @cortar="cortarAtaque" />
+                <CombatCortar v-if="rondaCortes && ['pregunta', 'elegir'].includes(fase)"
+                  :key="indice" :pregunta="pregunta" @responder="responder" />
+                <CombatClasificar v-if="fase === 'pregunta' && pregunta.tipo === 'clasificar'" :key="indice" :pregunta="pregunta"
+                  @impacto="aplicarPalabra" @error="palabraIncorrecta" @completar="completarPalabras" />
+                <CombatConjuro v-if="rondaConjuro && ['invocacion', 'pregunta', 'conjuro'].includes(fase)"
+                  :key="indice" :pregunta="pregunta" :invocando="fase === 'invocacion'"
+                  :resuelto="fase === 'conjuro'" @responder="resolverConjuro" />
+                <CombatEsquiva v-if="rondaEsquiva && fase === 'pregunta'" :key="indice" :pregunta="pregunta"
+                  @mover-heroe="desplazamientoEsquiva = $event" @esquivar="esquivar" @completar="completarAviso" />
+                <p v-if="ataque?.lado && pregunta.tipo === 'esquivar'" class="aviso-completado" lang="en">{{ pregunta.texto }}</p>
+                <p v-if="ataque?.esquivado && pregunta.tipo === 'esquiva-frase'" class="aviso-completado" lang="en">
+                  It <strong>{{ respuesta }}</strong> attack!
+                </p>
+                <div v-if="efectoPalabra" :key="efectoPalabra.id" class="efecto-palabra"
+                  :class="[efectoPalabra.destino, efectoPalabra.tipo]" role="status">{{ t(efectoPalabra.texto).replace('PV', t('PV')) }}</div>
+                <p v-if="avisoFase" class="banner-fase" role="status">{{ nivel.guardian }}{{ t(' se enfurece') }}</p>
+                <!-- Parada con tiempo: el anillo se cierra sobre el caballero y hay que tocar el escudo justo cuando lo alcanza -->
+                <div v-if="paradaActiva" class="parada" :style="{ '--t': duracionAnillo + 'ms' }">
+                  <button type="button" class="escudo-parada" :class="{ pronto: paradaPronto, logrado: bloqueo !== '' }"
+                    :disabled="bloqueo !== ''" :aria-label="t('Alzar el escudo. Toca cuando el anillo lo alcance, o pulsa la barra espaciadora.')"
+                    @pointerdown.prevent="parar">
+                    <span class="anillo-parada" aria-hidden="true" />
+                    <span class="icono-parada" aria-hidden="true">🛡</span>
+                  </button>
+                </div>
+              </template>
+            </CombatEscena>
+            <p v-if="escudoPreparado" class="proteccion" role="status">{{ t('Escudo preparado · Reduce el próximo golpe recibido.') }}</p>
+          </div>
+        </div>
+        <CombatPreguntaDuelo v-if="armandoFrase" class="mesa-frase" :key="indice"
+          :pregunta="pregunta" @responder="responder" />
       </div>
 
-      <aside class="panel sin-barra" :aria-label="t('Desafío de inglés')">
-        <div class="panel-cabecera">
-          <p class="etiqueta">{{ t('DESAFÍO') }} {{ indice + 1 }} / {{ nivel.preguntas.length }}</p>
-          <details v-if="fase === 'pregunta'" :key="indice" class="ayuda-desafio" open>
-            <summary>{{ t('Cómo jugar') }}</summary>
-            <p>{{ instruccion }}</p>
-          </details>
-        </div>
-        <div v-if="fase === 'pregunta'" class="reloj" :class="{ urgente: tiempoRestante <= 3 }" role="timer" :aria-label="t('Tiempo restante')">
-          <span class="reloj-barra"><span :style="{ transform: `scaleX(${tiempoRestante / tiempoTotal})` }" /></span>
-          <span class="reloj-num" aria-hidden="true">{{ Math.ceil(tiempoRestante) }} s</span>
-        </div>
-
+      <aside v-if="fase !== 'pregunta' || rondaPanel" class="panel sin-barra" :aria-label="t('Desafío de inglés')">
         <template v-if="fase === 'pregunta'">
           <CombatErrores v-if="pregunta.tipo === 'errores'" :key="indice" :pregunta="pregunta" @responder="responder" />
           <CombatParejas v-if="pregunta.tipo === 'parejas'" :key="indice" :pregunta="pregunta" @responder="responder" />
-          <CombatEscuchar v-if="pregunta.tipo === 'escuchar'" :key="indice" :pregunta="pregunta" @responder="responder" />
-          <CombatPreguntaDuelo v-if="!rondaHacha && !rondaCortes && !rondaConjuro && !rondaEsquiva && !rondaPanel && pregunta.tipo !== 'clasificar'" :key="indice" :pregunta="pregunta" @responder="responder" />
+          <CombatPreguntaDuelo v-if="pregunta.tipo === 'zona'" :key="indice" :pregunta="pregunta" @responder="responder" />
         </template>
 
         <template v-else-if="fase === 'aviso-contra'">
@@ -127,7 +133,7 @@
                 <span class="movimiento">
                   <strong>{{ t(movimiento.nombre) }}</strong>
                   <small v-if="movimiento.id === 'rayo' && rayoUsado">{{ t('Ya lo usaste en este duelo') }}</small>
-                  <small v-else>{{ fuerza(movimiento) }} {{ t(' de daño · ') }}{{ t(movimiento.descripcion) }}</small>
+                  <small v-else>{{ Math.min(danoDisponible(), fuerza(movimiento)) }} {{ t(' de daño · ') }}{{ t(movimiento.descripcion) }}</small>
                 </span>
               </v-btn>
             </AudioSonidoBoton>
@@ -150,7 +156,19 @@
 
         <template v-else>
           <h2>{{ pruebaRemate ? t('Prueba de remate completada') : vidaRival === 0 ? t('¡Victoria!') : t('Fin del desafío') }}</h2>
-          <template v-if="!pruebaRemate">
+          <div v-if="registroRepaso" class="repaso" aria-live="polite">
+            <h3 lang="en">{{ registroRepaso.pregunta.texto }}</h3>
+            <p>{{ t('Tu respuesta') }} <span lang="en">{{ registroRepaso.respuesta || t('Sin respuesta') }}</span></p>
+            <p>{{ t('Respuesta correcta') }} <strong lang="en">{{ registroRepaso.pregunta.correcta }}</strong></p>
+            <p>{{ registroRepaso.pregunta.explicacion }}</p>
+            <div class="paginas">
+              <v-btn size="small" :disabled="indiceRepaso === 0" @click="indiceRepaso--">{{ t('Anterior') }}</v-btn>
+              <span>{{ indiceRepaso + 1 }} / {{ historial.length }}</span>
+              <v-btn size="small" :disabled="indiceRepaso + 1 === historial.length" @click="indiceRepaso++">{{ t('Siguiente') }}</v-btn>
+              <v-btn size="small" @click="indiceRepaso = null">{{ t('Volver al resultado') }}</v-btn>
+            </div>
+          </div>
+          <template v-else-if="!pruebaRemate">
             <div v-if="nivel.numero === 4 && vidaRival === 0" class="epilogo-real" role="status" aria-live="polite">
               <span class="epilogo-sello" aria-hidden="true">{{ t('✦ Victoria del Reino ✦') }}</span>
               <p>{{ t('Lo has logrado, regresaste al castillo del rey; serás recordado hasta el fin de los tiempos.') }}</p>
@@ -161,19 +179,11 @@
               <p>{{ t('Respuesta correcta') }} <strong lang="en">{{ pregunta.correcta }}</strong></p>
               <p>{{ pregunta.explicacion }}</p>
             </template>
-            <details>
-              <summary>{{ t('Revisar respuestas') }}</summary>
-              <ol>
-                <li v-for="(registro, posicion) in historial" :key="posicion">
-                  <strong lang="en">{{ registro.pregunta.texto }}</strong>
-                  <p>{{ t('Tu respuesta') }} <span lang="en">{{ registro.respuesta || t('Sin respuesta') }}</span></p>
-                  <p>{{ t('Respuesta correcta') }} <strong lang="en">{{ registro.pregunta.correcta }}</strong></p>
-                  <p>{{ registro.pregunta.explicacion }}</p>
-                </li>
-              </ol>
-            </details>
+            <v-btn v-if="historial.length" variant="text" color="amber-lighten-3" @click="indiceRepaso = 0">
+              {{ t('Revisar respuestas') }}
+            </v-btn>
           </template>
-          <div class="opciones">
+          <div v-if="!registroRepaso" class="opciones">
             <AudioSonidoBoton @click="emit('volver')">
               <v-btn block color="amber-lighten-3" variant="flat">{{ t('Regresar al mapa') }}</v-btn>
             </AudioSonidoBoton>
@@ -219,7 +229,11 @@ const ataques = [
   { id: 'fenix', nombre: 'Llama del Fénix', dano: 20, duracion: 3200, magia: true, curacion: 12, descripcion: 'Recupera hasta 12 de vida' }
 ]
 
-const TIEMPO_MAXIMO = 17
+const segundosPorActividad = {
+  ordenar: 35, escuchar: 35, parejas: 32, errores: 28, clasificar: 26,
+  'romper-hechizo': 26, 'proteger-aliado': 26, zona: 25, 'esquiva-frase': 24,
+  esquivar: 20, cortar: 22, hacha: 20
+}
 const DANO_PALABRA = 14
 const CURACION_PALABRA = 8
 
@@ -234,6 +248,8 @@ const danoAplicado = ref(null)
 const curacionAplicada = ref(0)
 const rayoUsado = ref(false)
 const historial = ref([])
+const indiceRepaso = ref(null)
+const registroRepaso = computed(() => historial.value[indiceRepaso.value])
 const agotado = ref(false)
 const efectoPalabra = ref(null)
 let idEfectoPalabra = 0
@@ -274,7 +290,10 @@ const pregunta = computed(() => props.nivel.preguntas[indice.value])
 const rondaHacha = computed(() => pregunta.value.tipo === 'hacha')
 const rondaCortes = computed(() => pregunta.value.tipo === 'cortar')
 const rondaEsquiva = computed(() => ['esquivar', 'esquiva-frase'].includes(pregunta.value.tipo))
-const rondaPanel = computed(() => ['errores', 'parejas', 'escuchar'].includes(pregunta.value.tipo))
+const rondaPanel = computed(() => ['errores', 'parejas', 'zona'].includes(pregunta.value.tipo))
+const panelSuperpuesto = computed(() => fase.value === 'pregunta'
+  ? rondaPanel.value || pregunta.value.tipo === 'ordenar'
+  : ['revision', 'resultado', 'elegir'].includes(fase.value))
 const rondaConjuro = computed(() => ['romper-hechizo', 'proteger-aliado'].includes(pregunta.value.tipo))
 let temporizadorConjuro = null
 const desplazamientoEsquiva = ref(0)
@@ -296,7 +315,14 @@ const instruccion = computed(() => {
   if (pregunta.value.tipo === 'clasificar') return t('Suelta las palabras sobre los personajes antes de que ataque el guardián.')
   return t('Si aciertas, eliges un ataque. Si fallas o se acaba el tiempo, el guardián te ataca.')
 })
-const tiempoTotal = computed(() => Math.min(props.nivel.tiempo ?? TIEMPO_MAXIMO, TIEMPO_MAXIMO))
+const armandoFrase = computed(() => fase.value === 'pregunta' && pregunta.value.tipo === 'ordenar')
+const consignaCampo = computed(() => {
+  if (fase.value !== 'pregunta') return ''
+  if (pregunta.value.tipo === 'proteger-aliado') return pregunta.value.contexto
+  return ['clasificar', 'cortar', 'hacha', 'esquivar'].includes(pregunta.value.tipo) ? pregunta.value.texto : ''
+})
+const ayudaAbierta = ref(false)
+const tiempoTotal = computed(() => pregunta.value.tiempo ?? props.nivel.tiempo ?? segundosPorActividad[pregunta.value.tipo] ?? 25)
 const tiempoRestante = ref(tiempoTotal.value)
 // El enemigo carga su ataque a medida que se acaba el tiempo
 const carga = computed(() => {
@@ -310,6 +336,7 @@ let reloj = null
 let ultimoTick = 0
 
 function arrancarReloj() {
+  ayudaAbierta.value = false
   pararReloj()
   tiempoRestante.value = tiempoTotal.value
   ultimoTick = performance.now()
@@ -321,12 +348,16 @@ function pararReloj() {
   reloj = null
 }
 
+function reiniciarReferencia() {
+  ultimoTick = performance.now()
+}
+
 function tick() {
   const ahora = performance.now()
   const transcurrido = ahora - ultimoTick
   ultimoTick = ahora
   // El tiempo no corre con la pestaña oculta
-  if (document.hidden) return
+  if (document.hidden || ayudaAbierta.value) return
   tiempoRestante.value = Math.max(0, tiempoRestante.value - transcurrido / 1000)
   if (tiempoRestante.value === 0) agotar()
 }
@@ -353,6 +384,7 @@ function sonar(canal, ruta) {
 watch([fase, indice], () => (fase.value === 'pregunta' ? arrancarReloj() : pararReloj()))
 onMounted(() => {
   window.addEventListener('keydown', teclaParada)
+  document.addEventListener('visibilitychange', reiniciarReferencia)
   arrancarReloj()
   sonar(vozJefe, `${sonidosJefe.value}-grito.mp3`)
 })
@@ -365,6 +397,7 @@ watch(enfurecido, (activo) => {
 })
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', teclaParada)
+  document.removeEventListener('visibilitychange', reiniciarReferencia)
   pararReloj()
   clearTimeout(temporizadorConjuro)
   clearTimeout(temporizadorAviso)
@@ -382,6 +415,13 @@ const mensajeFinal = computed(() => {
   if (vidaCaballero.value === 0) return t('El caballero se quedó sin vida.')
   return t('El guardián resistió los seis desafíos. Puedes revisar tus respuestas y volver a intentarlo.')
 })
+
+// Reservar vida para las rondas pendientes evita que un ataque fuerte se salte su actividad.
+function danoDisponible() {
+  const rondasPendientes = props.nivel.preguntas.length - indice.value - 1
+  const reserva = Math.ceil(props.nivel.vida * rondasPendientes / (2 * props.nivel.preguntas.length))
+  return Math.max(0, vidaRival.value - reserva)
+}
 
 function fuerza(movimiento) {
   const base = movimiento.dano + (props.nivel.debilidad === movimiento.id ? 4 : 0)
@@ -423,7 +463,7 @@ function resolverConjuro(opcion) {
 
   fase.value = 'conjuro'
   if (pregunta.value.tipo === 'romper-hechizo') {
-    const dano = Math.min(12, vidaRival.value)
+    const dano = Math.min(12, danoDisponible())
     vidaRival.value -= dano
     mostrarEfectoPalabra('monstruo', 'dano', `−${dano} PV`)
     sonar(golpeSonido, '/audio/combate/rayo.mp3')
@@ -489,7 +529,7 @@ function aplicarPalabra(destino) {
     return
   }
 
-  const dano = Math.min(vidaRival.value, DANO_PALABRA)
+  const dano = Math.min(danoDisponible(), DANO_PALABRA)
   vidaRival.value -= dano
   mostrarEfectoPalabra(destino, 'dano', `−${dano} PV`)
   sonar(golpeSonido, '/audio/combate/escudo.mp3')
@@ -513,7 +553,7 @@ function atacar(movimiento) {
     rayoUsado.value = true
   }
   const usaFuria = furia.value >= FURIA_MAXIMA
-  const dano = fuerza(movimiento)
+  const dano = Math.min(danoDisponible(), fuerza(movimiento))
   if (usaFuria) furia.value = 0
   // El golpe que remata al guardián se convierte en una secuencia final
   if (dano >= vidaRival.value) {
@@ -545,7 +585,7 @@ function iniciarRemate(dano) {
   }
   iniciarAtaque({
     id: 'hachazo', nombre: nombresRemate[remate] ?? '¡Golpe final!',
-    dano, duracion: 5600, sangre: !remate, final: true, remate
+    dano, duracion: remate === 'solar' ? 14000 : 5600, sangre: !remate, final: true, remate
   })
 }
 
@@ -665,7 +705,7 @@ function teclaParada(evento) {
 function cerrarRonda() {
   const terminado = vidaRival.value === 0 || vidaCaballero.value === 0 || historial.value.length === props.nivel.preguntas.length
   fase.value = terminado ? 'resultado' : 'revision'
-  if (vidaRival.value === 0) emit('victoria')
+  if (vidaRival.value === 0 && historial.value.length === props.nivel.preguntas.length) emit('victoria')
 }
 
 function siguiente() {
@@ -710,18 +750,16 @@ h1 { min-width: 0; color: #f5e5c2; font-family: Georgia, serif; font-size: clamp
 h1 small { color: #c4c7cd; font-family: system-ui, sans-serif; font-size: 0.68em; font-weight: 500; }
 .contenido { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.55rem; }
 
-/* Arena: ocupa el alto libre. Su alto se pasa a CombatEscena con --alto-escena
-   (62cqw evita que quede demasiado alta y estrecha en ventanas angostas). */
-.zona-escena {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 120px;
-  display: grid;
-  align-content: end;
-  container-type: size;
-  --alto-escena: min(100cqh, 62cqw);
-}
-
+.zona-escena { position: relative; flex: 1 1 0; min-height: 0; min-width: 0; display: flex; flex-direction: column; }
+.vista-arena { min-height: 0; min-width: 0; flex: 1; display: flex; flex-direction: column; }
+.campo { flex: 1; min-height: 0; container-type: size; display: grid; align-items: center; --alto-escena: min(100cqh, 62cqw); }
+.banda-ronda { flex: none; width: 100%; max-width: 1240px; margin: 0 auto 4px; display: flex; align-items: center; gap: 12px; }
+.banda-ronda .reloj { flex: 1; max-width: 24rem; margin: 0 0 0 auto; }
+.banda-ronda .ayuda-desafio { margin: 0; }
+.ayuda-desafio[open] p { position: absolute; top: 100%; left: 0; z-index: 20; width: min(270px, 60vw); padding: 8px; background: #121c2b; border: 1px solid #b3955c; border-radius: 5px; }
+.marcador { flex: none; padding: 3px 10px; }
+.consigna-campo { flex: none; text-align: center; margin: 0; padding: 3px 8px; color: #ffebc3; background: #1a222b; font: 600 clamp(13px, 1.8vw, 19px)/1.2 Georgia, serif; }
+.mesa-frase { flex: none; border: 1px solid #917751; border-radius: 8px; background: #182029; padding: 6px 12px; }
 /* Panel del desafío: toma lo que necesita; si el contenido es muy largo
    (revisión final) se desplaza por dentro, sin barra visible. */
 .panel {
@@ -878,7 +916,6 @@ h1 small { color: #c4c7cd; font-family: system-ui, sans-serif; font-size: 0.68em
   pointer-events: none;
 }
 .panel { padding: 0.55rem clamp(0.6rem, 2vw, 1.25rem); border: 1px solid #74634d; border-radius: 8px; background: linear-gradient(110deg, #292927, #1b2028 78%); }
-.panel-cabecera { display: flex; align-items: center; flex-wrap: wrap; gap: 0.15rem 1rem; }
 .etiqueta { color: #e6b96e; font-size: 0.67rem; font-weight: 800; letter-spacing: 0.13em; }
 h2 { margin: 0.2rem 0 0.35rem; color: #fff0cc; font-family: Georgia, serif; font-size: clamp(1rem, 2.5vw, 1.35rem); }
 .panel p:not(.etiqueta) { margin-bottom: 0.5rem; font-size: 0.95rem; line-height: 1.35; }
@@ -917,18 +954,7 @@ h2 { margin: 0.2rem 0 0.35rem; color: #fff0cc; font-family: Georgia, serif; font
   font-weight: 700;
   cursor: pointer;
 }
-.panel .ayuda-desafio p:not(.etiqueta) {
-  max-width: min(26rem, 80vw);
-  margin: 0.35rem 0 0;
-  padding: 0.55rem 0.7rem;
-  border: 1px solid #8a775a;
-  border-radius: 6px;
-  background: #101721f5;
-  color: #f1e7d6;
-  font-size: 0.95rem;
-  font-weight: 600;
-  line-height: 1.35;
-}
+.paginas { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .opciones { display: grid; gap: 0.35rem; }
 .movimiento { display: grid; line-height: 1.3; text-align: left; }
 .movimiento small { font-size: 0.72rem; }
@@ -936,8 +962,6 @@ h2 { margin: 0.2rem 0 0.35rem; color: #fff0cc; font-family: Georgia, serif; font
 .panel :deep(.v-btn__content) { white-space: normal; }
 details { margin-block: 0.55rem; font-size: 0.82rem; }
 summary { cursor: pointer; color: #ffe09a; }
-ol { padding-left: 1.2rem; }
-li { margin-block: 0.55rem; }
 .aviso-completado {
   position: absolute;
   inset: 3.5rem 0.45rem auto;
@@ -999,31 +1023,71 @@ li { margin-block: 0.55rem; }
   .cabecera { margin-bottom: 0.3rem; }
 }
 
-/* Celular en horizontal: el alto es lo que escasea, así que la arena y el panel
-   van lado a lado. La arena usa todo el alto libre y el panel se desplaza por dentro. */
+/* La arena y los controles comparten el ancho disponible. */
 @media (orientation: landscape) and (max-height: 520px) {
   .desafio { padding-top: max(0.25rem, env(safe-area-inset-top)); padding-bottom: max(0.3rem, env(safe-area-inset-bottom)); }
   .cabecera { flex-wrap: nowrap; gap: 0.5rem; margin-bottom: 0.25rem; }
   .cabecera :deep(.v-btn) { min-height: 32px; height: 32px; padding-inline: 0.5rem; font-size: 0.72rem; }
   h1 { flex: 1; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .contenido { flex-direction: row; gap: 0.4rem; }
-  .zona-escena { flex: 1 1 auto; min-width: 0; min-height: 0; align-content: center; }
+  .contenido, .zona-escena.con-frase { gap: 4px; }
+  .con-frase .mesa-frase { min-height: 0; max-height: 44%; overflow-y: auto; }
+  .campo { --alto-escena: 100cqh; }
+  .banda-ronda { gap: 8px; }
+  .identidad { font-size: clamp(12px, 2.9dvh, 15px); }
+  .marcador { padding: 0 5px 3px; }
+  .furia { font-size: 10px; margin-top: 1px; }
+  .cabecera { min-height: 30px; }
   .panel {
-    flex: 0 0 clamp(210px, 36%, 340px);
-    max-height: none;
+    flex: 0 1 auto;
+    max-height: 42%;
     padding: 0.4rem 0.55rem;
   }
   .panel :deep(.v-btn) { min-height: 38px; padding-block: 0.2rem; }
-  .opciones, .ataques { grid-template-columns: minmax(0, 1fr); }
+  .opciones, .ataques { grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); }
   h2 { margin: 0.1rem 0 0.2rem; font-size: 0.95rem; }
   .movimiento small { font-size: 0.65rem; }
   .panel p:not(.etiqueta) { margin-bottom: 0.3rem; }
-  .panel-cabecera { gap: 0.1rem 0.6rem; }
   /* Títulos y textos de las actividades del panel (componentes hijos) */
   .panel :deep(h2) { margin: 0.1rem 0 0.2rem; font-size: 1rem; line-height: 1.2; }
   .panel :deep(p) { font-size: 0.9rem; }
   .ayuda-desafio { font-size: 0.8rem; }
-  .panel .ayuda-desafio p:not(.etiqueta) { font-size: 0.9rem; }
+}
+
+/* El HUD ocupa su propia fila. Las actividades comparten la segunda con la arena. */
+@media (orientation: landscape) and (max-height: 600px), (orientation: landscape) and (pointer: coarse) {
+  .contenido.superpuesto {
+    display: grid;
+    grid-template: auto minmax(0, 1fr) / minmax(0, 1fr);
+    gap: 0;
+  }
+  .superpuesto .zona-escena, .superpuesto .vista-arena { display: contents; }
+  .superpuesto .marcador { grid-area: 1 / 1; }
+  .superpuesto .campo { grid-area: 2 / 1; --alto-escena: 100cqh; }
+  .superpuesto .panel, .superpuesto .mesa-frase {
+    grid-area: 2 / 1;
+    align-self: center;
+    justify-self: start;
+    position: relative;
+    z-index: 6;
+    width: min(60%, 660px);
+    margin-left: 5px;
+    max-height: none;
+    overflow: visible;
+    padding: 6px 8px;
+    background: rgb(19 26 35 / 91%);
+  }
+  .superpuesto .panel :deep(.carta) { min-height: 34px; }
+  .superpuesto .proteccion { left: auto; right: 5px; max-width: 36%; font-size: .75rem; }
+  .superpuesto .panel :deep(.columna) { gap: 4px; }
+  .superpuesto .panel :deep(.tablero) { display: flex; align-items: center; gap: 6px; padding: 4px; }
+  .superpuesto .panel :deep(.zonas) { flex: 1; }
+  .superpuesto .panel :deep(.señal) { margin: 0; }
+  .superpuesto .epilogo-real { margin: 3px 0; padding: 4px; }
+  .superpuesto .epilogo-real p { font-size: 1rem; }
+  .superpuesto .panel :deep(.v-btn) { min-height: 32px; }
+}
+@media (orientation: landscape) and (max-height: 360px) {
+  .superpuesto .panel, .superpuesto .mesa-frase { width: calc(100% - 10px); }
 }
 
 /* Pantallas angostas (celular en vertical): cabecera compacta en dos filas */
@@ -1036,13 +1100,11 @@ li { margin-block: 0.55rem; }
 /* Celular o tableta en vertical: arena arriba a todo el ancho y panel debajo,
    que ocupa el resto de la pantalla y se desplaza por dentro si hace falta. */
 @media (orientation: portrait) and (max-width: 900px) {
-  .zona-escena {
-    flex: 0 0 auto;
-    height: min(80vw, 50%);
-    min-height: 170px;
-    align-content: start;
-    --alto-escena: 100cqh;
-  }
-  .panel { flex: 1 1 auto; max-height: none; }
+  .zona-escena { flex: 1 1 0; min-height: 0; }
+  .campo { --alto-escena: min(100cqh, 85cqw); }
+  .campo.campo-escucha { --alto-escena: 100cqh; }
+  .panel { flex: 0 1 auto; max-height: 46%; }
+  .banda-ronda { gap: 6px; }
+  .banda-ronda .reloj { min-width: 65px; }
 }
 </style>

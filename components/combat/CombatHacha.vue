@@ -5,7 +5,6 @@
     <!-- Un sonido por cada bola cortada -->
     <AudioEfecto ruta="/audio/combate/hachazo.mp3" :disparo="cantidad" :volumen="0.55" />
 
-    <p class="aviso" lang="en">{{ pregunta.texto }}</p>
 
     <!-- Estela luminosa que deja la hoja al moverse -->
     <svg class="rastro" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -59,7 +58,7 @@ const props = defineProps({
   total: { type: Number, required: true }
 })
 const emit = defineEmits(['cortar'])
-const DURACION_TRAYECTORIA = 5
+
 const bolas = [
   { id: 0, salida: .45, altura: 56 },
   { id: 1, salida: 1.6, altura: 68 },
@@ -91,7 +90,7 @@ let temporizadorGiro = null
 const temporizadores = new Set()
 
 function posicion(bola) {
-  const progreso = (transcurrido.value - bola.salida) / DURACION_TRAYECTORIA
+  const progreso = (transcurrido.value - bola.salida) / (props.total - bola.salida)
   return 77 - 53 * Math.max(0, Math.min(1, progreso))
 }
 
@@ -187,7 +186,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .intercepcion { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.aviso, .contador {
+.contador {
   position: absolute;
   width: fit-content;
   margin-inline: auto;
@@ -196,12 +195,6 @@ onBeforeUnmount(() => {
   background: #101928ed;
   color: #fff0cd;
   text-align: center;
-}
-.aviso {
-  inset: 3.5rem 8px auto;
-  max-width: calc(100% - 2rem);
-  border: 1px solid #b58c51;
-  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
 }
 .contador { inset: auto 8px 4%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; }
 

@@ -1,8 +1,7 @@
 <template>
   <div class="esquiva-actividad" :class="{ arrastre: gesto }" @pointermove="mover" @pointerup="soltar"
     @pointercancel="cancelar" @lostpointercapture="cancelar">
-    <p v-if="pregunta.tipo === 'esquivar'" class="aviso" lang="en">{{ pregunta.texto }}</p>
-    <p v-else class="aviso" lang="en">
+    <p v-if="pregunta.tipo === 'esquiva-frase'" class="aviso" lang="en">
       It <span ref="hueco" class="hueco" :class="{ resaltado: sobreHueco }">___</span> attack!
     </p>
     <div v-if="pregunta.tipo === 'esquivar'" class="carriles" aria-hidden="true">
@@ -117,7 +116,7 @@ function confirmarConTeclado(evento, ficha) {
 .esquiva-actividad { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .aviso {
   position: absolute;
-  inset: 3.5rem 0.45rem auto;
+  inset: 4px 0.45rem auto;
   width: fit-content;
   max-width: calc(100% - 1rem);
   margin-inline: auto;

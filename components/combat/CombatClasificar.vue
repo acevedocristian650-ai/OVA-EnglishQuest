@@ -1,6 +1,6 @@
 <template>
   <div class="palabras-combate" @pointermove="mover" @pointerup="soltar" @pointercancel="cancelar" @lostpointercapture="cancelar">
-    <p class="instruccion">{{ pregunta.texto }}</p>
+
     <div class="fichas-arena">
       <div v-for="(palabra, indice) in pregunta.palabras" :key="palabra.texto" class="espacio-ficha" :style="{ '--n': indice }">
         <button v-if="!usadas.includes(indice)" type="button" class="palabra" lang="en"
@@ -106,20 +106,6 @@ function soltar(evento) {
 
 <style scoped>
 .palabras-combate { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
-.instruccion {
-  position: absolute;
-  inset: 3.5rem 0.4rem auto;
-  width: fit-content;
-  max-width: calc(100% - 1rem);
-  margin-inline: auto;
-  padding: 0.4rem 0.75rem;
-  border: 1px solid #b58c51;
-  border-radius: 6px;
-  background: #101928ed;
-  color: #fff4dc;
-  text-align: center;
-  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
-}
 .fichas-arena {
   position: absolute;
   inset: auto 0.45rem 0.45rem;

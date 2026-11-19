@@ -30,7 +30,7 @@
 
     <template v-else>
       <svg v-if="trazo.length" class="trazo" aria-hidden="true"><polyline :points="trazo.map(p => p.join(',')).join(' ')" /></svg>
-      <p class="peticion" lang="en">{{ pregunta.contexto }}</p>
+
       <div class="aliado" :class="{ protegido: resuelto }">
         <img src="/images/personajes-mate/caballero/guardia.webp" :alt="t('Espíritu aliado')" draggable="false" />
         <span class="barrera" aria-hidden="true" />
@@ -277,20 +277,6 @@ function soltar(evento) {
   0% { filter: brightness(2) drop-shadow(0 0 20px #ad7fd9); }
   45% { scale: 1.04; }
   100% { filter: drop-shadow(0 0 4px #8ce4b5); }
-}
-.peticion {
-  position: absolute;
-  inset: 3.5rem 0.5rem auto;
-  width: fit-content;
-  max-width: calc(100% - 1rem);
-  margin: auto;
-  padding: 0.4rem 0.75rem;
-  border: 1px solid #b58c51;
-  border-radius: 6px;
-  background: #101928f5;
-  color: #fff4dc;
-  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
-  text-align: center;
 }
 .aliado { position: absolute; inset: 31% auto 40% 44%; width: 16%; min-width: 70px; }
 .aliado img { width: 100%; height: 100%; object-fit: contain; filter: sepia(0.5) hue-rotate(125deg) drop-shadow(0 0 6px #7ff2e9); opacity: 0.85; pointer-events: none; }

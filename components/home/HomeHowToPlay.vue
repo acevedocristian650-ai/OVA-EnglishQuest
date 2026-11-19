@@ -38,6 +38,7 @@ const steps = [
   "Si juegas en celular, gira la pantalla para ver la arena en horizontal.",
   "Responde una pregunta de inglés. Si aciertas, elige un ataque con los botones en pantalla.",
   "Si fallas, el guardián te ataca. Después puedes revisar la respuesta correcta y su explicación.",
+  "Completa las seis rondas para derrotar al guardián.",
   "Derrota al guardián para desbloquear la siguiente zona."
 ];
 

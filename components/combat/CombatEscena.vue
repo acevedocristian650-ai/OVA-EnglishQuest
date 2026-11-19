@@ -1,6 +1,6 @@
 <template>
   <div class="escenario" :class="[`nivel-${nivel.numero}`, { urgente, 'arena-esquiva': posicionEsquiva !== null, 'esquiva-exitosa': ataque?.esquivado }]" :style="{ '--fondo': `url('${nivel.fondo}')`, '--carga': carga ?? 0, '--posicion-esquiva': posicionEsquiva === null ? null : posicionEsquiva + '%' }">
-    <div class="secuencia" :class="[ataque?.id, ataque?.final && ataque.remate, { activa: ataque, magia: ataque?.magia, final: ataque?.final, urgente, congelado }]" :style="tiempos"
+    <div class="secuencia" :class="[ataque?.id, ataque?.final && ataque.remate, { activa: ataque, 'esperando-audio': esperaSolar, magia: ataque?.magia, final: ataque?.final, urgente, congelado }]" :style="tiempos"
       @animationend.self="emit('terminar')">
       <span class="ambiente" aria-hidden="true">
         <span v-for="(m, i) in motas" :key="i" class="mota" :style="m" />
@@ -11,22 +11,22 @@
           <span v-if="furia" class="aura-furia" aria-hidden="true" />
           <span v-if="bloqueando" class="barrera-bloqueo" aria-hidden="true"><b>{{ t('¡Bloqueado!') }}</b></span>
           <img v-for="pose in [...posesCaballero, ...posesNuevasCaballero]" v-show="!sinArma" :key="pose" class="pose"
-            :class="[pose, { amp: medidas[`caballero/${pose}`] }]" :style="estiloAmp('caballero', pose)"
+            :class="pose" :style="estiloPose('caballero', pose)"
             :src="`/images/personajes-mate/caballero/${pose}.${extension(pose)}`" alt="" draggable="false" />
-          <img v-if="sinArma" class="pose sin-arma" src="/images/personajes-mate/caballero/sin-arma.webp" alt="" draggable="false" />
+          <img v-if="sinArma" class="pose sin-arma" :style="estiloPose('caballero', 'sin-arma')" src="/images/personajes-mate/caballero/sin-arma.webp" alt="" draggable="false" />
           <template v-if="remateSolar">
             <span class="aura-solar" aria-hidden="true" />
-            <img class="pose ascension" src="/images/personajes-mate/caballero/ascension.webp" alt="" draggable="false" />
+            <img class="pose ascension" :style="estiloPose('caballero', 'impacto-rayo')" src="/images/personajes-mate/caballero/impacto-rayo.png" alt="" draggable="false" />
           </template>
         </div>
         <div class="luchador guardian" data-destino-palabra="monstruo" :class="[guardian, { esperando, 'con-derrota': nivel.derrota, c1: faseCarga === 1, c2: faseCarga === 2, 'desde-carga': cargaPrevia > 0 }]"
           :style="{ '--carga': carga ?? 0 }" role="img" :aria-label="nivel.guardian">
           <span v-if="enfurecido" class="aura-ira" aria-hidden="true" />
           <img v-for="pose in [...posesGuardian, ...posesNuevasGuardian]" :key="pose" class="pose"
-            :class="[pose, { amp: medidas[`${carpetaGuardian}/${pose}`] }]" :style="estiloAmp(carpetaGuardian, pose)"
+            :class="pose" :style="estiloPose(carpetaGuardian, pose)"
             :src="`${nivel.arte}/${pose}.${extension(pose)}`" alt="" draggable="false" />
           <!-- Chorro (veneno / aliento): nace en la boca del sprite «ataque» y viaja con el jefe, sin depender del tamaño de la escena -->
-          <img v-if="ataqueRival && chorro && !ladoGolpe" class="chorro" :class="`chorro-${nivel.numero}`" :src="chorro" alt="" draggable="false" />
+          <img v-if="ataqueRival && chorro && !ladoGolpe" class="chorro" :style="estiloPose(carpetaGuardian, 'ataque')" :class="`chorro-${nivel.numero}`" :src="chorro" alt="" draggable="false" />
           <span class="onda-suelo" aria-hidden="true" />
           <span class="particulas-carga" aria-hidden="true">
             <span v-for="(p, i) in particulasCarga" :key="i" class="p" :style="p" />
@@ -34,13 +34,14 @@
         </div>
         <template v-if="ataque?.final">
           <span class="rotulo-final" aria-hidden="true">{{ ataque.nombre }}</span>
-          <div v-if="remateSolar" class="descarga-solar" aria-hidden="true">
+          <div v-if="remateSolar" class="descarga-solar" :style="estiloPose('caballero', 'impacto-rayo')" aria-hidden="true">
             <span class="esfera-solar" />
             <span class="rayo-solar" />
           </div>
           <template v-if="remateSolar">
-            <span class="pulso-solar pulso-transformacion" aria-hidden="true" @animationstart.self="reproducirSolar(audioTransformacion)" />
-            <span class="pulso-solar pulso-carga" aria-hidden="true" @animationstart.self="reproducirSolar(audioCarga)" />
+            <span class="pulso-solar pulso-transformacion" aria-hidden="true" @animationstart.self="iniciarTransformacion" />
+            <span class="pulso-solar pulso-disparo" aria-hidden="true" @animationstart.self="esperarClipSolar" />
+            <span class="pulso-solar pulso-carga" aria-hidden="true" @animationstart.self="encadenarCarga" />
           </template>
           <div v-if="remateCruzado" class="corte-cruzado" aria-hidden="true">
             <span class="tajo-cruzado primero" />
@@ -93,13 +94,12 @@
     </span>
     <span v-if="vidaBaja" class="vida-baja" aria-hidden="true" />
     <span class="peligro" aria-hidden="true" />
-    <div class="indicadores">
-      <slot name="hud" />
-    </div>
   </div>
 </template>
 
 <script setup>
+import medidasPoses from '~/data/medidas-poses.json'
+
 const { t } = useLanguage()
 const props = defineProps({
   nivel: { type: Object, required: true },
@@ -138,11 +138,15 @@ const carpetaGuardian = computed(() => props.nivel.arte.split('/').pop())
 // Los jefes 2 y 4 lanzan un chorro desde la boca; el 1 lanza una bola (se dibuja en CombatEfectos) y el 3 invoca un rayo.
 const chorros = { 2: '/images/jefes/rio/ola-venenosa.png', 4: '/images/jefes/real/aliento-fuego.png' }
 const chorro = computed(() => chorros[props.nivel.numero])
-// Medidas en unidades del lienzo de referencia (512 de alto): ancho, alto, desvío horizontal y distancia al suelo.
-const medidas = {"caballero/golpeado": {"w": 0.7617, "h": 0.6738, "dx": 0.0, "by": 0.0279}, "caballero/anticipacion": {"w": 0.6758, "h": 0.5781, "dx": 0.0, "by": 0.0279}, "caballero/esquiva": {"w": 0.6504, "h": 0.6406, "dx": 0.0, "by": 0.0279}, "caballero/guardia": {"w": 0.625, "h": 0.5898, "dx": -0.001, "by": 0.0279}, "caballero/final-1": {"w": 0.5879, "h": 0.7168, "dx": -0.001, "by": 0.0279}, "caballero/final-2": {"w": 0.7676, "h": 0.7148, "dx": -0.001, "by": 0.0279}, "caballero/final-3": {"w": 0.7051, "h": 0.5469, "dx": -0.001, "by": 0.0279}, "grifo/carga-1": {"w": 0.6855, "h": 0.5352, "dx": -0.001, "by": 0.1669}, "grifo/carga-2": {"w": 0.9199, "h": 0.8926, "dx": -0.001, "by": 0.1669}, "grifo/ataque": {"w": 0.9629, "h": 0.5293, "dx": -0.001, "by": 0.1669}, "grifo/derrota-1": {"w": 0.8945, "h": 0.7012, "dx": -0.001, "by": 0.1669}, "grifo/derrota-2": {"w": 0.8359, "h": 0.4805, "dx": -0.001, "by": 0.1669}}
-function estiloAmp(carpeta, pose) {
-  const m = medidas[`${carpeta}/${pose}`]
-  return m ? { '--w': m.w, '--h': m.h, '--dx': m.dx, '--by': m.by } : undefined
+// Una unidad equivale a la raíz del área opaca (suma de alfa / 255) de cada archivo.
+// El centro y el margen bajo la silueta se miden en esas mismas unidades.
+function estiloPose(personaje, pose) {
+  const medida = medidasPoses[personaje][pose]
+  return {
+    '--ancho-pose': medida.ancho,
+    '--centro-pose': medida.centro,
+    '--margen-inferior': medida.margenInferior
+  }
 }
 // Chispas del enemigo al deshacerse (valores fijos para que servidor y cliente pinten lo mismo)
 const chispasFinal = Array.from({ length: 14 }, (_, i) => ({
@@ -186,12 +190,57 @@ const remateSolar = computed(() => props.ataque?.final && props.ataque.remate ==
 const audioTransformacion = ref(null)
 const audioCarga = ref(null)
 
-function reproducirSolar(audio) {
-  if (!remateSolar.value || !audio) return
-  audio.currentTime = 0
-  audio.volume = 0.75
-  audio.play().catch(() => {})
+const esperaSolar = ref(false)
+let cancelarClip
+let finClip
+let secuenciaSolar = 0
+
+function reproducirClip(audio) {
+  if (!audio) return
+  return new Promise((resolve) => {
+    const terminar = () => {
+      clearTimeout(limite)
+      audio.removeEventListener('ended', terminar)
+      audio.removeEventListener('error', terminar)
+      audio.pause()
+      cancelarClip = null
+      resolve()
+    }
+    // Si el dispositivo autoriza play pero nunca entrega audio, el duelo puede continuar.
+    const limite = setTimeout(terminar, 12000)
+    cancelarClip = terminar
+    audio.addEventListener('ended', terminar)
+    audio.addEventListener('error', terminar)
+    audio.currentTime = 0
+    audio.volume = 0.75
+    audio.play().catch(terminar)
+  })
 }
+
+function iniciarTransformacion() {
+  finClip = reproducirClip(audioTransformacion.value)
+}
+
+async function esperarClipSolar() {
+  const turno = secuenciaSolar
+  esperaSolar.value = true
+  await finClip
+  if (turno !== secuenciaSolar) return false
+  esperaSolar.value = false
+  return remateSolar.value
+}
+
+async function encadenarCarga() {
+  if (await esperarClipSolar()) finClip = reproducirClip(audioCarga.value)
+}
+
+function cancelarSolar() {
+  secuenciaSolar++
+  cancelarClip?.()
+  finClip = null
+  esperaSolar.value = false
+}
+watch(remateSolar, activo => { if (!activo) cancelarSolar() })
 const remateCruzado = computed(() => props.ataque?.final && props.ataque.remate === 'cruzado')
 const remateSombras = computed(() => props.ataque?.final && props.ataque.remate === 'sombras')
 
@@ -215,8 +264,7 @@ function alImpactar() {
 
 onBeforeUnmount(() => {
   clearTimeout(temporizadorPausa)
-  audioTransformacion.value?.pause()
-  audioCarga.value?.pause()
+  cancelarSolar()
 })
 // Un golpe bloqueado no hace reaccionar al caballero (igual que una esquiva)
 const bloqueando = computed(() => props.bloqueado && props.ataque?.id === 'rival')
@@ -238,7 +286,7 @@ const tiempos = computed(() => {
   if (!props.ataque) return null
   const duracion = props.ataque.duracion
   // El 54 % es el contacto en las animaciones de avance y de proyectil (el golpe final lo adelanta al 46 %).
-  const impacto = Math.round(duracion * (remateSolar.value ? 0.72 : props.ataque.final ? 0.46 : 0.54))
+  const impacto = Math.round(duracion * (remateSolar.value ? 0.84 : props.ataque.final ? 0.46 : 0.54))
   return {
     '--duracion': `${duracion}ms`,
     '--momento-impacto': `${impacto}ms`,
@@ -287,7 +335,6 @@ const efecto = computed(() => {
   pointer-events: none;
   box-shadow: inset 0 0 clamp(20px, 8vw, 100px) #0a0c135e;
 }
-.indicadores { position: absolute; z-index: 1; inset: 0.55rem clamp(0.8rem, 2.4vw, 2rem) auto; pointer-events: none; }
 .secuencia.activa { transform-origin: 60% 62%; animation: camara var(--duracion) ease-out both; }
 .secuencia.rival { transform-origin: 38% 62%; }
 .arena-esquiva .secuencia.rival { --sacudida: 0px; }
@@ -370,39 +417,45 @@ const efecto = computed(() => {
   animation: destello-golpe 280ms ease-out var(--momento-impacto) forwards;
 }
 .emisor { transform-origin: center bottom; }
-.accion { position: relative; width: min(100%, calc(var(--alto) * 3.2)); height: 100%; margin-inline: auto; }
-.luchador { position: absolute; width: 45%; height: 103%; container-type: size; }
-.caballero { left: 3%; bottom: 10%; }
-.guardian { left: 51%; bottom: -4%; width: 46%; height: 99%; }
-.escenario:not(.nivel-1) .guardian { left: 49%; width: 50%; }
+/* La unidad se calcula una vez sobre la arena. Las cajas de los luchadores también
+   son contenedores: registrar la longitud evita que sus hijos la vuelvan a calcular. */
+@property --unidad-figura {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 60px;
+}
+.accion { position: relative; width: min(100%, calc(var(--alto) * 3.2)); height: 100%; margin-inline: auto; container-type: size; --suelo: 10%; }
+.luchador, .descarga-solar { --unidad-figura: min(18.5cqw, 45cqh); }
+.luchador { position: absolute; width: 46%; height: 100%; bottom: 0; container-type: size; }
+.caballero { left: 2.5%; }
+.guardian { left: 51%; }
 .luchador::before {
   content: '';
   position: absolute;
   left: 50%;
-  bottom: -0.5%;
+  bottom: calc(var(--suelo) - 4.5%);
   width: min(72%, calc(var(--alto) * 0.87));
   height: 9%;
   transform: translateX(-50%);
   background: radial-gradient(ellipse, #101112bd 5%, #10111262 44%, transparent 74%);
 }
-.guardian::before { bottom: 13%; }
 .escenario.nivel-1 { --aura: #ffd54f; }
 .escenario.nivel-2 { --aura: #00e676; }
 .escenario.nivel-3 { --aura: #00e5ff; }
 .escenario.nivel-4 { --aura: #ff5722; }
 .pose {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: bottom;
+  left: calc(50% - var(--unidad-figura) * var(--centro-pose));
+  bottom: calc(var(--suelo) - var(--unidad-figura) * var(--margen-inferior));
+  width: calc(var(--unidad-figura) * var(--ancho-pose));
+  max-width: none;
+  height: auto;
   transform-origin: center bottom;
   opacity: 0;
   filter: drop-shadow(0 2px 3px #15141660);
 }
 .pose.reposo { opacity: 1; }
-.caballero .pose.sin-arma { inset: auto 0 2.8%; height: 67%; opacity: 1; }
+.caballero .pose.sin-arma { opacity: 1; }
 .arena-esquiva .caballero.esquiva-lograda .pose.sin-arma { opacity: 1; }
 /* Respiración en espera: los luchadores ya no se quedan congelados entre ataques */
 .luchador:not(.emisor, .receptor, .tendido) { transform-origin: center bottom; animation: respirar 3.2s ease-in-out infinite, mecer 5.3s ease-in-out infinite; }
@@ -474,18 +527,9 @@ const efecto = computed(() => {
 .pulso-impacto { position: absolute; visibility: hidden; animation: pulso 1ms linear var(--momento-impacto); }
 .pulso-solar { position: absolute; visibility: hidden; animation: pulso 1ms linear; }
 .pulso-transformacion { animation-delay: 450ms; }
-.pulso-carga { animation-delay: 1600ms; }
-
-/* ---------- Poses nuevas (recortadas a su tamaño, a la misma escala que el reposo) ---------- */
-.pose.amp {
-  inset: auto;
-  left: 50%;
-  bottom: calc(100cqh * var(--by));
-  width: calc(100cqh * var(--w));
-  height: calc(100cqh * var(--h));
-  translate: calc(-50% + 100cqh * var(--dx)) 0;
-  object-fit: fill;
-}
+.pulso-carga { animation-delay: 5450ms; }
+.pulso-disparo { animation-delay: 11650ms; }
+.secuencia.solar.esperando-audio, .secuencia.solar.esperando-audio * { animation-play-state: paused !important; }
 
 /* ---------- Espera de la pregunta: el enemigo carga su ataque ---------- */
 .esperando .pose { transition: opacity 220ms cubic-bezier(0.25, 0.8, 0.25, 1); }
@@ -516,6 +560,12 @@ const efecto = computed(() => {
 .particulas-carga { position: absolute; inset: 0; pointer-events: none; }
 .particulas-carga .p { position: absolute; left: 50%; top: 52%; width: 7px; height: 7px; margin: -3px; border-radius: 50%; display: none; opacity: 0;
   background: radial-gradient(circle, #fff 0, var(--aura, #ffd85a) 55%, transparent 75%); }
+/* El núcleo crece continuamente, incluso entre los cambios de pose del guardián. */
+.guardian.esperando .particulas-carga::after {
+  content: ''; position: absolute; left: 45%; top: 50%; width: 16%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, #fff 5%, var(--aura, #ffd85a) 32%, transparent 70%);
+  opacity: var(--carga); transform: scale(calc(.25 + 1.8 * var(--carga))); transition: transform .12s linear;
+}
 .guardian.esperando:is(.c1, .c2) .particulas-carga .p:nth-child(odd), .guardian.esperando.c2 .particulas-carga .p { display: block; animation: absorber 1.3s ease-in infinite; animation-delay: var(--r); }
 @keyframes absorber {
   0% { translate: calc(var(--ax) * 1cqw) calc(var(--ay) * 1cqh); opacity: 0; scale: 1.3; }
@@ -664,28 +714,31 @@ const efecto = computed(() => {
   41%, 100% { transform: none; filter: drop-shadow(0 2px 3px #15141660); }
 }
 
-/* Chorro de veneno (nivel 2) y aliento (nivel 4). Medidas en cqh del jefe (1 px del sprite = 100/512 cqh):
-   la punta de cada imagen se coloca sobre la boca del sprite «ataque», así siempre sale de donde toca. */
+/* Las bocas están medidas en el lienzo de ataque original (560 × 512).
+   El chorro y la pose usan la misma escala y el mismo anclaje al suelo. */
 .chorro {
   position: absolute;
   z-index: 3;
+  --pixel-ataque: calc(var(--unidad-figura) * var(--ancho-pose) / 560);
+  --origen-x: calc(50% - var(--unidad-figura) * var(--centro-pose));
+  --origen-y: calc(var(--suelo) - var(--unidad-figura) * var(--margen-inferior));
   max-width: none;
   opacity: 0;
   pointer-events: none;
   object-fit: fill;
 }
 .chorro-4 {
-  height: 36cqh; width: 108cqh;           /* misma proporción que aliento-fuego.png (3:1) */
-  left: calc(50cqw - 152.9cqh);           /* borde derecho = boca: 50cqw - 44.9cqh */
-  bottom: 35.7cqh;                         /* la punta de la llama está al 61,5 % de la altura de la imagen */
+  height: calc(184 * var(--pixel-ataque)); width: calc(552 * var(--pixel-ataque));
+  left: calc(var(--origen-x) - 503 * var(--pixel-ataque));
+  bottom: calc(var(--origen-y) + 183 * var(--pixel-ataque));
   transform-origin: 99.8% 61.5%;
   filter: drop-shadow(0 0 10px #ff5722cc) drop-shadow(0 0 22px #ffc107a6);
   animation: chorro-fuego var(--duracion) linear both;
 }
 .chorro-2 {
-  height: 40cqh; width: 120cqh;           /* ola-venenosa.png (3:1) */
-  left: calc(50cqw - 164.9cqh);
-  bottom: 21.9cqh;                         /* la cola de la ola está al 79 % de la altura de la imagen */
+  height: calc(205 * var(--pixel-ataque)); width: calc(615 * var(--pixel-ataque));
+  left: calc(var(--origen-x) - 564 * var(--pixel-ataque));
+  bottom: calc(var(--origen-y) + 112 * var(--pixel-ataque));
   transform-origin: 99.4% 79%;
   filter: drop-shadow(0 0 14px #00e676cc);
   animation: chorro-ola var(--duracion) linear both;
@@ -881,10 +934,9 @@ const efecto = computed(() => {
 }
 .descarga-solar {
   /* La mano está cerca de (400, 255) en el lienzo cuadrado de 512 px. */
-  --lienzo-solar: min(45%, var(--alto) * 1.03);
-  --origen-solar: calc(25.5% + var(--lienzo-solar) * .28);
-  --altura-solar: calc(90% - min(50cqw * .45, var(--alto) * .517));
-  container-type: inline-size;
+  --pixel-solar: calc(var(--unidad-figura) * var(--ancho-pose) / 512);
+  --origen-solar: calc(25.5% - var(--unidad-figura) * var(--centro-pose) + 400 * var(--pixel-solar));
+  --altura-solar: calc(100% - var(--suelo) + var(--unidad-figura) * var(--margen-inferior) - 257 * var(--pixel-solar));
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -920,18 +972,18 @@ const efecto = computed(() => {
 }
 @keyframes aura-solar {
   0%, 3% { opacity: 0; scale: .7; }
-  16%, 72% { opacity: 1; scale: 1.15; }
+  16%, 86% { opacity: 1; scale: 1.15; }
   100% { opacity: 0; scale: 1; }
 }
 @keyframes esfera-solar {
-  0%, 26% { opacity: 0; scale: .15; }
-  64% { opacity: 1; scale: 1; }
-  66%, 100% { opacity: 0; }
+  0%, 38.9% { opacity: 0; scale: .15; }
+  83% { opacity: 1; scale: 1; }
+  85%, 100% { opacity: 0; }
 }
 @keyframes rayo-solar {
-  0%, 64% { opacity: 0; scale: 0 .65; }
-  65%, 71% { opacity: 1; scale: 1 1; }
-  84%, 100% { opacity: 0; scale: 1 .2; }
+  0%, 83.3% { opacity: 0; scale: 0 .65; }
+  84%, 89% { opacity: 1; scale: 1 1; }
+  96%, 100% { opacity: 0; scale: 1 .2; }
 }
 /* Después del golpe, el caballero se queda en su pose de victoria */
 .luchador.caballero.victoria :is(.reposo, .dolor) { opacity: 0; }
@@ -1156,24 +1208,4 @@ const efecto = computed(() => {
 }
 @keyframes destello-golpe { 0% { opacity: 0.6; } 100% { opacity: 0; } }
 
-/* Arenas pequeñas (celular): marcador y rótulos más compactos para no tapar a los luchadores */
-@media (max-height: 520px) and (orientation: landscape), (max-width: 600px) {
-  .indicadores { inset: 0.4rem 0.6rem auto; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .secuencia.activa { animation-name: reloj; }
-  .secuencia .luchador, .herido:not(.emisor, .receptor) .dolor { animation-name: none !important; }
-  .secuencia.activa .accion::after { display: none; }
-  .secuencia.final.activa { animation-name: reloj; }
-  .secuencia.final.solar .caballero .reposo { display: none; }
-  .secuencia.final.solar .caballero .ascension { animation: none; opacity: 1; }
-  .aura-solar, .descarga-solar, .corte-cruzado, .invocacion-sombras { display: none; }
-  .penumbra, .secuencia.final .accion::before, .chispa-final, .rotulo-final { display: none; }
-  .guardian.esperando::after { animation: none; }
-  .ambiente, .particulas-carga, .onda-suelo, .descarga, .peligro, .chorro { display: none; }
-  .secuencia.urgente { animation: none; }
-  .receptor .caida { animation-name: quedar-tendido; }
-  @keyframes quedar-tendido { 0%, 65.9% { opacity: 0; } 66%, 100% { opacity: 1; } }
-}
 </style>

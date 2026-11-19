@@ -26,7 +26,7 @@
           </div>
         </v-col>
 
-        <v-col cols="12" md="3" align-self="end" class="d-none d-md-block">
+        <v-col cols="12" md="3" align-self="end" class="col-heroe">
           <div class="escena-heroe">
             <span class="aura" />
             <span class="sombra" />
@@ -222,5 +222,24 @@ const brasas = [
 @media (prefers-reduced-motion: reduce) {
   .escena-heroe, .cuerpo, .aura, .sombra, .niebla, .destello, .brasa { animation: none; }
   .brasa { display: none; }
+}
+@media (max-width: 959px) {
+  .portada :deep(.v-responsive__content) { overflow-y: auto; }
+  .contenedor-portada.fill-height { display: block; }
+  .contenedor-portada > .v-row {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-content: center;
+    min-height: 100%;
+    height: auto !important;
+  }
+  .contenedor-portada .v-col-12 { width: 100%; max-width: none; }
+  .escena-heroe { width: min(100%, 60dvh); height: auto; margin: 0 auto; }
+}
+@media (max-width: 959px) and (orientation: portrait) {
+  .contenedor-portada > .v-row { grid-template-columns: minmax(0, 1fr); }
+  .col-heroe { grid-row: 1; padding-block: 0; }
+  .escena-heroe { width: min(66vw, 32dvh); }
+  .hueco-menu { margin-top: 16px !important; }
 }
 </style>

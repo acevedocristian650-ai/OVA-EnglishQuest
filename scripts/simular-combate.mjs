@@ -3,8 +3,7 @@
 import { readFileSync } from 'node:fs'
 const vue = readFileSync(new URL('../components/combat/CombatDesafio.vue', import.meta.url),'utf8').replace(/\r\n/g,'\n')
 let code = /<script setup>([\s\S]*?)<\/script>/.exec(vue)[1].replace(/^import .*$/gm,'').replace(/import\.meta\.dev/g,'true')
-const map = readFileSync(new URL('../pages/map.vue', import.meta.url),'utf8')
-const niveles = new Function(map.slice(map.indexOf('const niveles = ['), map.indexOf('const ultimaVariante')).replace('const niveles','var niveles')+';return niveles')()
+const niveles = JSON.parse(readFileSync(new URL('../data/niveles.json', import.meta.url), 'utf8'))
 
 // --- mini Vue
 const ref = (v) => ({ value: v })
@@ -23,12 +22,17 @@ const avanzar = (ms) => { now += ms; timers.filter(t => t.at <= now).forEach(t =
 
 const emitted = []
 const nivel = niveles[0]
-const props = { nivel }
 const exportar = `return { fase, indice, furia, bloqueo, avisoFase, vidaCaballero, vidaRival, ataque, danoAplicado, historial, escudoPreparado, enfurecido, danoContra,
- responder, atacar, ataques, impactar, terminarAtaque, parar, paradaActiva, paradaPronto, duracionAnillo, siguiente, fuerza, textoAtaque, carga, completarPalabras, aplicarPalabra, probarRemate, rondaHacha, rondaEsquiva, FURIA_MAXIMA }`
-const f = new Function('ref','computed','reactive','watch','onMounted','onBeforeUnmount','defineProps','defineEmits','document','window','performance','setTimeout','clearTimeout','setInterval','clearInterval',
+ responder, atacar, ataques, impactar, terminarAtaque, parar, paradaActiva, paradaPronto, duracionAnillo, siguiente, fuerza, textoAtaque, carga, completarPalabras, aplicarPalabra, resolverConjuro, esquivar, completarAviso, cortarAtaque, agotar, tiempoTotal, probarRemate, rondaHacha, rondaEsquiva, FURIA_MAXIMA }`
+const f = new Function('ref','computed','reactive','watch','onMounted','onBeforeUnmount','defineProps','defineEmits','useLanguage','document','window','performance','setTimeout','clearTimeout','setInterval','clearInterval',
   code + exportar)
-const g = f(ref,computed,reactive,watch,onMounted,onBeforeUnmount,()=>props,()=> (e,...a)=>emitted.push(e),{hidden:false},{matchMedia:()=>({matches:false})},{now:()=>now},setTimeoutF,clearTimeoutF,setIntervalF,clearIntervalF)
+function crearCombate(nivel, eventos) {
+  return f(ref, computed, reactive, watch, onMounted, onBeforeUnmount,
+    () => ({ nivel }), () => evento => eventos.push(evento), () => ({ t: texto => texto }),
+    { hidden: false }, { matchMedia: () => ({ matches: false }) }, { now: () => now },
+    setTimeoutF, clearTimeoutF, setIntervalF, clearIntervalF)
+}
+const g = crearCombate(nivel, emitted)
 
 let fallos = 0
 const ok = (c, m) => { console.log((c ? 'OK   ' : 'FALLA') + ' ' + m); if (!c) fallos++ }
@@ -113,7 +117,59 @@ g.vidaCaballero.value=100; g.fase.value='elegir'; g.indice.value=1
 golpearYEsperarAviso(1)
 ok(g.duracionAnillo.value===450+1404,'enfurecido: el anillo se cierra más rápido (450 + 1404 ms)')
 // 10) rematar no dispara contraataque
-g.vidaCaballero.value=100; g.vidaRival.value=10; g.indice.value=1; g.fase.value='elegir'; g.furia.value=0
+g.vidaCaballero.value=100; g.vidaRival.value=10; g.indice.value=nivel.preguntas.length - 1; g.fase.value='elegir'; g.furia.value=0
 g.atacar(g.ataques[0]); g.impactar(); g.terminarAtaque()
 ok(g.vidaRival.value===0 && g.fase.value!=='aviso-contra','el golpe final no tiene contraataque')
+// Recorrido normal con los eventos que emite cada actividad y el ataque más fuerte disponible.
+for (const zona of niveles) {
+  const eventos = []
+  const juego = crearCombate(zona, eventos)
+  let usoRayo = false
+  for (const [i, q] of zona.preguntas.entries()) {
+    if (q.invocacion) avanzar(1200)
+    if (q.tipo === 'clasificar') {
+      for (const palabra of q.palabras) juego.aplicarPalabra(palabra.futuro ? 'heroe' : 'monstruo')
+      juego.completarPalabras()
+    } else if (q.tipo === 'hacha') {
+      juego.cortarAtaque()
+      avanzar(500)
+    } else if (['romper-hechizo', 'proteger-aliado'].includes(q.tipo)) {
+      juego.resolverConjuro(q.correcta)
+      avanzar(850)
+    } else if (['esquivar', 'esquiva-frase'].includes(q.tipo)) {
+      if (q.tipo === 'esquivar') juego.esquivar(q.lado === 'izquierda' ? 'derecha' : 'izquierda')
+      else juego.completarAviso(q.correcta)
+      juego.terminarAtaque()
+    } else {
+      juego.responder(q.correcta)
+    }
+    if (juego.fase.value === 'elegir') {
+      const disponibles = juego.ataques.filter(a => a.id !== 'rayo' || !usoRayo)
+      const mejor = disponibles.sort((a, b) => juego.fuerza(b) - juego.fuerza(a))[0]
+      if (mejor.id === 'rayo') usoRayo = true
+      juego.atacar(mejor)
+      if (zona.remate === 'solar' && i === zona.preguntas.length - 1) {
+        ok(juego.ataque.value?.duracion === 14000, 'el remate solar recupera su secuencia completa')
+      }
+      juego.terminarAtaque()
+      if (juego.fase.value === 'aviso-contra') {
+        avanzar(700)
+        juego.terminarAtaque()
+      }
+    }
+    const ultima = i === zona.preguntas.length - 1
+    ok(juego.historial.value.length === i + 1 && juego.historial.value[i].acierto &&
+      (ultima ? eventos.filter(e => e === 'victoria').length === 1 :
+        juego.vidaRival.value > 0 && juego.fase.value === 'revision' && !eventos.includes('victoria')),
+      zona.nombre + ' · ronda ' + (i + 1))
+    if (!ultima) juego.siguiente()
+  }
+}
+const eventosTiempo = []
+const sinRespuesta = crearCombate(niveles[1], eventosTiempo)
+ok(sinRespuesta.tiempoTotal.value === 35, 'la frase cuenta con 35 segundos')
+sinRespuesta.agotar()
+sinRespuesta.terminarAtaque()
+ok(sinRespuesta.vidaCaballero.value < 100 && sinRespuesta.historial.value[0].agotado &&
+  !eventosTiempo.includes('victoria'), 'agotar el reloj cuesta vida y registra la ronda')
 console.log(fallos ? `\n${fallos} FALLOS` : '\nTodo correcto'); process.exit(fallos?1:0)

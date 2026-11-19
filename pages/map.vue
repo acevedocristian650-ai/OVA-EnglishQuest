@@ -1,972 +1,88 @@
 <template>
-  <!-- Una pista por pantalla: el key obliga a desmontar una y montar la otra al cambiar. -->
-  <AudioMusicaHome v-if="pantalla === 'mapa'" key="musica-mapa" ruta="/audio/Mapa.mp3" />
-  <AudioMusicaHome v-else :key="`musica-combate-${nivelActual?.numero}`"
-    :ruta="`/audio/combate/batalla-${nivelActual?.numero ?? 1}.mp3`" :volumen="0.4" />
-  <section v-if="pantalla === 'mapa'" class="reino">
-    <div class="contenido">
-      <header class="cabecera-mapa">
-        <AudioSonidoBoton>
-          <v-btn to="/" variant="text" color="amber-lighten-3" class="volver">{{ t('Volver al inicio') }}</v-btn>
-        </AudioSonidoBoton>
+  <div ref="juego" class="juego">
+    <!-- Una pista por pantalla: el key obliga a desmontar una y montar la otra al cambiar. -->
+    <AudioMusicaHome v-if="pantalla === 'mapa'" key="musica-mapa" ruta="/audio/Mapa.mp3" />
+    <AudioMusicaHome v-else :key="`musica-combate-${nivelActual?.numero}`"
+      :ruta="`/audio/combate/batalla-${nivelActual?.numero ?? 1}.mp3`" :volumen="0.4" />
+    <section v-if="pantalla === 'mapa'" class="reino">
+      <div class="contenido">
+        <header class="cabecera-mapa">
+          <AudioSonidoBoton>
+            <v-btn to="/" variant="text" color="amber-lighten-3" class="volver">{{ t('Volver al inicio') }}</v-btn>
+          </AudioSonidoBoton>
 
-        <h1>{{ t('Mapa del Reino') }}</h1>
-        <p>{{ t('Sigue el camino dorado. Toca un marcador para entrar en la zona.') }}</p>
-        <p v-if="nivelDesbloqueado > niveles.length" class="conquista">{{ t('Completaste las cuatro zonas del reino.') }}</p>
-      </header>
-      <!-- El tablero se escala para caber completo en el espacio que queda (sin scroll) -->
-      <div class="zona-mapa">
-        <MapBoard class="tablero" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" @elegir="entrar" />
+          <v-btn v-if="pantallaCompletaDisponible" variant="tonal" size="small" class="boton-pantalla"
+            :aria-pressed="pantallaCompleta" @click="alternarPantalla">
+            {{ t(pantallaCompleta ? 'Salir de pantalla completa' : 'Pantalla completa') }}
+          </v-btn>
+          <h1>{{ t('Mapa del Reino') }}</h1>
+          <p>{{ t('Sigue el camino dorado. Toca un marcador para entrar en la zona.') }}</p>
+          <p v-if="nivelDesbloqueado > niveles.length" class="conquista">{{ t('Completaste las cuatro zonas del reino.') }}</p>
+        </header>
+        <p v-if="avisoPantalla" role="status">{{ t('El navegador no pudo cambiar la pantalla completa.') }}</p>
+        <!-- El tablero se escala para caber completo en el espacio que queda (sin scroll) -->
+        <div class="zona-mapa">
+          <MapBoard class="tablero" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" @elegir="entrar" />
+        </div>
+        <MapListaZonas class="lista-zonas sin-barra" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" @elegir="entrar" />
       </div>
-      <MapListaZonas class="lista-zonas sin-barra" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" @elegir="entrar" />
-    </div>
-  </section>
-  <CombatDesafio
-    v-else-if="nivelActual"
-    :key="intento"
-    :nivel="nivelActual"
-    @victoria="desbloquear"
-    @volver="volverAlMapa"
-    @reintentar="reintentar"
-  />
+    </section>
+    <LazyCombatDesafio
+      v-else-if="nivelActual"
+      :key="intento"
+      :nivel="nivelActual"
+      @victoria="desbloquear"
+      @volver="volverAlMapa"
+      @reintentar="reintentar"
+    />
 
-  <!-- Transición Cinemática de Encuentro / Versus al entrar al nivel -->
-  <MapEncuentroTransicion
-    :activo="enTransicion"
-    :nivel="nivelSeleccionado"
-    @listo="iniciarCombate"
-  />
+    <!-- Transición Cinemática de Encuentro / Versus al entrar al nivel -->
+    <MapEncuentroTransicion
+      :activo="enTransicion"
+      :nivel="nivelSeleccionado"
+      @listo="iniciarCombate"
+    />
+  </div>
 </template>
 
 <script setup>
+import nivelesBase from '~/data/niveles.json'
+
 const { language, t, translateContent } = useLanguage()
+const juego = ref(null)
+const pantallaCompleta = ref(false)
+const pantallaCompletaDisponible = ref(false)
+const avisoPantalla = ref(false)
+
+function actualizarPantalla() {
+  pantallaCompleta.value = document.fullscreenElement === juego.value
+}
+
+async function alternarPantalla() {
+  avisoPantalla.value = false
+  try {
+    if (pantallaCompleta.value) {
+      await document.exitFullscreen()
+    } else {
+      await juego.value.requestFullscreen()
+    }
+  } catch {
+    avisoPantalla.value = true
+  }
+}
+
+onMounted(() => {
+  pantallaCompletaDisponible.value = Boolean(document.fullscreenEnabled && juego.value?.requestFullscreen)
+  document.addEventListener('fullscreenchange', actualizarPantalla)
+})
+onBeforeUnmount(() => document.removeEventListener('fullscreenchange', actualizarPantalla))
+
 const pantalla = ref('mapa')
 const nivelActual = ref(null)
 const nivelSeleccionado = ref(null)
 const enTransicion = ref(false)
 const nivelDesbloqueado = ref(1)
 const intento = ref(0)
-
-const nivelesBase = [
-  {
-    "numero": 1,
-    "nombre": "Bosque del Alba",
-    "tema": "Introducción al futuro",
-    "guardian": "Grifo del Alba",
-    "fondo": "/images/arenas/bosque-del-alba-animado.svg",
-    "arte": "/images/personajes-mate/grifo",
-    "golpe": "Zarpazo del Alba",
-    "efecto": "/images/bosque-del-alba/zarpazo.svg",
-    "vida": 114,
-    "dano": 23,
-    "debilidad": "hachazo",
-    "corte": true,
-    "derrota": true,
-    "preguntas": [
-      {
-        "tipo": "clasificar",
-        "texto": "Arrastra futuro al héroe y pasado al monstruo.",
-        "palabras": [
-          {
-            "texto": "tomorrow",
-            "futuro": true
-          },
-          {
-            "texto": "yesterday",
-            "futuro": false
-          },
-          {
-            "texto": "next week",
-            "futuro": true
-          },
-          {
-            "texto": "last night",
-            "futuro": false
-          }
-        ],
-        "correcta": "Héroe: tomorrow, next week · Monstruo: yesterday, last night",
-        "explicacion": "Tomorrow y next week indican futuro. Yesterday y last night indican pasado.",
-        "variantes": [
-          {
-            "tipo": "clasificar",
-            "texto": "Arrastra futuro al héroe y pasado al monstruo.",
-            "palabras": [
-              {
-                "texto": "tonight",
-                "futuro": true
-              },
-              {
-                "texto": "last week",
-                "futuro": false
-              },
-              {
-                "texto": "in two days",
-                "futuro": true
-              },
-              {
-                "texto": "a week ago",
-                "futuro": false
-              }
-            ],
-            "correcta": "Héroe: tonight, in two days · Monstruo: last week, a week ago",
-            "explicacion": "Tonight e in two days miran al futuro. Last week y a week ago indican pasado."
-          },
-          {
-            "tipo": "clasificar",
-            "texto": "Arrastra futuro al héroe y pasado al monstruo.",
-            "palabras": [
-              {
-                "texto": "soon",
-                "futuro": true
-              },
-              {
-                "texto": "last month",
-                "futuro": false
-              },
-              {
-                "texto": "next year",
-                "futuro": true
-              },
-              {
-                "texto": "two days ago",
-                "futuro": false
-              }
-            ],
-            "correcta": "Héroe: soon, next year · Monstruo: last month, two days ago",
-            "explicacion": "Soon y next year indican futuro. Last month y two days ago indican pasado."
-          }
-        ]
-      },
-      {
-        "tipo": "errores",
-        "texto": "Find the mistake in the plan.",
-        "contexto": "Tap the wrong word.",
-        "frase": [
-          "We",
-          "is",
-          "going",
-          "to",
-          "explore",
-          "the",
-          "forest",
-          "next",
-          "week."
-        ],
-        "error": 1,
-        "correcta": "We are going to explore the forest next week.",
-        "explicacion": "Con we se usa are, no is: We are going to explore the forest.",
-        "variantes": [
-          {
-            "tipo": "errores",
-            "texto": "Find the mistake in the plan.",
-            "contexto": "Tap the wrong word.",
-            "frase": [
-              "I",
-              "are",
-              "going",
-              "to",
-              "visit",
-              "the",
-              "castle",
-              "tomorrow."
-            ],
-            "error": 1,
-            "correcta": "I am going to visit the castle tomorrow.",
-            "explicacion": "Con I se usa am: I am going to visit the castle."
-          },
-          {
-            "tipo": "errores",
-            "texto": "Find the mistake in the plan.",
-            "contexto": "Tap the wrong word.",
-            "frase": [
-              "She",
-              "is",
-              "going",
-              "to",
-              "cooks",
-              "dinner",
-              "tonight."
-            ],
-            "error": 4,
-            "correcta": "She is going to cook dinner tonight.",
-            "explicacion": "Después de going to va el verbo base: cook, no cooks."
-          }
-        ]
-      },
-      {
-        "tipo": "cortar",
-        "texto": "Which phrase refers to the future?",
-        "opciones": [
-          "Yesterday",
-          "Next week",
-          "Last night"
-        ],
-        "correcta": "Next week",
-        "explicacion": "Next week significa la próxima semana.",
-        "variantes": [
-          {
-            "tipo": "cortar",
-            "texto": "Choose the future time.",
-            "opciones": [
-              "Tomorrow",
-              "Last year",
-              "Yesterday morning"
-            ],
-            "correcta": "Tomorrow",
-            "explicacion": "Tomorrow significa mañana, un tiempo futuro."
-          },
-          {
-            "tipo": "cortar",
-            "texto": "Which sentence is about the future?",
-            "opciones": [
-              "I visited the lake.",
-              "I am going to visit the lake.",
-              "I visit the lake every day."
-            ],
-            "correcta": "I am going to visit the lake.",
-            "explicacion": "Am going to expresa un plan para el futuro."
-          }
-        ]
-      },
-      {
-        "tipo": "hacha",
-        "texto": "The griffin will strike!",
-        "correcta": "Cut all three energy balls.",
-        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía."
-      },
-      {
-        "tipo": "parejas",
-        "texto": "Match each time expression.",
-        "contexto": "Une la expresión con su significado.",
-        "parejas": [
-          {
-            "izq": "tomorrow",
-            "der": "mañana"
-          },
-          {
-            "izq": "yesterday",
-            "der": "ayer"
-          },
-          {
-            "izq": "next week",
-            "der": "la próxima semana"
-          }
-        ],
-        "correcta": "tomorrow = mañana · yesterday = ayer · next week = la próxima semana",
-        "explicacion": "Tomorrow y next week miran al futuro. Yesterday mira al pasado.",
-        "variantes": [
-          {
-            "tipo": "parejas",
-            "texto": "Match each time expression.",
-            "contexto": "Une cada palabra con su significado.",
-            "parejas": [
-              {
-                "izq": "tonight",
-                "der": "esta noche"
-              },
-              {
-                "izq": "next year",
-                "der": "el próximo año"
-              },
-              {
-                "izq": "last night",
-                "der": "anoche"
-              }
-            ],
-            "correcta": "tonight = esta noche · next year = el próximo año · last night = anoche",
-            "explicacion": "Tonight y next year miran al futuro. Last night mira al pasado."
-          },
-          {
-            "tipo": "parejas",
-            "texto": "Match each time expression.",
-            "contexto": "Une cada palabra con su significado.",
-            "parejas": [
-              {
-                "izq": "soon",
-                "der": "pronto"
-              },
-              {
-                "izq": "two days ago",
-                "der": "hace dos días"
-              },
-              {
-                "izq": "next month",
-                "der": "el próximo mes"
-              }
-            ],
-            "correcta": "soon = pronto · two days ago = hace dos días · next month = el próximo mes",
-            "explicacion": "Soon y next month miran al futuro. Two days ago mira al pasado."
-          }
-        ]
-      },
-      {
-        "tipo": "ordenar",
-        "texto": "Assemble the knight's plan for this evening.",
-        "fichas": [
-          "tonight.",
-          "am",
-          "check the gate",
-          "I",
-          "going to"
-        ],
-        "correcta": "I am going to check the gate tonight.",
-        "explicacion": "Am going to expresa un plan que el caballero ya tiene.",
-        "variantes": [
-          {
-            "tipo": "ordenar",
-            "texto": "Put the painter's plan in order.",
-            "correcta": "She is going to paint the wall tomorrow.",
-            "explicacion": "Is going to expresa un plan ya decidido.",
-            "fichas": [
-              "She",
-              "is",
-              "going to",
-              "paint the wall",
-              "tomorrow."
-            ]
-          },
-          {
-            "tipo": "ordenar",
-            "texto": "Put the guards' plan in order.",
-            "correcta": "They are going to open the gate tonight.",
-            "explicacion": "Con they se usa are going to.",
-            "fichas": [
-              "They",
-              "are",
-              "going to",
-              "open the gate",
-              "tonight."
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "numero": 2,
-    "remate": "cruzado",
-    "nombre": "Puente del Río",
-    "tema": "Be going to",
-    "guardian": "Basilisco del Río",
-    "fondo": "/images/arenas/puente-del-rio-animado.svg",
-    "arte": "/images/personajes-mate/rio",
-    "golpe": "Coletazo del Río",
-    "efecto": "/images/jefes/rio/coletazo.svg",
-    "vida": 117,
-    "dano": 25,
-    "debilidad": "escudo",
-    "preguntas": [
-      {
-        "tipo": "ordenar",
-        "texto": "Cancel the crossing. Make the sentence negative.",
-        "modelo": "He is going to cross the bridge.",
-        "correcta": "He is not going to cross the bridge.",
-        "explicacion": "Coloca not después de is para formar la negativa.",
-        "fichas": [
-          "is",
-          "going to",
-          "cross the bridge.",
-          "He",
-          "not"
-        ],
-        "variantes": [
-          {
-            "tipo": "ordenar",
-            "texto": "Cancel the trip. Make the sentence negative.",
-            "modelo": "She is going to cross the river.",
-            "correcta": "She is not going to cross the river.",
-            "explicacion": "Coloca not después de is para formar la negativa.",
-            "fichas": [
-              "She",
-              "is",
-              "not",
-              "going to",
-              "cross the river."
-            ]
-          },
-          {
-            "tipo": "ordenar",
-            "texto": "Close the gate. Make the sentence negative.",
-            "modelo": "We are going to open the gate.",
-            "correcta": "We are not going to open the gate.",
-            "explicacion": "Coloca not después de are para formar la negativa.",
-            "fichas": [
-              "We",
-              "are",
-              "not",
-              "going to",
-              "open the gate."
-            ]
-          }
-        ]
-      },
-      {
-        "tipo": "esquivar",
-        "texto": "The basilisk is going to attack on the left!",
-        "lado": "izquierda",
-        "correcta": "Move right.",
-        "explicacion": "On the left indica que el ataque viene por la izquierda. Mueve al héroe al lado derecho."
-      },
-      {
-        "tipo": "cortar",
-        "texto": "We ___ going to cross the river.",
-        "opciones": [
-          "are",
-          "am",
-          "is"
-        ],
-        "correcta": "are",
-        "explicacion": "Con we se usa are going to.",
-        "variantes": [
-          {
-            "tipo": "cortar",
-            "texto": "I ___ going to cross the bridge.",
-            "opciones": [
-              "is",
-              "am",
-              "are"
-            ],
-            "correcta": "am",
-            "explicacion": "Con I se usa am going to."
-          },
-          {
-            "tipo": "cortar",
-            "texto": "They ___ going to cross the bridge.",
-            "opciones": [
-              "is",
-              "are",
-              "am"
-            ],
-            "correcta": "are",
-            "explicacion": "Con they se usa are going to."
-          }
-        ]
-      },
-      {
-        "tipo": "hacha",
-        "texto": "The basilisk is going to attack!",
-        "correcta": "Cut all three energy balls.",
-        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía."
-      },
-      {
-        "tipo": "esquiva-frase",
-        "texto": "It ___ attack!",
-        "fichas": [
-          "are going to",
-          "is going to",
-          "am going to"
-        ],
-        "correcta": "is going to",
-        "explicacion": "Con it usamos is going to seguido del verbo base: It is going to attack!"
-      },
-      {
-        "tipo": "escuchar",
-        "texto": "Listen to the warning.",
-        "contexto": "Escucha y toca la frase que oíste.",
-        "audio": "Look out! The stone is going to fall!",
-        "opciones": [
-          "The stone is going to fall!",
-          "The stone fell yesterday.",
-          "The stone is not going to fall!"
-        ],
-        "correcta": "The stone is going to fall!",
-        "explicacion": "Is going to + verbo base avisa de algo que está a punto de pasar.",
-        "variantes": [
-          {
-            "tipo": "escuchar",
-            "texto": "Listen to the warning.",
-            "contexto": "Escucha y toca la frase que oíste.",
-            "audio": "Watch out! The bridge is going to break!",
-            "opciones": [
-              "The bridge is going to break!",
-              "The bridge broke last night.",
-              "The bridge is not going to break!"
-            ],
-            "correcta": "The bridge is going to break!",
-            "explicacion": "Is going to avisa de algo que está a punto de pasar."
-          },
-          {
-            "tipo": "escuchar",
-            "texto": "Listen to the warning.",
-            "contexto": "Escucha y toca la frase que oíste.",
-            "audio": "We are going to cross the river tomorrow.",
-            "opciones": [
-              "We are going to cross the river tomorrow.",
-              "We crossed the river yesterday.",
-              "We are not going to cross the river."
-            ],
-            "correcta": "We are going to cross the river tomorrow.",
-            "explicacion": "Are going to + verbo base expresa un plan para mañana."
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "numero": 3,
-    "remate": "solar",
-    "nombre": "Torre del Viento",
-    "tema": "Will",
-    "guardian": "Águila de la Tormenta",
-    "fondo": "/images/arenas/torre-del-viento-animado.svg",
-    "arte": "/images/personajes-mate/viento",
-    "golpe": "Picado de la Tormenta",
-    "efecto": "/images/jefes/viento/picado.svg",
-    "vida": 120,
-    "dano": 27,
-    "debilidad": "barrido",
-    "corte": true,
-    "preguntas": [
-      {
-        "tipo": "errores",
-        "texto": "Find the mistake in the prediction.",
-        "contexto": "Tap the wrong word.",
-        "frase": [
-          "I",
-          "think",
-          "the",
-          "storm",
-          "will",
-          "reaches",
-          "the",
-          "tower",
-          "tonight."
-        ],
-        "error": 5,
-        "correcta": "I think the storm will reach the tower tonight.",
-        "explicacion": "Después de will usamos el verbo base: reach, no reaches.",
-        "variantes": [
-          {
-            "tipo": "errores",
-            "texto": "Find the mistake in the prediction.",
-            "contexto": "Tap the wrong word.",
-            "frase": [
-              "I",
-              "think",
-              "it",
-              "will",
-              "rains",
-              "tomorrow."
-            ],
-            "error": 4,
-            "correcta": "I think it will rain tomorrow.",
-            "explicacion": "Después de will usamos el verbo base: rain, no rains."
-          },
-          {
-            "tipo": "errores",
-            "texto": "Find the mistake in the prediction.",
-            "contexto": "Tap the wrong word.",
-            "frase": [
-              "The",
-              "eagle",
-              "will",
-              "to",
-              "fly",
-              "over",
-              "the",
-              "tower."
-            ],
-            "error": 3,
-            "correcta": "The eagle will fly over the tower.",
-            "explicacion": "Después de will no se usa to: will fly."
-          }
-        ]
-      },
-      {
-        "tipo": "romper-hechizo",
-        "texto": "Make the spell negative.",
-        "invocacion": true,
-        "huecos": [
-          2,
-          3
-        ],
-        "frase": [
-          "The",
-          "hero",
-          "will",
-          "fall!"
-        ],
-        "correcta": "The hero will not fall.",
-        "explicacion": "Coloca not después de will para negar lo que anuncia el hechizo: The hero will not fall."
-      },
-      {
-        "tipo": "cortar",
-        "texto": "I will ___ you.",
-        "opciones": [
-          "helped",
-          "helps",
-          "help"
-        ],
-        "correcta": "help",
-        "explicacion": "Después de will va el verbo en su forma base: help.",
-        "variantes": [
-          {
-            "tipo": "cortar",
-            "texto": "She will ___ the door.",
-            "opciones": [
-              "opened",
-              "opens",
-              "open"
-            ],
-            "correcta": "open",
-            "explicacion": "Después de will va el verbo base: open."
-          },
-          {
-            "tipo": "cortar",
-            "texto": "They will ___ the tower.",
-            "opciones": [
-              "climbing",
-              "climb",
-              "climbed"
-            ],
-            "correcta": "climb",
-            "explicacion": "Después de will va el verbo base: climb."
-          }
-        ]
-      },
-      {
-        "tipo": "hacha",
-        "texto": "The eagle will strike!",
-        "correcta": "Cut all three energy balls.",
-        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía."
-      },
-      {
-        "tipo": "proteger-aliado",
-        "texto": "Promise to protect the ally.",
-        "contexto": "Promise you will protect me!",
-        "nodos": [
-          "I",
-          "will",
-          "did",
-          "protect you."
-        ],
-        "correcta": "I will protect you.",
-        "explicacion": "I will protect you expresa una promesa. Will va seguido del verbo base protect."
-      },
-      {
-        "tipo": "ordenar",
-        "texto": "Complete the knight's promise. Use will or 'll.",
-        "contexto": "Promise to return the key tomorrow.",
-        "modelo": "I promise…",
-        "correcta": "I promise I will return the key tomorrow.",
-        "explicacion": "Will sirve para expresar un compromiso futuro. I'll es la contracción de I will.",
-        "fichas": [
-          "promise",
-          "will",
-          "return the key",
-          "tomorrow.",
-          "I",
-          "I"
-        ],
-        "variantes": [
-          {
-            "tipo": "ordenar",
-            "texto": "Complete the knight's promise.",
-            "contexto": "Promise to help your ally tomorrow.",
-            "modelo": "I promise…",
-            "correcta": "I promise I will help you tomorrow.",
-            "explicacion": "Will expresa un compromiso futuro.",
-            "fichas": [
-              "promise",
-              "will",
-              "help you",
-              "tomorrow.",
-              "I",
-              "I"
-            ]
-          },
-          {
-            "tipo": "ordenar",
-            "texto": "Complete the guard's promise.",
-            "contexto": "Promise to guard the gate tonight.",
-            "modelo": "I promise…",
-            "correcta": "I promise I will guard the gate tonight.",
-            "explicacion": "Will expresa una promesa.",
-            "fichas": [
-              "promise",
-              "will",
-              "guard the gate",
-              "tonight.",
-              "I",
-              "I"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "numero": 4,
-    "remate": "sombras",
-    "nombre": "Puerta Real",
-    "tema": "Traffic signs and rules",
-    "guardian": "Dragón de la Puerta Real",
-    "fondo": "/images/arenas/puerta-real-animado.svg",
-    "arte": "/images/personajes-mate/real",
-    "golpe": "Aliento Escarlata",
-    "efecto": "/images/jefes/real/aliento.svg",
-    "vida": 126,
-    "dano": 31,
-    "debilidad": "escudo",
-    "preguntas": [
-      {
-        "tipo": "zona",
-        "texto": "Bring the rider to a complete stop.",
-        "tablero": "calle",
-        "señal": {
-          "imagen": "/images/signs/stop.svg",
-          "alt": "Octágono rojo con la palabra STOP"
-        },
-        "zonas": [
-          {
-            "texto": "Go past the line",
-            "icono": "↑"
-          },
-          {
-            "texto": "Stop at the line",
-            "icono": "▬"
-          },
-          {
-            "texto": "Go through the crossing",
-            "icono": "↑"
-          }
-        ],
-        "correcta": "Stop at the line",
-        "explicacion": "Ante STOP, detente por completo en la línea.",
-        "variantes": [
-          {
-            "tipo": "zona",
-            "texto": "Keep the rider out of the street.",
-            "tablero": "calle",
-            "señal": {
-              "imagen": "/images/signs/no-entry.svg",
-              "alt": "Círculo rojo con una barra blanca"
-            },
-            "zonas": [
-              {
-                "texto": "Enter slowly",
-                "icono": "↑"
-              },
-              {
-                "texto": "Do not enter",
-                "icono": "✖"
-              },
-              {
-                "texto": "Wait and enter",
-                "icono": "◷"
-              }
-            ],
-            "correcta": "Do not enter",
-            "explicacion": "NO ENTRY prohíbe entrar a la calle."
-          },
-          {
-            "tipo": "zona",
-            "texto": "Let the other rider go first.",
-            "tablero": "calle",
-            "señal": {
-              "imagen": "/images/signs/yield.svg",
-              "alt": "Triángulo invertido con borde rojo"
-            },
-            "zonas": [
-              {
-                "texto": "Enter first",
-                "icono": "↗"
-              },
-              {
-                "texto": "Overtake",
-                "icono": "↑"
-              },
-              {
-                "texto": "Wait and give way",
-                "icono": "◷"
-              }
-            ],
-            "correcta": "Wait and give way",
-            "explicacion": "Give way significa «ceder el paso»."
-          }
-        ]
-      },
-      {
-        "tipo": "parejas",
-        "texto": "Match each sign with its meaning.",
-        "parejas": [
-          {
-            "izq": "STOP",
-            "imagen": "/images/signs/stop.svg",
-            "alt": "Octágono rojo STOP",
-            "der": "Come to a full stop"
-          },
-          {
-            "izq": "YIELD",
-            "imagen": "/images/signs/yield.svg",
-            "alt": "Triángulo invertido",
-            "der": "Give way"
-          },
-          {
-            "izq": "NO ENTRY",
-            "imagen": "/images/signs/no-entry.svg",
-            "alt": "Círculo rojo con barra blanca",
-            "der": "Do not enter"
-          }
-        ],
-        "correcta": "STOP = Come to a full stop · YIELD = Give way · NO ENTRY = Do not enter",
-        "explicacion": "STOP exige detenerse, YIELD pide ceder el paso y NO ENTRY prohíbe entrar.",
-        "variantes": [
-          {
-            "tipo": "parejas",
-            "texto": "Match the road words.",
-            "contexto": "Une cada palabra con su significado.",
-            "parejas": [
-              {
-                "izq": "helmet",
-                "der": "casco"
-              },
-              {
-                "izq": "crossing",
-                "der": "cruce"
-              },
-              {
-                "izq": "lane",
-                "der": "carril"
-              }
-            ],
-            "correcta": "helmet = casco · crossing = cruce · lane = carril",
-            "explicacion": "Helmet protege la cabeza, crossing es donde cruzan peatones y lane es un carril."
-          },
-          {
-            "tipo": "parejas",
-            "texto": "Match the road words.",
-            "contexto": "Une cada palabra con su significado.",
-            "parejas": [
-              {
-                "izq": "speed",
-                "der": "velocidad"
-              },
-              {
-                "izq": "traffic light",
-                "der": "semáforo"
-              },
-              {
-                "izq": "road",
-                "der": "camino"
-              }
-            ],
-            "correcta": "speed = velocidad · traffic light = semáforo · road = camino",
-            "explicacion": "Speed es la velocidad, traffic light el semáforo y road el camino."
-          }
-        ]
-      },
-      {
-        "tipo": "cortar",
-        "texto": "What does a STOP sign mean?",
-        "opciones": [
-          "Go faster",
-          "Come to a full stop",
-          "Keep going"
-        ],
-        "correcta": "Come to a full stop",
-        "explicacion": "STOP indica que debes detenerte por completo.",
-        "variantes": [
-          {
-            "tipo": "cortar",
-            "texto": "What does a YIELD sign mean?",
-            "opciones": [
-              "Give way",
-              "Go faster",
-              "Park here"
-            ],
-            "correcta": "Give way",
-            "explicacion": "YIELD significa ceder el paso."
-          },
-          {
-            "tipo": "cortar",
-            "texto": "What does a NO ENTRY sign mean?",
-            "opciones": [
-              "You can enter",
-              "Do not enter",
-              "Stop and wait"
-            ],
-            "correcta": "Do not enter",
-            "explicacion": "NO ENTRY significa que no puedes entrar."
-          }
-        ]
-      },
-      {
-        "tipo": "hacha",
-        "texto": "The dragon will breathe fire!",
-        "correcta": "Cut all three energy balls.",
-        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía."
-      },
-      {
-        "tipo": "ordenar",
-        "texto": "Equip the rider before the ride.",
-        "contexto": "Write the name of the item that protects the rider's head.",
-        "antes": "Put on your",
-        "despues": ".",
-        "correcta": "Put on your helmet.",
-        "explicacion": "Helmet significa «casco».",
-        "fichas": [
-          "on",
-          "helmet.",
-          "Put",
-          "your"
-        ],
-        "variantes": [
-          {
-            "tipo": "ordenar",
-            "texto": "Obey the traffic light.",
-            "contexto": "The light is red.",
-            "correcta": "Stop at the red light.",
-            "explicacion": "Red light significa luz roja: hay que detenerse.",
-            "fichas": [
-              "Stop",
-              "at",
-              "the",
-              "red light."
-            ]
-          },
-          {
-            "tipo": "ordenar",
-            "texto": "Be polite on the road.",
-            "contexto": "Let other riders go first.",
-            "correcta": "Give way to other riders.",
-            "explicacion": "Give way significa ceder el paso.",
-            "fichas": [
-              "Give way",
-              "to",
-              "other",
-              "riders."
-            ]
-          }
-        ]
-      },
-      {
-        "tipo": "zona",
-        "texto": "Move the rider according to the traffic light.",
-        "tablero": "calle",
-        "señal": {
-          "alt": "Semáforo con la luz roja encendida"
-        },
-        "zonas": [
-          {
-            "texto": "Move forward",
-            "icono": "↑"
-          },
-          {
-            "texto": "Stop before the crossing",
-            "icono": "▬"
-          },
-          {
-            "texto": "Change lanes",
-            "icono": "↔"
-          }
-        ],
-        "correcta": "Stop before the crossing",
-        "explicacion": "La luz roja indica que debes detenerte antes de entrar al cruce."
-      }
-    ]
-  }
-]
 
 const niveles = computed(() => language.value === 'en'
   ? translateContent(nivelesBase)
@@ -1086,45 +202,30 @@ p {
   width: min(100cqw, 156.25cqh);
 }
 
-/* Celular en horizontal: título y botón en una sola fila, texto más corto */
-@media (max-height: 520px) and (orientation: landscape) {
-  .cabecera-mapa {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0 0.75rem;
-  }
-  .cabecera-mapa .volver { order: 2; margin-left: auto; min-height: 36px; height: 36px; }
-  h1 { order: 1; margin: 0; font-size: 1.3rem; }
-  .cabecera-mapa p { order: 3; flex-basis: 100%; margin: 0 0 0.35rem; font-size: 0.8rem; }
-}
-
-/* La lista de zonas solo aparece en vertical */
+.juego { background: #0b1325; }
+.juego:fullscreen { width: 100%; height: 100%; }
+.boton-pantalla { margin-inline-start: 6px; }
 .contenido .lista-zonas { display: none; }
 
-/* Celular en vertical: tablero a todo el ancho arriba (solo marcadores) y
-   debajo la lista de zonas con botones grandes, que se desplaza si no cabe. */
-@media (orientation: portrait) and (max-width: 700px) {
-  .cabecera-mapa {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0 0.75rem;
-  }
-  .cabecera-mapa .volver { order: 2; margin-left: auto; min-height: 36px; height: 36px; padding-inline: 0.5rem; font-size: 0.75rem; }
-  h1 { order: 1; margin: 0; }
-  .cabecera-mapa p { order: 3; flex-basis: 100%; }
-  .zona-mapa { flex: none; display: block; container-type: normal; }
+@media (orientation: landscape) and (max-height: 560px) {
+  .reino .contenido { display: grid; grid-template: auto minmax(0, 1fr) / minmax(0, 1.5fr) minmax(185px, 1fr); gap: 4px 12px; }
+  .cabecera-mapa { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; }
+  .cabecera-mapa h1 { order: -1; flex: 1; margin: 0; font-size: 20px; }
+  .cabecera-mapa .volver, .boton-pantalla { height: 32px; min-height: 32px; font-size: 12px; }
+  .cabecera-mapa p:not(.conquista) { display: none; }
+  .tablero :deep(.rotulo) { display: none; }
+  .contenido .lista-zonas { display: grid; align-content: center; gap: 4px; overflow-y: auto; }
+  .lista-zonas :deep(.fila) { min-height: 38px; gap: 6px; padding: 3px 6px; }
+  .lista-zonas :deep(.numero) { width: 29px; height: 29px; }
+  .lista-zonas :deep(.texto strong) { font-size: 14px; }
+  .lista-zonas :deep(.texto small), .lista-zonas :deep(.estado) { font-size: 11px; }
+}
+@media (orientation: portrait) and (max-width: 700px), (orientation: portrait) and (pointer: coarse) and (max-width: 950px) {
+  .reino { overflow-y: auto; }
+  .contenido { height: auto; gap: 12px; }
+  .zona-mapa { display: block; flex: none; container-type: normal; }
   .tablero { width: 100%; }
   .tablero :deep(.rotulo) { display: none; }
-  .contenido .lista-zonas {
-    display: grid;
-    flex: 1 1 auto;
-    min-height: 0;
-    margin-top: 0.75rem;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    align-content: start;
-  }
+  .contenido .lista-zonas { display: grid; }
 }
 </style>

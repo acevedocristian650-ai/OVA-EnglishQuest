@@ -4,13 +4,21 @@
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+import {
+  VApp, VAvatar, VBtn, VBtnToggle, VCard,
+  VCardActions, VCardText, VCardTitle, VCol, VContainer,
+  VDialog, VImg, VList, VListItem, VListItemTitle,
+  VMain, VProgressLinear, VRow, VSpacer
+} from 'vuetify/components'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
-    components,
-    directives,
+    components: {
+      VApp, VAvatar, VBtn, VBtnToggle, VCard,
+      VCardActions, VCardText, VCardTitle, VCol, VContainer,
+      VDialog, VImg, VList, VListItem, VListItemTitle,
+      VMain, VProgressLinear, VRow, VSpacer
+    },
     ssr: true,
     // Tema oscuro: todo el juego usa colores nocturnos
     theme: { defaultTheme: 'dark' }

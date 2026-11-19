@@ -1,10 +1,7 @@
-// Valida las preguntas y sus variantes de pages/map.vue. Uso: node scripts/validar-preguntas.mjs
+// Valida el mismo banco de preguntas que carga el mapa.
 import { readFileSync } from 'node:fs'
 
-const origen = readFileSync(new URL('../pages/map.vue', import.meta.url), 'utf8')
-const inicio = origen.indexOf('const niveles = [')
-const fin = origen.indexOf('function entrar')
-const niveles = new Function(origen.slice(inicio, fin).replace('const niveles', 'var niveles') + '; return niveles')()
+const niveles = JSON.parse(readFileSync(new URL('../data/niveles.json', import.meta.url), 'utf8'))
 
 const errores = []
 const norm = (t) => t.trim().toLowerCase().replace(/[‘’]/g, "'").replace(/[.?!]+$/, '').replace(/\s+/g, ' ')

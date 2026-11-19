@@ -1,7 +1,7 @@
 <template>
   <div class="cortes" @pointerdown="iniciar" @pointermove="mover" @pointerup="soltar"
     @pointercancel="cancelar" @lostpointercapture="cancelar">
-    <p class="enunciado" lang="en">{{ pregunta.texto }}</p>
+
     <div ref="fichas" class="fichas">
       <button v-for="(opcion, i) in pregunta.opciones" :key="opcion" type="button" lang="en"
         :class="{ partida: cortadas.includes(i) }" :disabled="terminado || cortadas.includes(i)"
@@ -118,20 +118,6 @@ function cortar(indice) {
 }
 @keyframes aparecer-pista { from { opacity: 0; translate: 0 8px; } }
 @media (prefers-reduced-motion: reduce) { .sugerencia { animation: none; } }
-.enunciado {
-  position: absolute;
-  inset: 3.5rem 0.5rem auto;
-  width: fit-content;
-  max-width: calc(100% - 1rem);
-  margin-inline: auto;
-  padding: 0.45rem 0.8rem;
-  border: 1px solid #b58c51;
-  border-radius: 6px;
-  background: #101928f5;
-  color: #fff4dc;
-  font: 800 clamp(1.05rem, 3vw, 1.45rem) / 1.25 Georgia, serif;
-  text-align: center;
-}
 .fichas {
   position: absolute;
   inset: auto 4% 14%;

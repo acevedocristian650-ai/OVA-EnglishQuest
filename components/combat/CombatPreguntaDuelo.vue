@@ -1,24 +1,14 @@
 <template>
   <form class="pregunta" @submit.prevent="confirmar">
-    <h2 lang="en">{{ pregunta.texto }}</h2>
-    <p v-if="pregunta.contexto" class="contexto" lang="en">{{ pregunta.contexto }}</p>
-
-    <template v-if="pregunta.tipo === 'ordenar'">
-      <p v-if="pregunta.modelo" class="modelo" lang="en">
+    <div class="consigna">
+      <h2 lang="en">{{ pregunta.texto }}</h2>
+      <p v-if="pregunta.contexto" class="contexto" lang="en">{{ pregunta.contexto }}</p>
+      <p v-if="pregunta.tipo === 'ordenar' && pregunta.modelo" class="modelo" lang="en">
         <small>{{ pregunta.modelo.endsWith('…') ? t('Empieza así') : t('Frase base') }}</small>
         <strong>{{ pregunta.modelo }}</strong>
       </p>
-      <div class="barra-orden">
-        <p class="ayuda">{{ t('Toca fichas ·') }} <span class="contador-fichas" aria-live="polite">{{ orden.length }}/{{ pregunta.fichas.length }}</span></p>
-        <span class="acciones-orden">
-          <AudioSonidoBoton @click="orden.pop()">
-            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">↶ {{ t('Deshacer') }}</v-btn>
-          </AudioSonidoBoton>
-          <AudioSonidoBoton @click="orden.splice(0)">
-            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">{{ t('Borrar todo') }}</v-btn>
-          </AudioSonidoBoton>
-        </span>
-      </div>
+    </div>
+    <template v-if="pregunta.tipo === 'ordenar'">
       <div class="frase fichas" role="group" :aria-label="t('Tu frase')" lang="en">
         <template v-for="posicion in pregunta.fichas.length" :key="posicion">
           <AudioSonidoBoton v-if="orden[posicion - 1] !== undefined" @click="orden.splice(posicion - 1, 1)">
@@ -30,9 +20,20 @@
       </div>
       <div class="fichas" role="group" :aria-label="t('Fichas disponibles')" lang="en">
         <AudioSonidoBoton v-for="(palabra, indice) in pregunta.fichas" :key="indice" @click="orden.push(indice)">
-          <v-btn type="button" :disabled="orden.includes(indice)" color="amber-lighten-3"
+          <v-btn type="button" v-show="!orden.includes(indice)" :disabled="orden.includes(indice)" color="amber-lighten-3"
             variant="outlined">{{ palabra }}</v-btn>
         </AudioSonidoBoton>
+      </div>
+      <div class="barra-orden">
+        <p class="ayuda">{{ t('Toca fichas ·') }} <span class="contador-fichas" aria-live="polite">{{ orden.length }}/{{ pregunta.fichas.length }}</span></p>
+        <span class="acciones-orden">
+          <AudioSonidoBoton @click="orden.pop()">
+            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">↶ {{ t('Deshacer') }}</v-btn>
+          </AudioSonidoBoton>
+          <AudioSonidoBoton @click="orden.splice(0)">
+            <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">{{ t('Borrar todo') }}</v-btn>
+          </AudioSonidoBoton>
+        </span>
       </div>
     </template>
 
@@ -168,4 +169,27 @@ h2 { margin: 0.2rem 0 0.4rem; color: #fff0cc; font: 600 clamp(1rem, 2.5vw, 1.3re
   .zona { transition: none; }
 }
 .pregunta :is(button, input):focus-visible { outline: 2px solid #ffe09a; outline-offset: 2px; }
+
+/* La mesa comparte el campo con los luchadores. Las fichas se ajustan al espacio disponible. */
+.mesa-frase { display: grid; align-content: center; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; }
+.mesa-frase > :is(.consigna, .frase, .fichas) { grid-column: 1 / -1; }
+.mesa-frase h2, .mesa-frase .modelo, .mesa-frase .fichas, .mesa-frase .contexto { margin: 0; }
+.mesa-frase .barra-orden { grid-column: 1; grid-row: auto; }
+.mesa-frase .confirmar { grid-column: 2; margin: 0; }
+.mesa-frase :deep(.v-btn) { min-width: 0; height: auto; min-height: 34px; padding: 3px 9px; white-space: normal; letter-spacing: normal; text-transform: none; line-height: 1.15; }
+.mesa-frase :deep(.v-btn__content) { white-space: normal; }
+.mesa-frase .frase { min-height: 36px; }
+.mesa-frase .hueco { min-width: 24px; height: 21px; }
+.mesa-frase .fichas { gap: 4px; }
+.mesa-frase .modelo { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px; }
+@media (max-height: 520px), (max-width: 650px) {
+  .mesa-frase { font-size: clamp(13px, 3.4dvh, 16px); padding: 6px 8px; }
+  .mesa-frase h2 { font-size: clamp(15px, 4dvh, 18px); line-height: 1.16; }
+  .mesa-frase .modelo strong { font-size: 14px; }
+  .mesa-frase :deep(.v-btn) { font-size: clamp(12px, 3.4dvh, 15px); }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  .mesa-frase { align-content: start; }
+  .mesa-frase :deep(.v-btn) { min-height: 32px; padding-inline: 6px; }
+}
 </style>
