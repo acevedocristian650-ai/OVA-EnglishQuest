@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="contenido" :class="{ superpuesto: panelSuperpuesto }">
+    <div class="contenido" v-panel-adaptable="fase === 'pregunta' && (rondaPanel || armandoFrase) ? indice : null">
       <div class="zona-escena" :class="{ 'con-frase': armandoFrase }">
         <div class="vista-arena">
           <div class="marcador" aria-live="polite">
@@ -97,7 +97,7 @@
           :pregunta="pregunta" @responder="responder" />
       </div>
 
-      <aside v-if="fase !== 'pregunta' || rondaPanel" class="panel sin-barra" :aria-label="t('Desafío de inglés')">
+      <aside v-if="fase !== 'pregunta' || rondaPanel" class="panel sin-barra" :class="{ resultado: fase === 'resultado' }" :aria-label="t('Desafío de inglés')">
         <template v-if="fase === 'pregunta'">
           <CombatErrores v-if="pregunta.tipo === 'errores'" :key="indice" :pregunta="pregunta" @responder="responder" />
           <CombatParejas v-if="pregunta.tipo === 'parejas'" :key="indice" :pregunta="pregunta" @responder="responder" />
@@ -291,9 +291,40 @@ const rondaHacha = computed(() => pregunta.value.tipo === 'hacha')
 const rondaCortes = computed(() => pregunta.value.tipo === 'cortar')
 const rondaEsquiva = computed(() => ['esquivar', 'esquiva-frase'].includes(pregunta.value.tipo))
 const rondaPanel = computed(() => ['errores', 'parejas', 'zona'].includes(pregunta.value.tipo))
-const panelSuperpuesto = computed(() => fase.value === 'pregunta'
-  ? rondaPanel.value || pregunta.value.tipo === 'ordenar'
-  : ['revision', 'resultado', 'elegir'].includes(fase.value))
+let desconectarPanel
+function ajustarPanel(contenido, indicePregunta) {
+  desconectarPanel?.()
+  contenido.classList.remove('superpuesto')
+  if (indicePregunta === null) return
+  const panel = contenido.querySelector('.panel, .mesa-frase')
+  if (!panel) return
+  const horizontal = window.matchMedia('(orientation: landscape) and (max-height: 600px), (orientation: landscape) and (pointer: coarse)')
+  function medir() {
+    // Medir siempre debajo de la arena, incluso si la pregunta ya está superpuesta.
+    contenido.classList.remove('superpuesto')
+    if (horizontal.matches && panel.scrollHeight > panel.clientHeight + 1) {
+      contenido.classList.add('superpuesto')
+    }
+  }
+  const tamano = new ResizeObserver(medir)
+  tamano.observe(contenido)
+  tamano.observe(panel)
+  const cambios = new MutationObserver(medir)
+  cambios.observe(panel, { subtree: true, childList: true, characterData: true, attributes: true })
+  horizontal.addEventListener('change', medir)
+  desconectarPanel = () => {
+    tamano.disconnect()
+    cambios.disconnect()
+    horizontal.removeEventListener('change', medir)
+    desconectarPanel = undefined
+  }
+  medir()
+}
+const vPanelAdaptable = {
+  mounted(el, { value }) { ajustarPanel(el, value) },
+  updated(el, { value, oldValue }) { if (value !== oldValue) ajustarPanel(el, value) },
+  unmounted() { desconectarPanel?.() }
+}
 const rondaConjuro = computed(() => ['romper-hechizo', 'proteger-aliado'].includes(pregunta.value.tipo))
 let temporizadorConjuro = null
 const desplazamientoEsquiva = ref(0)
@@ -1055,6 +1086,8 @@ summary { cursor: pointer; color: #ffe09a; }
 
 /* El HUD ocupa su propia fila. Las actividades comparten la segunda con la arena. */
 @media (orientation: landscape) and (max-height: 600px), (orientation: landscape) and (pointer: coarse) {
+  .con-frase .mesa-frase { min-height: 0; max-height: 44%; overflow-y: auto; }
+  .contenido .panel.resultado { max-height: none; }
   .contenido.superpuesto {
     display: grid;
     grid-template: auto minmax(0, 1fr) / minmax(0, 1fr);
@@ -1082,8 +1115,8 @@ summary { cursor: pointer; color: #ffe09a; }
   .superpuesto .panel :deep(.tablero) { display: flex; align-items: center; gap: 6px; padding: 4px; }
   .superpuesto .panel :deep(.zonas) { flex: 1; }
   .superpuesto .panel :deep(.señal) { margin: 0; }
-  .superpuesto .epilogo-real { margin: 3px 0; padding: 4px; }
-  .superpuesto .epilogo-real p { font-size: 1rem; }
+  .resultado .epilogo-real { margin: 3px 0; padding: 4px; }
+  .resultado .epilogo-real p { font-size: 1rem; }
   .superpuesto .panel :deep(.v-btn) { min-height: 32px; }
 }
 @media (orientation: landscape) and (max-height: 360px) {
