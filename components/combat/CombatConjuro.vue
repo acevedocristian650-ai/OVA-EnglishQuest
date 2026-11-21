@@ -66,22 +66,32 @@ const colocacion = ref(null)
 const puntos = ref([])
 const trazo = ref([])
 const frasePromesa = computed(() => seleccion.value.map(i => props.pregunta.nodos[i]).join(' '))
+const audioEnPrimerPlano = useState('audio-en-primer-plano', () => false)
 
 let vozGigante = null
 
 watch(() => props.invocando, (invocando) => {
   if (invocando || !props.pregunta.invocacion || document.hidden || !window.speechSynthesis
     || !window.SpeechSynthesisUtterance) return
-  vozGigante = new SpeechSynthesisUtterance(props.pregunta.frase.join(' '))
-  vozGigante.lang = 'en-US'
-  vozGigante.pitch = 0.55
-  vozGigante.rate = 0.87
-  vozGigante.onend = vozGigante.onerror = () => { vozGigante = null }
-  window.speechSynthesis.speak(vozGigante)
+  const voz = new SpeechSynthesisUtterance(props.pregunta.correcta)
+  vozGigante = voz
+  audioEnPrimerPlano.value = true
+  voz.lang = 'en-US'
+  voz.pitch = 0.55
+  voz.rate = 0.87
+  const liberarAudio = () => {
+    if (vozGigante !== voz) return
+    vozGigante = null
+    audioEnPrimerPlano.value = false
+  }
+  voz.onend = voz.onerror = liberarAudio
+  window.speechSynthesis.speak(voz)
 })
 
 onBeforeUnmount(() => {
   if (vozGigante) window.speechSynthesis.cancel()
+  vozGigante = null
+  audioEnPrimerPlano.value = false
 })
 
 function tomar(evento) {

@@ -13,7 +13,8 @@
         :style="{ opacity: (i + 1) / tramos.length, strokeWidth: 1.5 + 5 * (i + 1) / tramos.length + 'px' }" />
     </svg>
 
-    <div v-for="bola in bolas" v-show="transcurrido >= bola.salida" :key="bola.id"
+    <div v-for="bola in bolas" :ref="referenciasBola[bola.id]"
+      v-show="transcurrido >= bola.salida" :key="bola.id"
       class="bola" :class="{ partida: cortes[bola.id] !== undefined, peligro: cortes[bola.id] === undefined && posicion(bola) < 42 }"
       :data-bola="bola.id" :style="{ left: (cortes[bola.id] ?? posicion(bola)) + '%', top: bola.altura + '%' }"
       aria-hidden="true">
@@ -83,11 +84,21 @@ const tramos = computed(() => rastro.value.slice(1).map((punto, i) => ({
 })))
 let puntero = null
 let agarre = null
+let campoActivo = null
+let anchoHacha = 0
+let alturaHacha = 0
+let movimientoPendiente = null
+let cuadroMovimiento = null
 let idPunto = 0
 let idDestello = 0
 let temporizadorRastro = null
 let temporizadorGiro = null
 const temporizadores = new Set()
+const elementosBola = new Map()
+const referenciasBola = Object.fromEntries(bolas.map((bola) => [
+  bola.id,
+  (elemento) => asignarBola(elemento, bola.id)
+]))
 
 function posicion(bola) {
   const progreso = (transcurrido.value - bola.salida) / (props.total - bola.salida)
@@ -99,11 +110,19 @@ function tomar(evento) {
   evento.currentTarget.setPointerCapture(evento.pointerId)
   puntero = evento.pointerId
   const campo = arena.value.getBoundingClientRect()
+  campoActivo = campo
   const hacha = evento.currentTarget.getBoundingClientRect()
+  anchoHacha = hacha.width
+  alturaHacha = hacha.height
   const x = hacha.left + hacha.width / 2
   const y = hacha.top + hacha.height / 2
   agarre = { x: evento.clientX - x, y: evento.clientY - y }
   centro.value = { x: (x - campo.left) / campo.width * 100, y: (y - campo.top) / campo.height * 100 }
+}
+
+function asignarBola(elemento, id) {
+  if (elemento) elementosBola.set(id, elemento)
+  else elementosBola.delete(id)
 }
 
 // Rastro: guarda los últimos puntos de la hoja (en %) y lo borra poco después de dejar de mover.
@@ -133,50 +152,80 @@ function estallar(x, y) {
 
 function mover(evento) {
   if (puntero !== evento.pointerId || cantidad.value === bolas.length) return
-  const campo = arena.value.getBoundingClientRect()
-  const anchoHacha = evento.target.offsetWidth
+  movimientoPendiente = evento
+  if (cuadroMovimiento !== null) return
+  cuadroMovimiento = requestAnimationFrame(() => {
+    cuadroMovimiento = null
+    const movimiento = movimientoPendiente
+    movimientoPendiente = null
+    if (movimiento) procesarMovimiento(movimiento)
+  })
+}
+
+function distanciaAlSegmento(x, y, x1, y1, x2, y2) {
+  const dx = x2 - x1
+  const dy = y2 - y1
+  const longitudCuadrada = dx * dx + dy * dy
+  const proporcion = longitudCuadrada === 0 ? 0 : Math.max(0, Math.min(1, ((x - x1) * dx + (y - y1) * dy) / longitudCuadrada))
+  const diferenciaX = x - (x1 + proporcion * dx)
+  const diferenciaY = y - (y1 + proporcion * dy)
+  return diferenciaX * diferenciaX + diferenciaY * diferenciaY
+}
+
+function procesarMovimiento(evento) {
+  if (puntero !== evento.pointerId || cantidad.value === bolas.length || !campoActivo) return
+  const campo = campoActivo
   const x = centro.value.x * campo.width / 100
   const y = centro.value.y * campo.height / 100
   const destinoX = Math.max(0, Math.min(campo.width, evento.clientX - campo.left - agarre.x))
   const destinoY = Math.max(0, Math.min(campo.height, evento.clientY - campo.top - agarre.y))
   const dx = destinoX - x
   const dy = destinoY - y
-  const pasos = Math.ceil(Math.hypot(dx, dy) / 5)
   centro.value = { x: destinoX / campo.width * 100, y: destinoY / campo.height * 100 }
-  if (pasos > 0) {
+  if (dx !== 0 || dy !== 0) {
     marcarRastro(campo, destinoX + anchoHacha * .1, destinoY - anchoHacha * .24)
     inclinar(dx)
   }
 
   for (const bola of bolas) {
     if (transcurrido.value < bola.salida || cortes.value[bola.id] !== undefined) continue
-    const caja = arena.value.querySelector(`[data-bola="${bola.id}"]`)?.getBoundingClientRect()
+    const caja = elementosBola.get(bola.id)?.getBoundingClientRect()
     if (!caja?.width) continue
     const blancoX = caja.left + caja.width / 2
     const blancoY = caja.top + caja.height / 2
-
-    for (let paso = 0; paso <= pasos && pasos > 0; paso++) {
-      const hojaX = campo.left + x + dx * paso / pasos + anchoHacha * .1
-      const hojaY = campo.top + y + dy * paso / pasos - anchoHacha * .24
-      if (Math.hypot(hojaX - blancoX, hojaY - blancoY) > caja.width / 2 + anchoHacha * .21) continue
-      cortes.value[bola.id] = (blancoX - campo.left) / campo.width * 100
-      estallar(cortes.value[bola.id], bola.altura)
-      break
-    }
+    const inicioX = campo.left + x + anchoHacha * .1
+    const inicioY = campo.top + y - alturaHacha * .24
+    const finalX = campo.left + destinoX + anchoHacha * .1
+    const finalY = campo.top + destinoY - alturaHacha * .24
+    const radio = caja.width / 2 + anchoHacha * .21
+    if (distanciaAlSegmento(blancoX, blancoY, inicioX, inicioY, finalX, finalY) > radio * radio) continue
+    cortes.value[bola.id] = (blancoX - campo.left) / campo.width * 100
+    estallar(cortes.value[bola.id], bola.altura)
   }
   if (cantidad.value === bolas.length) emit('cortar')
 }
 
 function soltar(evento) {
-  mover(evento)
+  if (cuadroMovimiento !== null) {
+    cancelAnimationFrame(cuadroMovimiento)
+    cuadroMovimiento = null
+    movimientoPendiente = null
+  }
+  if (puntero === evento.pointerId) procesarMovimiento(evento)
   cancelar(evento)
 }
 
 function cancelar(evento) {
-  if (puntero === evento.pointerId) puntero = null
+  if (puntero !== evento.pointerId) return
+  if (cuadroMovimiento !== null) cancelAnimationFrame(cuadroMovimiento)
+  cuadroMovimiento = null
+  movimientoPendiente = null
+  puntero = null
+  campoActivo = null
 }
 
 onBeforeUnmount(() => {
+  if (cuadroMovimiento !== null) cancelAnimationFrame(cuadroMovimiento)
   clearTimeout(temporizadorRastro)
   clearTimeout(temporizadorGiro)
   temporizadores.forEach((temporizador) => clearTimeout(temporizador))
@@ -394,5 +443,15 @@ onBeforeUnmount(() => {
   .texto { animation: fundido-corte 760ms ease-out forwards; translate: -50% 0; }
   @keyframes fundido-corte { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
   .ultimo-corte::after, .pips i.llena { animation: none; }
+}
+
+@media (pointer: coarse) {
+  .bola span { box-shadow: 0 0 8px var(--energia); }
+  .bola span:first-child::before { display: none; }
+  .bola:not(.partida) span:first-child,
+  .bola.peligro:not(.partida) span:first-child { animation: none; }
+  .bola.peligro:not(.partida) span:first-child { box-shadow: 0 0 10px #ff4a3a; }
+  .rastro line { filter: none; }
+  .hacha, .hacha.moviendo { filter: none; }
 }
 </style>
