@@ -1104,8 +1104,9 @@ summary { cursor: pointer; color: #ffe09a; }
     z-index: 6;
     width: min(60%, 660px);
     margin-left: 5px;
-    max-height: none;
-    overflow: visible;
+    max-height: calc(100% - 10px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 6px 8px;
     background: rgb(19 26 35 / 91%);
   }

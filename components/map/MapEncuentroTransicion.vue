@@ -17,10 +17,10 @@
       <!-- Lado del Caballero -->
       <div class="luchador-bloque bloque-caballero">
         <div class="avatar-wrap">
-          <img src="/images/personajes-mate/caballero/reposo.png" :alt="t('Caballero del Sol')" class="avatar-luchador avatar-caballero" />
+          <img :src="imageUrl('/images/personajes-mate/caballero/reposo.png')" :alt="t('Caballero del Sol')" class="avatar-luchador avatar-caballero" />
         </div>
         <div class="cinta-contenedor">
-          <img src="/images/transiciones/cinta-nombre.png" alt="" class="cinta-bg" draggable="false" />
+          <img :src="imageUrl('/images/transiciones/cinta-nombre.png')" alt="" class="cinta-bg" draggable="false" />
           <div class="cinta-texto">
             <span class="sub-rol">{{ t('Héroe') }}</span>
             <h3 class="nombre-luchador">{{ t('Caballero del Sol') }}</h3>
@@ -31,16 +31,16 @@
       <!-- Emblema VS central auténtico -->
       <div class="emblema-vs-wrap">
         <div class="aura-dorada" />
-        <img src="/images/transiciones/emblema-vs.png" alt="Versus" class="emblema-vs-img" draggable="false" />
+        <img :src="imageUrl('/images/transiciones/emblema-vs.png')" alt="Versus" class="emblema-vs-img" draggable="false" />
       </div>
 
       <!-- Lado del Guardián -->
       <div class="luchador-bloque bloque-guardian">
         <div class="avatar-wrap">
-          <img :src="`${nivel.arte}/reposo.png`" :alt="nivel.guardian" class="avatar-luchador avatar-guardian" />
+          <img :src="imageUrl(`${nivel.arte}/reposo.png`)" :alt="nivel.guardian" class="avatar-luchador avatar-guardian" />
         </div>
         <div class="cinta-contenedor">
-          <img src="/images/transiciones/cinta-nombre.png" alt="" class="cinta-bg" draggable="false" />
+          <img :src="imageUrl('/images/transiciones/cinta-nombre.png')" alt="" class="cinta-bg" draggable="false" />
           <div class="cinta-texto">
             <span class="sub-rol">{{ t('Guardián de la Zona') }}</span>
             <h3 class="nombre-luchador">{{ nivel.guardian }}</h3>
@@ -54,6 +54,12 @@
       <span class="etiqueta-zona">{{ t('ZONA') }} {{ nivel.numero }}</span>
       <h2 class="titulo-zona">{{ nivel.nombre }}</h2>
       <p class="tema-desafio">{{ t('Misión:') }} <strong lang="en">{{ nivel.tema }}</strong></p>
+      <div v-if="fallo" role="alert">
+        <p>{{ t('No se pudo cargar el encuentro.') }}</p>
+        <v-btn @click="reintentos++">{{ t('Reintentar') }}</v-btn>
+        <v-btn @click="emit('cancelar')">{{ t('Volver al mapa') }}</v-btn>
+      </div>
+      <p v-else-if="preparando" class="estado-carga" role="status">{{ t('Preparando combate') }} · {{ progreso.loaded }} / {{ progreso.total }}</p>
     </div>
 
     <!-- Flash final de choque de combate -->
@@ -74,8 +80,9 @@ const props = defineProps({
 })
 
 const { t } = useLanguage()
+const { imageUrl, prepareImages, levelEssentials } = useGameGraphics()
 
-const emit = defineEmits(['listo'])
+const emit = defineEmits(['listo', 'cancelar'])
 
 // Brasas flotantes ambientales para el fondo de duelo
 const brasas = Array.from({ length: 16 }, (_, i) => {
@@ -96,20 +103,43 @@ const brasas = Array.from({ length: 16 }, (_, i) => {
 })
 
 let timer = null
-watch(
-  () => props.activo,
-  (val) => {
-    if (val) {
-      if (timer) clearTimeout(timer)
-      // Duración: 2 segundos cinemáticos
-      timer = setTimeout(() => {
-        emit('listo')
-      }, 2000)
-    }
+let ciclo = 0
+const preparando = ref(false)
+const progreso = ref({ loaded: 0, total: 1, failed: 0 })
+const fallo = ref(false)
+const reintentos = ref(0)
+watch([() => props.activo, reintentos], async ([val]) => {
+  fallo.value = false
+  ciclo++
+  const actual = ciclo
+  clearTimeout(timer)
+  if (!val) {
+    preparando.value = false
+    return
   }
-)
+
+  let transicionTerminada = false
+  let recursosListos = false
+  preparando.value = true
+  const comprobar = () => {
+    if (actual !== ciclo || !transicionTerminada || !recursosListos) return
+    preparando.value = false
+    emit('listo')
+  }
+  timer = setTimeout(() => { transicionTerminada = true; comprobar() }, 2000)
+  const extras = ['/images/transiciones/cinta-nombre.png', '/images/transiciones/emblema-vs.png', '/images/transiciones/fondo-versus.jpg']
+  const resultado = await prepareImages([...levelEssentials(props.nivel), ...extras], {
+    signal: { get aborted() { return actual !== ciclo } },
+    onProgress: (value) => { if (actual === ciclo) progreso.value = value }
+  })
+  if (actual !== ciclo) return
+  recursosListos = resultado.loaded === resultado.total && !resultado.failed
+  fallo.value = !recursosListos
+  comprobar()
+})
 
 onUnmounted(() => {
+  ciclo++
   if (timer) clearTimeout(timer)
 })
 </script>
@@ -447,6 +477,7 @@ onUnmounted(() => {
 .tema-desafio strong {
   color: #81d4fa;
 }
+.estado-carga { margin: 0.35rem 0 0; color: #fff0c2; font-size: .8rem; text-shadow: 0 1px 5px #000; }
 
 /* Flash de corte hacia el combate: entrada y disolución suave */
 .flash-corte {

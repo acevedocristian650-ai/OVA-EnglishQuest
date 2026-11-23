@@ -15,16 +15,23 @@
             :aria-pressed="pantallaCompleta" @click="alternarPantalla">
             {{ t(pantallaCompleta ? 'Salir de pantalla completa' : 'Pantalla completa') }}
           </v-btn>
+          <v-btn variant="tonal" size="small" class="boton-opciones" @click="showOptions = true">{{ t('Gráficos') }}</v-btn>
           <h1>{{ t('Mapa del Reino') }}</h1>
           <p>{{ t('Sigue el camino dorado. Toca un marcador para entrar en la zona.') }}</p>
           <p v-if="nivelDesbloqueado > niveles.length" class="conquista">{{ t('Completaste las cuatro zonas del reino.') }}</p>
         </header>
         <p v-if="avisoPantalla" role="status">{{ t('El navegador no pudo cambiar la pantalla completa.') }}</p>
         <!-- El tablero se escala para caber completo en el espacio que queda (sin scroll) -->
+        <aside v-if="sugerir && !descartado && quality !== 'lite'" role="status">
+          {{ t('El juego ha perdido fluidez. ¿Quieres activar el modo Lite?') }}
+          <v-btn size="small" @click="setQuality('lite'); descartado = true">{{ t('Activar Lite') }}</v-btn>
+          <v-btn size="small" @click="descartado = true">{{ t('Ahora no') }}</v-btn>
+        </aside>
         <div class="zona-mapa">
           <MapBoard class="tablero" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" @elegir="entrar" />
         </div>
         <MapListaZonas class="lista-zonas sin-barra" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" @elegir="entrar" />
+        <HomeOptions v-model="showOptions" />
       </div>
     </section>
     <LazyCombatDesafio
@@ -41,6 +48,7 @@
       :activo="enTransicion"
       :nivel="nivelSeleccionado"
       @listo="iniciarCombate"
+      @cancelar="enTransicion = false"
     />
   </div>
 </template>
@@ -49,6 +57,7 @@
 import nivelesBase from '~/data/niveles.json'
 
 const { language, t, translateContent } = useLanguage()
+const { loadPreferences, quality, setQuality } = useGameGraphics()
 const juego = ref(null)
 const pantallaCompleta = ref(false)
 const pantallaCompletaDisponible = ref(false)
@@ -83,6 +92,22 @@ const nivelSeleccionado = ref(null)
 const enTransicion = ref(false)
 const nivelDesbloqueado = ref(1)
 const intento = ref(0)
+const showOptions = ref(false)
+const { sugerir, descartado } = useFramePacing(computed(() => !enTransicion.value && quality.value !== 'lite'))
+const progresoRestaurado = ref(false)
+
+onMounted(() => {
+  loadPreferences()
+  try {
+    const valor = Number(localStorage.getItem('english-quest-unlocked-level'))
+    if (Number.isInteger(valor) && valor >= 1 && valor <= nivelesBase.length + 1) nivelDesbloqueado.value = valor
+  } catch { /* The game remains playable when local storage is unavailable. */ }
+  progresoRestaurado.value = true
+})
+watch(nivelDesbloqueado, (valor) => {
+  if (!import.meta.client || !progresoRestaurado.value) return
+  try { localStorage.setItem('english-quest-unlocked-level', String(valor)) } catch { /* Session progress remains available. */ }
+})
 
 const niveles = computed(() => language.value === 'en'
   ? translateContent(nivelesBase)

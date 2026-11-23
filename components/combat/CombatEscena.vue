@@ -1,6 +1,6 @@
 <template>
-  <div class="escenario" :class="[`nivel-${nivel.numero}`, { urgente, 'arena-esquiva': posicionEsquiva !== null, 'esquiva-exitosa': ataque?.esquivado }]" :style="{ '--fondo': `url('${nivel.fondo}')`, '--carga': carga ?? 0, '--posicion-esquiva': posicionEsquiva === null ? null : posicionEsquiva + '%' }">
-    <div class="secuencia" :class="[ataque?.id, ataque?.final && ataque.remate, { activa: ataque, 'esperando-audio': esperaSolar, magia: ataque?.magia, final: ataque?.final, urgente, congelado }]" :style="tiempos"
+  <div class="escenario" :class="[`nivel-${nivel.numero}`, { urgente, 'arena-esquiva': posicionEsquiva !== null, 'esquiva-exitosa': ataque?.esquivado }]" :style="{ '--fondo': `url('${levelBackground(nivel)}')`, '--carga': carga ?? 0, '--posicion-esquiva': posicionEsquiva === null ? null : posicionEsquiva + '%' }">
+    <div class="secuencia" :class="[ataque?.id, ataque?.final && ataque.remate, { activa: ataque, 'esperando-audio': esperaSolar, magia: ataque?.magia, final: ataque?.final, urgente, congelado, oculta }]" :style="tiempos"
       @animationend.self="emit('terminar')">
       <span class="ambiente" aria-hidden="true">
         <span v-for="(m, i) in motas" :key="i" class="mota" :style="m" />
@@ -12,11 +12,11 @@
           <span v-if="bloqueando" class="barrera-bloqueo" aria-hidden="true"><b>{{ t('¡Bloqueado!') }}</b></span>
           <img v-for="pose in [...posesCaballero, ...posesNuevasCaballero]" v-show="!sinArma" :key="pose" class="pose"
             :class="pose" :style="estiloPose('caballero', pose)"
-            :src="`/images/personajes-mate/caballero/${pose}.${extension(pose)}`" alt="" draggable="false" />
-          <img v-if="sinArma" class="pose sin-arma" :style="estiloPose('caballero', 'sin-arma')" src="/images/personajes-mate/caballero/sin-arma.webp" alt="" draggable="false" />
+            :src="poseUrl('/images/personajes-mate/caballero', pose)" alt="" draggable="false" />
+          <img v-if="sinArma" class="pose sin-arma" :style="estiloPose('caballero', 'sin-arma')" :src="imageUrl('/images/personajes-mate/caballero/sin-arma.webp')" alt="" draggable="false" />
           <template v-if="remateSolar">
             <span class="aura-solar" aria-hidden="true" />
-            <img class="pose ascension" :style="estiloPose('caballero', 'impacto-rayo')" src="/images/personajes-mate/caballero/impacto-rayo.png" alt="" draggable="false" />
+            <img class="pose ascension" :style="estiloPose('caballero', 'impacto-rayo')" :src="imageUrl('/images/personajes-mate/caballero/impacto-rayo.png')" alt="" draggable="false" />
           </template>
         </div>
         <div class="luchador guardian" data-destino-palabra="monstruo" :class="[guardian, { esperando, 'con-derrota': nivel.derrota, c1: faseCarga === 1, c2: faseCarga === 2, 'desde-carga': cargaPrevia > 0 }]"
@@ -24,9 +24,9 @@
           <span v-if="enfurecido" class="aura-ira" aria-hidden="true" />
           <img v-for="pose in [...posesGuardian, ...posesNuevasGuardian]" :key="pose" class="pose"
             :class="pose" :style="estiloPose(carpetaGuardian, pose)"
-            :src="`${nivel.arte}/${pose}.${extension(pose)}`" alt="" draggable="false" />
+            :src="poseUrl(nivel.arte, pose)" alt="" draggable="false" />
           <!-- Chorro (veneno / aliento): nace en la boca del sprite «ataque» y viaja con el jefe, sin depender del tamaño de la escena -->
-          <img v-if="ataqueRival && chorro && !ladoGolpe" class="chorro" :style="estiloPose(carpetaGuardian, 'ataque')" :class="`chorro-${nivel.numero}`" :src="chorro" alt="" draggable="false" />
+          <img v-if="ataqueRival && chorro && !ladoGolpe" class="chorro" :style="estiloPose(carpetaGuardian, 'ataque')" :class="`chorro-${nivel.numero}`" :src="imageUrl(chorro)" alt="" draggable="false" />
           <span class="onda-suelo" aria-hidden="true" />
           <span class="particulas-carga" aria-hidden="true">
             <span v-for="(p, i) in particulasCarga" :key="i" class="p" :style="p" />
@@ -51,8 +51,8 @@
             <span class="portal-sombras" />
             <template v-for="i in 3" :key="i">
               <div class="guerrero-sombra" :style="{ '--fila': i - 2, '--adelanto': (3 - i) * 240 + 'ms' }">
-                <img class="sombra-guardia" src="/images/personajes-mate/caballero/guardia.webp" alt="" draggable="false" />
-                <img class="sombra-golpe" src="/images/personajes-mate/caballero/impacto-hachazo.png" alt="" draggable="false" />
+                <img class="sombra-guardia" :src="imageUrl('/images/personajes-mate/caballero/guardia.webp')" alt="" draggable="false" />
+                <img class="sombra-golpe" :src="imageUrl('/images/personajes-mate/caballero/impacto-hachazo.png')" alt="" draggable="false" />
               </div>
               <span class="impacto-sombras" :style="{
                 '--contacto': 'calc(var(--momento-impacto) - ' + (3 - i) * 240 + 'ms)',
@@ -101,6 +101,7 @@
 import medidasPoses from '~/data/medidas-poses.json'
 
 const { t } = useLanguage()
+const { imageUrl, levelBackground, prepareImages, levelEssentials } = useGameGraphics()
 const props = defineProps({
   nivel: { type: Object, required: true },
   ataque: { type: Object, default: null },
@@ -134,6 +135,38 @@ const posesNuevasCaballero = ['guardia', 'final-1', 'final-2', 'final-3', 'golpe
 const posesNuevasGuardian = computed(() => ['carga-1', 'carga-2', 'ataque', ...(props.nivel.derrota ? ['derrota-1', 'derrota-2'] : [])])
 const nuevas = new Set([...posesNuevasCaballero, 'carga-1', 'carga-2', 'ataque', 'derrota-1', 'derrota-2'])
 const extension = (pose) => (nuevas.has(pose) ? 'webp' : 'png')
+// Las poses visibles al comenzar ya se prepararon durante la transición.
+const listas = reactive(new Set(levelEssentials(props.nivel)))
+const colaPoses = new AbortController()
+function poseUrl(carpeta, pose) {
+  const ruta = `${carpeta}/${pose}.${extension(pose)}`
+  if (listas.has(ruta)) return imageUrl(ruta)
+  const golpe = props.ataque
+  if (!golpe) return undefined
+  const esHeroe = carpeta.endsWith('/caballero')
+  const recibe = esHeroe === (golpe.id === 'rival')
+  const necesaria = recibe
+    ? posesReaccion.includes(pose) || ['golpeado', 'esquiva', 'derrota-1', 'derrota-2'].includes(pose)
+    : pose.includes(golpe.id) || ['anticipacion', 'ataque', 'salida-magia'].includes(pose) ||
+      (golpe.final && pose.startsWith('final-'))
+  return necesaria ? imageUrl(ruta) : undefined
+}
+onMounted(async () => {
+  const grupos = [
+    ['/images/personajes-mate/caballero', [...posesCaballero, ...posesNuevasCaballero]],
+    [props.nivel.arte, [...posesGuardian, ...posesNuevasGuardian.value]]
+  ]
+  for (const [carpeta, poses] of grupos) {
+    for (const pose of poses) {
+      if (colaPoses.signal.aborted) return
+      const ruta = `${carpeta}/${pose}.${extension(pose)}`
+      if (listas.has(ruta)) continue
+      await prepareImages([ruta], { signal: colaPoses.signal })
+      if (!colaPoses.signal.aborted) listas.add(ruta)
+    }
+  }
+})
+onBeforeUnmount(() => colaPoses.abort())
 const carpetaGuardian = computed(() => props.nivel.arte.split('/').pop())
 // Los jefes 2 y 4 lanzan un chorro desde la boca; el 1 lanza una bola (se dibuja en CombatEfectos) y el 3 invoca un rayo.
 const chorros = { 2: '/images/jefes/rio/ola-venenosa.png', 4: '/images/jefes/real/aliento-fuego.png' }
@@ -256,6 +289,7 @@ watch(() => props.ataque, (nuevo) => {
 const congelado = ref(false)
 let temporizadorPausa = null
 function alImpactar() {
+  if (!props.ataque || props.danoAplicado !== null || congelado.value) return
   emit('impactar')
   congelado.value = true
   clearTimeout(temporizadorPausa)
@@ -293,6 +327,32 @@ const tiempos = computed(() => {
     '--duracion-reaccion': `${duracion - impacto}ms`
   }
 })
+
+// Los eventos CSS conservan la sincronía visual. El reloj cubre eventos perdidos
+// y descuenta las pausas de audio, impacto y pestaña oculta.
+const oculta = ref(import.meta.client && document.hidden)
+function actualizarVisibilidad() { oculta.value = document.hidden }
+onMounted(() => document.addEventListener('visibilitychange', actualizarVisibilidad))
+onBeforeUnmount(() => document.removeEventListener('visibilitychange', actualizarVisibilidad))
+let golpeActual
+let tiempoActivo = 0
+watch([() => props.ataque, esperaSolar, congelado, oculta], ([golpe, audio, pausa, ocultaAhora], _, limpiar) => {
+  if (golpe !== golpeActual) {
+    golpeActual = golpe
+    tiempoActivo = 0
+  }
+  if (!golpe || audio || pausa || ocultaAhora) return
+  const inicio = performance.now()
+  const contacto = parseFloat(tiempos.value['--momento-impacto'])
+  const impacto = props.danoAplicado === null
+    ? setTimeout(alImpactar, Math.max(0, contacto - tiempoActivo) + 60) : null
+  const fin = setTimeout(() => emit('terminar'), Math.max(0, golpe.duracion - tiempoActivo) + 80)
+  limpiar(() => {
+    clearTimeout(impacto)
+    clearTimeout(fin)
+    tiempoActivo += performance.now() - inicio
+  })
+}, { flush: 'sync' })
 
 const efecto = computed(() => {
   if (!props.ataque || props.ataque.magia || props.ataque.remate) return undefined
@@ -691,7 +751,7 @@ const efecto = computed(() => {
 }
 
 /* Pausa de impacto */
-.secuencia.congelado, .secuencia.congelado * { animation-play-state: paused !important; }
+.secuencia.oculta, .secuencia.oculta *, .secuencia.congelado, .secuencia.congelado * { animation-play-state: paused !important; }
 @keyframes temblar { 25% { translate: -2px 1px; } 50% { translate: 2px -1px; } 75% { translate: -1px -1px; } }
 
 /* El enemigo ataca desde su carga: carga-1 → carga-2 → «ataque» (se suelta el golpe en el 36 %) → reposo.

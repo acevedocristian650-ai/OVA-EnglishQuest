@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :data-graphics="quality">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -8,6 +8,9 @@
 
 <script setup>
 const { language } = useLanguage()
+const { quality, loadPreferences } = useGameGraphics()
+
+onMounted(loadPreferences)
 
 useHead({
   htmlAttrs: {

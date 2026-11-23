@@ -25,7 +25,7 @@
       <!-- Nivel 3: Águila de la Tormenta (relámpago celestial) -->
       <div v-if="nivel === 3" class="relampago-rival">
         <div class="resplandor-cielo" />
-        <img src="/images/jefes/viento/relampago-tormenta.png" alt="" class="relampago-img" draggable="false" />
+        <img :src="imageUrl('/images/jefes/viento/relampago-tormenta.png')" alt="" class="relampago-img" draggable="false" />
       </div>
 
       <!-- Las garras solo acompañan al picado del águila; los ataques de fuego y veneno ya tienen su propio impacto. -->
@@ -53,6 +53,7 @@
 </template>
 
 <script setup>
+const { imageUrl } = useGameGraphics()
 const props = defineProps({
   ataque: { type: Object, required: true },
   estela: String,

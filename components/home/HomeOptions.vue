@@ -16,6 +16,14 @@
           <v-btn value="es" :aria-pressed="language === 'es'">{{ t('Español') }}</v-btn>
           <v-btn value="en" :aria-pressed="language === 'en'">{{ t('Inglés') }}</v-btn>
         </v-btn-toggle>
+        <p class="text-subtitle-1 mt-5 mb-3">{{ t('Calidad gráfica') }}</p>
+        <v-btn-toggle :model-value="quality" mandatory color="amber-lighten-2" divided
+          :aria-label="t('Selector de calidad gráfica')" @update:model-value="setQuality">
+          <v-btn value="alta">{{ t('Alta') }}</v-btn>
+          <v-btn value="equilibrada">{{ t('Equilibrada') }}</v-btn>
+          <v-btn value="lite">Lite</v-btn>
+        </v-btn-toggle>
+        <p class="text-caption mt-2">{{ t('Los cambios se aplican de inmediato y sus efectos se actualizan de forma segura entre acciones.') }}</p>
       </v-card-text>
 
       <v-card-actions>
@@ -30,4 +38,5 @@
 // v-model del componente: true = ventana abierta
 const open = defineModel({ type: Boolean, default: false });
 const { language, t } = useLanguage()
+const { quality, setQuality } = useGameGraphics()
 </script>

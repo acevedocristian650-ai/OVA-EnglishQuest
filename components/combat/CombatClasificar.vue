@@ -62,7 +62,18 @@ function tomar(evento, indice) {
   arrastre.value = { indice, puntero: evento.pointerId, x: evento.clientX, y: evento.clientY, dx: 0, dy: 0 }
 }
 
+let cuadro = 0
+let ultimoMovimiento
 function mover(evento) {
+  if (arrastre.value?.puntero !== evento.pointerId) return
+  ultimoMovimiento = { clientX: evento.clientX, clientY: evento.clientY, pointerId: evento.pointerId, currentTarget: evento.currentTarget }
+  if (!cuadro) cuadro = requestAnimationFrame(() => {
+    cuadro = 0
+    actualizarArrastre(ultimoMovimiento)
+  })
+}
+
+function actualizarArrastre(evento) {
   const ficha = arrastre.value
   if (ficha?.puntero !== evento.pointerId) return
   ficha.dx = evento.clientX - ficha.x
@@ -72,11 +83,14 @@ function mover(evento) {
 
 function cancelar(evento) {
   if (arrastre.value?.puntero !== evento.pointerId) return
+  cancelAnimationFrame(cuadro)
+  cuadro = 0
   arrastre.value = null
   marcarDestinos(evento.currentTarget.closest('.escenario'), false)
 }
 
 onBeforeUnmount(() => {
+  cancelAnimationFrame(cuadro)
   document.querySelectorAll('[data-zona-palabra]').forEach((destino) => {
     destino.removeAttribute('data-zona-palabra')
     destino.removeAttribute('data-sobre')
@@ -86,6 +100,8 @@ onBeforeUnmount(() => {
 function soltar(evento) {
   const ficha = arrastre.value
   if (ficha?.puntero !== evento.pointerId) return
+  cancelAnimationFrame(cuadro)
+  cuadro = 0
   arrastre.value = null
   const arena = evento.currentTarget.closest('.escenario')
   const destino = destinoBajo(evento, arena)?.dataset.destinoPalabra

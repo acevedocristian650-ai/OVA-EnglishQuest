@@ -1,7 +1,8 @@
 <template>
   <div :class="{ 'iniciando-viaje': viajando }">
-    <AudioMusicaHome ruta="/audio/interfazentrada.mp3" />
-    <HomeHero>
+    <HomeGamePreparation @skip-intro="navigateTo('/map')" />
+    <AudioMusicaHome v-if="introSeen" ruta="/audio/interfazentrada.mp3" />
+    <HomeHero v-if="introSeen">
       <template #title>
         <HomeTitle />
       </template>
@@ -17,6 +18,7 @@
 </template>
 
 <script setup>
+const { introSeen } = useGameGraphics()
 const viajando = ref(false)
 
 // Al pulsar COMENZAR AVENTURA activamos la animación de inmersión / portal

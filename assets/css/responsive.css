@@ -65,3 +65,43 @@ img {
   max-height: calc(100dvh - 24px) !important;
   max-width: calc(100vw - 24px) !important;
 }
+/* Perfiles gráficos de English Quest: los gestos y la secuencia central de
+   combate siguen activos; estos selectores solo reducen decoración. */
+[data-graphics='equilibrada'] .particulas-brasas .brasa,
+[data-graphics='equilibrada'] .ambiente .mota,
+[data-graphics='equilibrada'] .polvo-frontal .mota-frontal,
+[data-graphics='equilibrada'] .particulas-carga .p { opacity: .45; }
+
+[data-graphics='lite'] .particulas-brasas,
+[data-graphics='lite'] .ambiente,
+[data-graphics='lite'] .bruma-frontal,
+[data-graphics='lite'] .polvo-frontal,
+[data-graphics='lite'] .particulas-carga,
+[data-graphics='lite'] .onda-suelo,
+[data-graphics='lite'] .aura-furia,
+[data-graphics='lite'] .aura-ira,
+[data-graphics='lite'] .penumbra,
+[data-graphics='lite'] .aura-dorada,
+[data-graphics='lite'] .niebla,
+[data-graphics='lite'] .destello,
+[data-graphics='lite'] .luz { display: none !important; }
+
+[data-graphics='lite'] .avatar-luchador,
+[data-graphics='lite'] .pose,
+[data-graphics='lite'] .heroe,
+[data-graphics='lite'] .emblema-vs-img,
+[data-graphics='lite'] .cinta-bg { filter: none !important; }
+
+[data-graphics='lite'] .escenario,
+[data-graphics='lite'] .mapa,
+[data-graphics='lite'] .encuentro-pantalla { box-shadow: none; }
+
+[data-graphics='equilibrada'] .ambiente .mota:nth-child(even),
+[data-graphics='equilibrada'] .particulas-carga .p:nth-child(even),
+[data-graphics='equilibrada'] .escena-heroe .brasa:nth-child(even),
+[data-graphics='lite'] .escena-heroe .brasa,
+[data-graphics='lite'] .efectos .chispa-vuelo,
+[data-graphics='lite'] .efectos .residuo { display: none; }
+
+[data-graphics='lite'] .secuencia:not(.activa):not(.urgente),
+[data-graphics='lite'] .escena-heroe .cuerpo { animation: none; }
