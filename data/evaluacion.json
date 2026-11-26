@@ -1,0 +1,5 @@
+{
+  "_nota": "Criterio de aprobación de «La última prueba del reino». Provisional: se podrá cambiar según las orientaciones del profesor. aprobacion = porcentaje mínimo (0 a 1) de respuestas lingüísticas correctas, global y por temática.",
+  "aprobacion": 0.7,
+  "minimoPorTema": 3
+}

@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-const { imageUrl } = useGameGraphics()
+const { imageUrl, quality } = useGameGraphics()
 const props = defineProps({
   ataque: { type: Object, required: true },
   estela: String,
@@ -62,8 +62,9 @@ const props = defineProps({
   curacion: { type: Number, default: 0 }
 })
 
-const chispas = [-165, -132, -104, -76, -45, -15, 18, 46, 138, 166]
-const sangre = computed(() => props.ataque.sangre ? [-154, -119, -82, -53, -24, 12] : [])
+const chispasTodas = [-165, -132, -104, -76, -45, -15, 18, 46, 138, 166]
+const chispas = computed(() => (quality.value === 'alta' ? chispasTodas : chispasTodas.filter((_, i) => i % 2 === 0)))
+const sangre = computed(() => props.ataque.sangre ? (quality.value === 'alta' ? [-154, -119, -82, -53, -24, 12] : [-154, -82, -24]) : [])
 
 function estiloChispa(n) {
   const top = 25 + ((n * 13) % 45)

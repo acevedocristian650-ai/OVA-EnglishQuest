@@ -1,0 +1,804 @@
+{
+  "_nota": "Biblioteca del reino. Las reglas, ejemplos, vocabulario y contrastes salen de data/lecciones.json (no se duplican aquí). Este archivo añade: ficha de misión, errores frecuentes, actividades complementarias y recursos externos. Para añadir un recurso de Educaplay usa recursos[].tipo = 'educaplay' con la URL de incrustación oficial (la que ofrece Educaplay en «Compartir > Incrustar»).",
+  "temas": [
+    {
+      "nivel": 1,
+      "id": "futuro",
+      "titulo": "Introducción al futuro",
+      "ambiente": "Bosque del Alba",
+      "mision": {
+        "descripcion": "El Grifo del Alba protege el camino hacia el reino. Para derrotarlo, necesitarás demostrar tus conocimientos sobre la expresión del futuro en inglés.",
+        "conocimientos": [
+          "Reconocer expresiones temporales relacionadas con el futuro (tomorrow, tonight, next week).",
+          "Diferenciar el futuro del pasado (yesterday, last night).",
+          "Identificar acciones y planes futuros con am / is / are + going to.",
+          "Comprender oraciones sencillas en inglés."
+        ]
+      },
+      "errores": [
+        {
+          "mal": "We is going to explore the forest.",
+          "bien": "We are going to explore the forest.",
+          "nota": "Con we se usa are, no is."
+        },
+        {
+          "mal": "I am going to explored the forest.",
+          "bien": "I am going to explore the forest.",
+          "nota": "Después de going to el verbo va en forma base."
+        },
+        {
+          "mal": "I am going to go there yesterday.",
+          "bien": "I am going to go there tomorrow.",
+          "nota": "Yesterday señala el pasado; para el futuro usa tomorrow, tonight o next week."
+        }
+      ],
+      "actividades": [
+        {
+          "id": "f1",
+          "tipo": "clasificar",
+          "titulo": "¿Futuro o pasado?",
+          "instruccion": "Elige a qué tiempo pertenece cada expresión.",
+          "grupos": [
+            "Futuro",
+            "Pasado"
+          ],
+          "items": [
+            {
+              "texto": "tomorrow",
+              "grupo": 0
+            },
+            {
+              "texto": "yesterday",
+              "grupo": 1
+            },
+            {
+              "texto": "next week",
+              "grupo": 0
+            },
+            {
+              "texto": "last night",
+              "grupo": 1
+            },
+            {
+              "texto": "tonight",
+              "grupo": 0
+            }
+          ],
+          "porque": "Tomorrow, next week y tonight miran hacia adelante. Yesterday y last night miran hacia atrás."
+        },
+        {
+          "id": "f2",
+          "tipo": "relacionar",
+          "titulo": "Expresiones y significados",
+          "instruccion": "Toca una expresión y luego su significado.",
+          "parejas": [
+            {
+              "izq": "tomorrow",
+              "der": "mañana"
+            },
+            {
+              "izq": "tonight",
+              "der": "esta noche"
+            },
+            {
+              "izq": "next week",
+              "der": "la próxima semana"
+            },
+            {
+              "izq": "last night",
+              "der": "anoche"
+            }
+          ],
+          "porque": "Estas expresiones aparecen en las preguntas del Bosque del Alba."
+        },
+        {
+          "id": "f3",
+          "tipo": "ordenar",
+          "titulo": "Ordena el plan",
+          "instruccion": "Toca las fichas en el orden correcto.",
+          "fichas": [
+            "tomorrow.",
+            "am",
+            "I",
+            "explore",
+            "going to",
+            "the forest"
+          ],
+          "correcta": "I am going to explore the forest tomorrow.",
+          "porque": "Sujeto + am + going to + verbo base + lugar + expresión de tiempo."
+        },
+        {
+          "id": "f4",
+          "tipo": "opcion",
+          "titulo": "Acciones futuras",
+          "instruccion": "¿Qué oración habla del futuro?",
+          "opciones": [
+            "We visited the castle yesterday.",
+            "We are going to visit the castle next week.",
+            "We visited the castle last night."
+          ],
+          "correcta": 1,
+          "porque": "Next week y am/is/are going to indican una acción que todavía no ocurre."
+        },
+        {
+          "id": "f5",
+          "tipo": "opcion",
+          "titulo": "Presente o futuro",
+          "instruccion": "¿Qué oración describe algo que ocurrirá después?",
+          "opciones": [
+            "The knight opens the gate now.",
+            "The knight is going to open the gate tonight."
+          ],
+          "correcta": 1,
+          "porque": "Is going to + verbo base anuncia un plan; la primera oración describe el presente."
+        }
+      ],
+      "recursos": [
+        {
+          "id": "r1-1",
+          "tipo": "video",
+          "titulo": "Learn Future Time Expressions in English",
+          "fuente": "CodeLucky (YouTube)",
+          "descripcion": "Expresiones como tomorrow y next week, con ejemplos para principiantes.",
+          "youtube": "Hx4Bg_M8p0I",
+          "url": "https://www.youtube.com/watch?v=Hx4Bg_M8p0I"
+        },
+        {
+          "id": "r1-2",
+          "tipo": "video",
+          "titulo": "Last Week Next Week: English Time Expressions for Beginners",
+          "fuente": "CodeLucky (YouTube)",
+          "descripcion": "Contraste entre expresiones de pasado y de futuro.",
+          "youtube": "67BUCnN4HkM",
+          "url": "https://www.youtube.com/watch?v=67BUCnN4HkM"
+        },
+        {
+          "id": "r1-3",
+          "tipo": "video",
+          "titulo": "A1 English Time Words: today, yesterday, tomorrow, this, last, next…",
+          "fuente": "English WOWcabulary (YouTube)",
+          "descripcion": "Vocabulario de tiempo nivel A1 con un calendario.",
+          "youtube": "aYl23INKfrY",
+          "url": "https://www.youtube.com/watch?v=aYl23INKfrY"
+        }
+      ]
+    },
+    {
+      "nivel": 2,
+      "id": "going-to",
+      "titulo": "Be going to",
+      "ambiente": "Puente del Río",
+      "mision": {
+        "descripcion": "El Basilisco del Río vigila el puente. Para cruzarlo deberás anunciar planes y avisos con be going to, y entender sus advertencias en inglés.",
+        "conocimientos": [
+          "Usar am, is y are según el sujeto en be going to.",
+          "Reconocer estructuras afirmativas, negativas e interrogativas.",
+          "Entender avisos sencillos (on the left / on the right) para esquivar.",
+          "Comprender una advertencia oída en inglés."
+        ]
+      },
+      "errores": [
+        {
+          "mal": "He are going to attack.",
+          "bien": "He is going to attack.",
+          "nota": "He, she e it usan is; we, you y they usan are; I usa am."
+        },
+        {
+          "mal": "Is he going to crossing the bridge?",
+          "bien": "Is he going to cross the bridge?",
+          "nota": "El verbo después de going to no cambia."
+        },
+        {
+          "mal": "He not is going to cross.",
+          "bien": "He is not going to cross.",
+          "nota": "En la negativa, not va después de am / is / are."
+        },
+        {
+          "mal": "I will visit my aunt. (ya lo planeé ayer)",
+          "bien": "I am going to visit my aunt.",
+          "nota": "Un plan que ya tenías se dice con be going to; will se reserva para promesas y decisiones del momento."
+        }
+      ],
+      "actividades": [
+        {
+          "id": "g1",
+          "tipo": "opcion",
+          "titulo": "Completa con am, is o are",
+          "instruccion": "Completa: We ___ going to cross the river.",
+          "opciones": [
+            "am",
+            "is",
+            "are"
+          ],
+          "correcta": 2,
+          "porque": "Con we se usa are."
+        },
+        {
+          "id": "g2",
+          "tipo": "opcion",
+          "titulo": "Completa con am, is o are (2)",
+          "instruccion": "Completa: The basilisk ___ going to attack.",
+          "opciones": [
+            "is",
+            "are",
+            "am"
+          ],
+          "correcta": 0,
+          "porque": "The basilisk equivale a it: is."
+        },
+        {
+          "id": "g3",
+          "tipo": "ordenar",
+          "titulo": "Afirmativa",
+          "instruccion": "Ordena la oración afirmativa.",
+          "fichas": [
+            "going to",
+            "cross",
+            "is",
+            "the bridge.",
+            "He"
+          ],
+          "correcta": "He is going to cross the bridge.",
+          "porque": "Afirmativa: sujeto + is + going to + verbo base."
+        },
+        {
+          "id": "g4",
+          "tipo": "ordenar",
+          "titulo": "Negativa",
+          "instruccion": "Ordena la oración negativa.",
+          "fichas": [
+            "not",
+            "going to",
+            "cross",
+            "He",
+            "the bridge.",
+            "is"
+          ],
+          "correcta": "He is not going to cross the bridge.",
+          "porque": "Negativa: not va justo después de is."
+        },
+        {
+          "id": "g5",
+          "tipo": "ordenar",
+          "titulo": "Pregunta",
+          "instruccion": "Ordena la pregunta.",
+          "fichas": [
+            "going to",
+            "he",
+            "the bridge?",
+            "Is",
+            "cross"
+          ],
+          "correcta": "Is he going to cross the bridge?",
+          "porque": "En la pregunta, el verbo to be pasa al inicio."
+        },
+        {
+          "id": "g6",
+          "tipo": "clasificar",
+          "titulo": "Afirmativa, negativa o pregunta",
+          "instruccion": "Clasifica cada oración.",
+          "grupos": [
+            "Afirmativa",
+            "Negativa",
+            "Pregunta"
+          ],
+          "items": [
+            {
+              "texto": "She is going to jump.",
+              "grupo": 0
+            },
+            {
+              "texto": "They are not going to wait.",
+              "grupo": 1
+            },
+            {
+              "texto": "Are we going to cross?",
+              "grupo": 2
+            },
+            {
+              "texto": "I am going to read.",
+              "grupo": 0
+            },
+            {
+              "texto": "It is not going to fall.",
+              "grupo": 1
+            },
+            {
+              "texto": "Is she going to swim?",
+              "grupo": 2
+            }
+          ],
+          "porque": "La negativa lleva not; la pregunta empieza con am / is / are."
+        },
+        {
+          "id": "g7",
+          "tipo": "opcion",
+          "titulo": "Planes e intenciones",
+          "instruccion": "¿Qué oración expresa un plan?",
+          "opciones": [
+            "We cross the river every day.",
+            "We crossed the river yesterday.",
+            "We are going to cross the river."
+          ],
+          "correcta": 2,
+          "porque": "Are going to + verbo base expresa un plan."
+        },
+        {
+          "id": "g8",
+          "tipo": "corregir",
+          "titulo": "Corrige el error",
+          "instruccion": "Toca la palabra incorrecta.",
+          "frase": [
+            "We",
+            "is",
+            "going",
+            "to",
+            "cross",
+            "the",
+            "river."
+          ],
+          "error": 1,
+          "correccion": "We are going to cross the river.",
+          "porque": "Con we se usa are, no is."
+        },
+        {
+          "id": "g9",
+          "tipo": "corregir",
+          "titulo": "Corrige el error (2)",
+          "instruccion": "Toca la palabra incorrecta.",
+          "frase": [
+            "Is",
+            "he",
+            "going",
+            "to",
+            "crossing",
+            "the",
+            "bridge?"
+          ],
+          "error": 4,
+          "correccion": "Is he going to cross the bridge?",
+          "porque": "Después de going to va el verbo en forma base: cross."
+        }
+      ],
+      "recursos": [
+        {
+          "id": "r2-1",
+          "tipo": "video",
+          "titulo": "Present continuous and going to – 6 Minute Grammar",
+          "fuente": "BBC Learning English (YouTube)",
+          "descripcion": "Cuándo usar going to para decisiones ya tomadas.",
+          "youtube": "-8660VeIj4U",
+          "url": "https://www.youtube.com/watch?v=-8660VeIj4U"
+        },
+        {
+          "id": "r2-2",
+          "tipo": "lectura",
+          "titulo": "Ways of talking about the future – Grammar reference",
+          "fuente": "BBC Learning English",
+          "descripcion": "Referencia gramatical: will, be going to y otras formas del futuro (nivel intermedio).",
+          "url": "https://www.bbc.com/learningenglish/english/course/intermediate/unit-17/tab/grammar",
+          "incrustar": true
+        }
+      ]
+    },
+    {
+      "nivel": 3,
+      "id": "will",
+      "titulo": "Will",
+      "ambiente": "Torre del Viento",
+      "mision": {
+        "descripcion": "El Águila de la Tormenta domina la torre. Para vencerla deberás usar will en promesas, negaciones y frases del futuro, y detectar errores en inglés.",
+        "conocimientos": [
+          "Usar will con el verbo en forma base (I will protect you).",
+          "Formar la negativa con will not / won't.",
+          "Reconocer promesas y predicciones.",
+          "Detectar errores frecuentes en oraciones con will."
+        ]
+      },
+      "errores": [
+        {
+          "mal": "He will returns tomorrow.",
+          "bien": "He will return tomorrow.",
+          "nota": "Después de will el verbo va en forma base: sin -s."
+        },
+        {
+          "mal": "I will to protect you.",
+          "bien": "I will protect you.",
+          "nota": "No se escribe to después de will."
+        },
+        {
+          "mal": "She wills help you.",
+          "bien": "She will help you.",
+          "nota": "Will no cambia con el sujeto."
+        },
+        {
+          "mal": "I will visit my cousin. (ya lo tenía planeado)",
+          "bien": "I am going to visit my cousin.",
+          "nota": "Will sirve para promesas, predicciones y decisiones del momento; un plan previo usa be going to."
+        }
+      ],
+      "actividades": [
+        {
+          "id": "w1",
+          "tipo": "opcion",
+          "titulo": "Completa con will",
+          "instruccion": "Completa: I will ___ you.",
+          "opciones": [
+            "help",
+            "helps",
+            "helping"
+          ],
+          "correcta": 0,
+          "porque": "Después de will va el verbo en forma base."
+        },
+        {
+          "id": "w2",
+          "tipo": "opcion",
+          "titulo": "Completa con will (2)",
+          "instruccion": "Completa: The hero will ___ fall.",
+          "opciones": [
+            "not",
+            "does",
+            "to"
+          ],
+          "correcta": 0,
+          "porque": "La negativa se forma con will not (won't)."
+        },
+        {
+          "id": "w3",
+          "tipo": "clasificar",
+          "titulo": "Predicción, promesa o decisión",
+          "instruccion": "¿Para qué se usa will en cada oración?",
+          "grupos": [
+            "Predicción",
+            "Promesa",
+            "Decisión del momento"
+          ],
+          "items": [
+            {
+              "texto": "I think it will rain tonight.",
+              "grupo": 0
+            },
+            {
+              "texto": "I promise I will return.",
+              "grupo": 1
+            },
+            {
+              "texto": "I'm cold. I will close the window.",
+              "grupo": 2
+            },
+            {
+              "texto": "The storm will reach the tower.",
+              "grupo": 0
+            },
+            {
+              "texto": "I will protect you.",
+              "grupo": 1
+            },
+            {
+              "texto": "The bell rings. I will open the door.",
+              "grupo": 2
+            }
+          ],
+          "porque": "Opinión sobre el futuro = predicción; compromiso = promesa; algo que decides al hablar = decisión del momento."
+        },
+        {
+          "id": "w4",
+          "tipo": "ordenar",
+          "titulo": "Negación",
+          "instruccion": "Ordena la negación.",
+          "fichas": [
+            "not",
+            "fall.",
+            "The hero",
+            "will"
+          ],
+          "correcta": "The hero will not fall.",
+          "porque": "Negativa: will + not + verbo base."
+        },
+        {
+          "id": "w5",
+          "tipo": "ordenar",
+          "titulo": "Pregunta",
+          "instruccion": "Ordena la pregunta.",
+          "fichas": [
+            "protect",
+            "Will",
+            "you",
+            "me?"
+          ],
+          "correcta": "Will you protect me?",
+          "porque": "En la pregunta, will va antes del sujeto."
+        },
+        {
+          "id": "w6",
+          "tipo": "corregir",
+          "titulo": "Encuentra el error",
+          "instruccion": "Toca la palabra incorrecta.",
+          "frase": [
+            "He",
+            "will",
+            "returns",
+            "to",
+            "the",
+            "tower."
+          ],
+          "error": 2,
+          "correccion": "He will return to the tower.",
+          "porque": "Después de will el verbo no lleva -s."
+        },
+        {
+          "id": "w7",
+          "tipo": "corregir",
+          "titulo": "Encuentra el error (2)",
+          "instruccion": "Toca la palabra incorrecta.",
+          "frase": [
+            "I",
+            "will",
+            "to",
+            "protect",
+            "you."
+          ],
+          "error": 2,
+          "correccion": "I will protect you.",
+          "porque": "Will no va seguido de to."
+        },
+        {
+          "id": "w8",
+          "tipo": "opcion",
+          "titulo": "Will o be going to",
+          "instruccion": "Ayer decidiste visitar la torre. ¿Qué dices hoy?",
+          "opciones": [
+            "I will visit the tower.",
+            "I am going to visit the tower."
+          ],
+          "correcta": 1,
+          "porque": "Un plan que ya tenías se expresa con be going to."
+        }
+      ],
+      "recursos": [
+        {
+          "id": "r3-1",
+          "tipo": "video",
+          "titulo": "Talking about the future – 6 Minute Grammar",
+          "fuente": "BBC Learning English (YouTube)",
+          "descripcion": "will, going to y might para hablar del futuro (nivel intermedio).",
+          "youtube": "jcAX1RtKq3U",
+          "url": "https://www.youtube.com/watch?v=jcAX1RtKq3U"
+        },
+        {
+          "id": "r3-2",
+          "tipo": "lectura",
+          "titulo": "Talking about the future – Grammar reference",
+          "fuente": "British Council – LearnEnglish",
+          "descripcion": "Usos de will: predicciones, ofrecimientos y promesas.",
+          "url": "https://learnenglish.britishcouncil.org/free-resources/grammar/english-grammar-reference/talking-about-future",
+          "incrustar": false
+        },
+        {
+          "id": "r3-3",
+          "tipo": "lectura",
+          "titulo": "Future forms (teens)",
+          "fuente": "British Council – LearnEnglish Teens",
+          "descripcion": "Explicación con diálogo sobre will, going to y presente continuo.",
+          "url": "https://learnenglishteens.britishcouncil.org/grammar/b1-b2-grammar/future-forms",
+          "incrustar": false
+        }
+      ]
+    },
+    {
+      "nivel": 4,
+      "id": "senales",
+      "titulo": "Traffic signs and rules",
+      "ambiente": "Puerta Real",
+      "mision": {
+        "descripcion": "El Dragón de la Puerta Real custodia el acceso al castillo. Para pasar deberás interpretar las señales y las normas de tránsito escritas en inglés.",
+        "conocimientos": [
+          "Reconocer señales como STOP, YIELD y NO ENTRY.",
+          "Entender órdenes sencillas (Stop at the line, Put on your helmet).",
+          "Diferenciar obligaciones y prohibiciones (Do not enter).",
+          "Resolver situaciones sencillas de tránsito."
+        ]
+      },
+      "errores": [
+        {
+          "mal": "YIELD = detenerse siempre",
+          "bien": "YIELD = ceder el paso",
+          "nota": "Con YIELD cedes el paso; si el camino está libre puedes continuar. Con STOP debes detenerte por completo."
+        },
+        {
+          "mal": "Enter. (para prohibir)",
+          "bien": "Do not enter.",
+          "nota": "Una prohibición usa Do not + verbo; una obligación usa solo el verbo (Stop)."
+        },
+        {
+          "mal": "Stopping at the line.",
+          "bien": "Stop at the line.",
+          "nota": "Las órdenes empiezan con el verbo en forma base, sin sujeto."
+        }
+      ],
+      "actividades": [
+        {
+          "id": "s1",
+          "tipo": "opcion",
+          "titulo": "Señal STOP",
+          "instruccion": "¿Qué significa esta señal?",
+          "imagen": "/images/signs/stop.svg",
+          "alt": "Octágono rojo con la palabra STOP",
+          "opciones": [
+            "Come to a full stop.",
+            "Give way.",
+            "Do not enter."
+          ],
+          "correcta": 0,
+          "porque": "STOP exige detenerse por completo."
+        },
+        {
+          "id": "s2",
+          "tipo": "opcion",
+          "titulo": "Señal YIELD",
+          "instruccion": "¿Qué significa esta señal?",
+          "imagen": "/images/signs/yield.svg",
+          "alt": "Señal triangular con la palabra YIELD",
+          "opciones": [
+            "Come to a full stop.",
+            "Give way.",
+            "Do not enter."
+          ],
+          "correcta": 1,
+          "porque": "YIELD significa ceder el paso."
+        },
+        {
+          "id": "s3",
+          "tipo": "opcion",
+          "titulo": "Señal NO ENTRY",
+          "instruccion": "¿Qué significa esta señal?",
+          "imagen": "/images/signs/no-entry.svg",
+          "alt": "Señal circular roja de prohibido el paso",
+          "opciones": [
+            "Come to a full stop.",
+            "Give way.",
+            "Do not enter."
+          ],
+          "correcta": 2,
+          "porque": "NO ENTRY prohíbe entrar."
+        },
+        {
+          "id": "s4",
+          "tipo": "relacionar",
+          "titulo": "Vocabulario de tránsito",
+          "instruccion": "Une cada palabra con su significado.",
+          "parejas": [
+            {
+              "izq": "stop",
+              "der": "detenerse"
+            },
+            {
+              "izq": "give way",
+              "der": "ceder el paso"
+            },
+            {
+              "izq": "traffic light",
+              "der": "semáforo"
+            },
+            {
+              "izq": "crossing",
+              "der": "cruce"
+            },
+            {
+              "izq": "helmet",
+              "der": "casco"
+            }
+          ],
+          "porque": "Es el vocabulario clave de la Puerta Real."
+        },
+        {
+          "id": "s5",
+          "tipo": "clasificar",
+          "titulo": "Obligación o prohibición",
+          "instruccion": "Clasifica cada norma.",
+          "grupos": [
+            "Obligación",
+            "Prohibición"
+          ],
+          "items": [
+            {
+              "texto": "Stop at the line.",
+              "grupo": 0
+            },
+            {
+              "texto": "Do not enter.",
+              "grupo": 1
+            },
+            {
+              "texto": "Put on your helmet.",
+              "grupo": 0
+            },
+            {
+              "texto": "Do not cross the street.",
+              "grupo": 1
+            },
+            {
+              "texto": "Give way to the cars.",
+              "grupo": 0
+            }
+          ],
+          "porque": "Do not + verbo prohíbe; el verbo solo manda hacer algo."
+        },
+        {
+          "id": "s6",
+          "tipo": "ordenar",
+          "titulo": "Ordena la norma",
+          "instruccion": "Ordena la norma.",
+          "fichas": [
+            "helmet.",
+            "Put on",
+            "your"
+          ],
+          "correcta": "Put on your helmet.",
+          "porque": "Las órdenes empiezan con el verbo."
+        },
+        {
+          "id": "s7",
+          "tipo": "ordenar",
+          "titulo": "Ordena la prohibición",
+          "instruccion": "Ordena la prohibición.",
+          "fichas": [
+            "enter.",
+            "Do",
+            "not"
+          ],
+          "correcta": "Do not enter.",
+          "porque": "Prohibición: Do not + verbo base."
+        },
+        {
+          "id": "s8",
+          "tipo": "opcion",
+          "titulo": "Situación: semáforo",
+          "instruccion": "The traffic light is red. What should you do?",
+          "opciones": [
+            "Stop at the line.",
+            "Go through the crossing.",
+            "Put on your helmet."
+          ],
+          "correcta": 0,
+          "porque": "Con el semáforo en rojo debes detenerte en la línea."
+        }
+      ],
+      "recursos": [
+        {
+          "id": "r4-1",
+          "tipo": "video",
+          "titulo": "Traffic Signs English Vocabulary",
+          "fuente": "Easy English Learning Hub (YouTube)",
+          "descripcion": "Nombres y pronunciación de señales de tránsito.",
+          "youtube": "BBG2cLImY10",
+          "url": "https://www.youtube.com/watch?v=BBG2cLImY10"
+        },
+        {
+          "id": "r4-2",
+          "tipo": "video",
+          "titulo": "Important Road Signs You Should Know!",
+          "fuente": "Boost your Vocabulary (YouTube)",
+          "descripcion": "Más de 80 señales con su significado en inglés.",
+          "youtube": "JhhrK4nO0-M",
+          "url": "https://www.youtube.com/watch?v=JhhrK4nO0-M"
+        }
+      ]
+    }
+  ],
+  "final": {
+    "nivel": 5,
+    "titulo": "La última prueba del reino",
+    "descripcion": "Evaluación integradora: 12 desafíos de inglés repartidos en cuatro fases, una por cada temática.",
+    "mision": {
+      "descripcion": "Los cuatro guardianes han sido vencidos, pero el reino exige una última prueba: el Dragón de la Puerta Real despierta de nuevo y solo reconocerá a quien domine todo lo aprendido. Esta batalla evalúa tu inglés, no tus reflejos.",
+      "conocimientos": [
+        "Fase I · Introducción al futuro: expresiones de tiempo y planes.",
+        "Fase II · Be going to: am / is / are y estructuras afirmativas, negativas e interrogativas.",
+        "Fase III · Will: promesas, negaciones y errores frecuentes.",
+        "Fase IV · Traffic signs and rules: señales, obligaciones y prohibiciones."
+      ]
+    }
+  }
+}

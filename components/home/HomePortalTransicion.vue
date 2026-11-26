@@ -63,7 +63,7 @@
 
       <!-- Héroe saltando/sumergiéndose hacia el vórtice (como en The Hunt) -->
       <div class="heroe-inmersion">
-        <img src="/images/personajes-mate/caballero/anticipacion.webp" :alt="t('Caballero entrando al portal')" class="caballero-salto" />
+        <img :src="imageUrl('/images/personajes-mate/caballero/anticipacion.webp')" :alt="t('Caballero entrando al portal')" class="caballero-salto" />
       </div>
     </div>
 
@@ -79,6 +79,7 @@
 </template>
 
 <script setup>
+const { imageUrl } = useGameGraphics()
 const props = defineProps({
   activo: {
     type: Boolean,

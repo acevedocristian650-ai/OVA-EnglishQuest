@@ -49,4 +49,5 @@ function estadoDe(numero) {
 .zona-2 { left: 55%; top: 57%; }
 .zona-3 { left: 81%; top: 63%; }
 .zona-4 { left: 75%; top: 35%; }
+.zona-5 { left: 44%; top: 28%; }
 </style>

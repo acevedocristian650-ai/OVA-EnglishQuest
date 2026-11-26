@@ -5,25 +5,21 @@
     <!-- Un sonido por cada bola cortada -->
     <AudioEfecto ruta="/audio/combate/hachazo.mp3" :disparo="cantidad" :volumen="0.55" />
 
-
-    <!-- Estela luminosa que deja la hoja al moverse -->
-    <svg class="rastro" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <line v-for="(tramo, i) in tramos" :key="tramo.id"
-        :x1="tramo.x1" :y1="tramo.y1" :x2="tramo.x2" :y2="tramo.y2"
-        :style="{ opacity: (i + 1) / tramos.length, strokeWidth: 1.5 + 5 * (i + 1) / tramos.length + 'px' }" />
+    <!-- Estela de la hoja: dos trazos que se actualizan directamente, sin pasar por la reactividad -->
+    <svg class="rastro" aria-hidden="true">
+      <polyline ref="rastroAncho" class="ancho" points="" />
+      <polyline ref="rastroNucleo" class="nucleo" points="" />
     </svg>
 
-    <div v-for="bola in bolas" :ref="referenciasBola[bola.id]"
-      v-show="transcurrido >= bola.salida" :key="bola.id"
-      class="bola" :class="{ partida: cortes[bola.id] !== undefined, peligro: cortes[bola.id] === undefined && posicion(bola) < 42 }"
-      :data-bola="bola.id" :style="{ left: (cortes[bola.id] ?? posicion(bola)) + '%', top: bola.altura + '%' }"
-      aria-hidden="true">
+    <div v-for="bola in bolas" :ref="referenciasBola[bola.id]" :key="bola.id"
+      class="bola" :class="{ partida: cortes[bola.id] !== undefined }" hidden
+      :data-bola="bola.id" aria-hidden="true">
       <span /><span />
     </div>
 
     <!-- Estallido en el punto de cada corte -->
     <div v-for="destello in destellos" :key="destello.id" class="destello"
-      :style="{ left: destello.x + '%', top: destello.y + '%' }" aria-hidden="true">
+      :style="{ left: destello.x + 'px', top: destello.y + 'px' }" aria-hidden="true">
       <i class="flash" />
       <i class="anillo" />
       <i v-for="n in 8" :key="n" class="astilla" :style="{ '--a': n * 45 + 'deg' }" />
@@ -37,26 +33,37 @@
       <span>{{ cantidad === bolas.length ? t('¡Ataques cortados!') : cantidad + ' / ' + bolas.length + ' ' + t('bolas cortadas') }}</span>
     </div>
 
-    <button type="button" class="hacha" :class="{ moviendo: giro !== 0 }" :disabled="cantidad === bolas.length"
-      :style="estiloHacha"
-      :aria-label="t('Arrastra el hacha para cortar las bolas de energía')"
-      @pointerdown="tomar">
-      <span class="mango" aria-hidden="true" />
-      <span class="hoja" aria-hidden="true" />
+    <button ref="hachaEl" type="button" class="hacha" :class="{ moviendo: giro !== 0 }" :disabled="cantidad === bolas.length"
+      :style="{ rotate: giro + 'deg' }"
+      :aria-label="t('Arrastra el hacha para cortar las bolas de energía. Con teclado, usa las flechas.')"
+      @pointerdown="tomar" @keydown="teclado">
+      <!-- Una sola pieza inclinada: el mango y la hoja giran juntos alrededor de la hoja (antes cada uno giraba sobre su propio centro y se desalineaban) -->
+      <span class="arma" aria-hidden="true">
+        <span class="mango" />
+        <span class="hoja" />
+      </span>
     </button>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import AudioEfecto from '../audio/Efecto.vue'
 
+// El movimiento visual (bolas, hacha, estela) va en su propio ciclo requestAnimationFrame y usa el tiempo
+// real transcurrido. El reloj educativo (props.restante) ya no marca la fluidez: solo se usa para saber
+// cuándo llegan las bolas al caballero (props.total).
 const { t } = useLanguage()
 const props = defineProps({
   pregunta: { type: Object, required: true },
   nivel: { type: Number, required: true },
   restante: { type: Number, required: true },
-  total: { type: Number, required: true }
+  total: { type: Number, required: true },
+  pausado: Boolean,
+  sinLimite: Boolean,
+  // Referencia temporal compartida con el reloj educativo (segundos efectivos sin pausas) y su estado de pausa.
+  tiempoActivo: { type: Function, default: null },
+  detenido: { type: Function, default: null }
 })
 const emit = defineEmits(['cortar'])
 
@@ -65,75 +72,114 @@ const bolas = [
   { id: 1, salida: 1.6, altura: 68 },
   { id: 2, salida: 2.75, altura: 45 }
 ]
+const DURACION_SIN_LIMITE = 20
 const colores = ['#ffad55', '#9fee68', '#8ed9ff', '#ff8267']
 const textosCorte = ['¡Corte!', '¡Doble!', '¡Triple!']
 const arena = ref(null)
-const centro = ref(null)
+const hachaEl = ref(null)
+const rastroAncho = ref(null)
+const rastroNucleo = ref(null)
 const cortes = ref({})
-const rastro = ref([])
 const destellos = ref([])
 const giro = ref(0)
 const cantidad = computed(() => Object.keys(cortes.value).length)
-const transcurrido = computed(() => props.total - props.restante)
-const estiloHacha = computed(() => ({
-  ...(centro.value ? { left: centro.value.x + '%', top: centro.value.y + '%' } : {}),
-  rotate: giro.value + 'deg'
-}))
-const tramos = computed(() => rastro.value.slice(1).map((punto, i) => ({
-  id: punto.id, x1: rastro.value[i].x, y1: rastro.value[i].y, x2: punto.x, y2: punto.y
-})))
+
+// Estado de alta frecuencia: variables normales, no reactivas.
+const medida = { escala: 1, ancho: 0, alto: 0, izq: 0, arriba: 0, radioBola: 20, ancho_hacha: 76, alto_hacha: 76 }
+const hacha = { x: .34, y: .76 } // fracciones del campo (se conserva al girar la pantalla)
+let anterior = { x: 0, y: 0 }
+const estadoBolas = bolas.map((b) => ({ ...b, el: null, x: 0, y: 0, visible: false, peligro: false }))
+let transcurrido = 0
+let ultimoCuadro = 0
+let cuadro = 0
 let puntero = null
-let agarre = null
-let campoActivo = null
-let anchoHacha = 0
-let alturaHacha = 0
+let agarre = { x: 0, y: 0 }
 let movimientoPendiente = null
-let cuadroMovimiento = null
-let idPunto = 0
+let cuadroMovimiento = 0
+let puntos = []
+let ultimoMovimiento = 0
+let temporizadorGiro = 0
 let idDestello = 0
-let temporizadorRastro = null
-let temporizadorGiro = null
 const temporizadores = new Set()
-const elementosBola = new Map()
-const referenciasBola = Object.fromEntries(bolas.map((bola) => [
-  bola.id,
-  (elemento) => asignarBola(elemento, bola.id)
-]))
+let observador = null
+const referenciasBola = Object.fromEntries(bolas.map((b) => [b.id, (el) => { estadoBolas[b.id].el = el }]))
 
-function posicion(bola) {
-  const progreso = (transcurrido.value - bola.salida) / (props.total - bola.salida)
-  return 77 - 53 * Math.max(0, Math.min(1, progreso))
+const duracion = () => (props.sinLimite ? DURACION_SIN_LIMITE : props.total)
+
+// Posición horizontal (0..1 del campo) de una bola en el instante t. Llega al caballero al terminar la duración.
+function progresoBola(bola, t) {
+  return Math.max(0, Math.min(1, (t - bola.salida) / (duracion() - bola.salida)))
+}
+const posX = (bola, t) => (77 - 53 * progresoBola(bola, t)) / 100
+
+function medir() {
+  const el = arena.value
+  if (!el) return
+  const r = el.getBoundingClientRect()
+  // Si algún ancestro está escalado (cámara de la escena), el rectángulo visible no coincide con las unidades
+  // locales de translate3d: se calcula la escala y se trabaja siempre en unidades locales.
+  const anchoLocal = el.offsetWidth || r.width
+  medida.escala = anchoLocal ? r.width / anchoLocal || 1 : 1
+  medida.ancho = anchoLocal; medida.alto = el.offsetHeight || r.height; medida.izq = r.left; medida.arriba = r.top
+  const b = estadoBolas.find((e) => e.el)?.el
+  if (b) medida.radioBola = (b.offsetWidth || 40) / 2
+  if (hachaEl.value) { medida.ancho_hacha = hachaEl.value.offsetWidth || 76; medida.alto_hacha = hachaEl.value.offsetHeight || 76 }
+  colocarHacha()
 }
 
-function tomar(evento) {
-  if (puntero !== null || evento.button !== 0 || cantidad.value === bolas.length) return
-  evento.currentTarget.setPointerCapture(evento.pointerId)
-  puntero = evento.pointerId
-  const campo = arena.value.getBoundingClientRect()
-  campoActivo = campo
-  const hacha = evento.currentTarget.getBoundingClientRect()
-  anchoHacha = hacha.width
-  alturaHacha = hacha.height
-  const x = hacha.left + hacha.width / 2
-  const y = hacha.top + hacha.height / 2
-  agarre = { x: evento.clientX - x, y: evento.clientY - y }
-  centro.value = { x: (x - campo.left) / campo.width * 100, y: (y - campo.top) / campo.height * 100 }
+function colocarHacha() {
+  if (!hachaEl.value) return
+  hachaEl.value.style.transform = `translate3d(${hacha.x * medida.ancho}px, ${hacha.y * medida.alto}px, 0)`
 }
 
-function asignarBola(elemento, id) {
-  if (elemento) elementosBola.set(id, elemento)
-  else elementosBola.delete(id)
+function pintarBolas() {
+  for (const b of estadoBolas) {
+    const el = b.el
+    if (!el) continue
+    const visible = transcurrido >= b.salida
+    if (visible !== b.visible) { b.visible = visible; el.hidden = !visible }
+    if (!visible) continue
+    if (cortes.value[b.id] === undefined) {
+      b.x = posX(b, transcurrido) * medida.ancho
+      b.y = b.altura / 100 * medida.alto
+      el.style.transform = `translate3d(${b.x}px, ${b.y}px, 0)`
+      const peligro = posX(b, transcurrido) < .42
+      if (peligro !== b.peligro) { b.peligro = peligro; el.classList.toggle('peligro', peligro) }
+    }
+  }
 }
 
-// Rastro: guarda los últimos puntos de la hoja (en %) y lo borra poco después de dejar de mover.
-function marcarRastro(campo, hojaX, hojaY) {
-  rastro.value.push({ id: ++idPunto, x: hojaX / campo.width * 100, y: hojaY / campo.height * 100 })
-  if (rastro.value.length > 12) rastro.value.shift()
-  clearTimeout(temporizadorRastro)
-  temporizadorRastro = setTimeout(() => { rastro.value = [] }, 140)
+// Pausa manual, ayuda abierta o pestaña oculta: no avanzan los proyectiles, no hay colisiones ni se aceptan cortes.
+const bloqueado = () => props.pausado || (props.detenido ? props.detenido() : document.hidden)
+const inicioReloj = props.tiempoActivo ? props.tiempoActivo() : 0
+
+function bucle(ahora) {
+  cuadro = requestAnimationFrame(bucle)
+  const dt = ultimoCuadro ? (ahora - ultimoCuadro) / 1000 : 0
+  ultimoCuadro = ahora
+  if (!bloqueado() && cantidad.value < bolas.length) {
+    // El tiempo sale del mismo reloj que el educativo (misma política de recuperación tras bloqueos del navegador).
+    if (props.tiempoActivo) transcurrido = Math.max(transcurrido, props.tiempoActivo() - inicioReloj)
+    else transcurrido += Math.min(dt, .5)
+  }
+  pintarBolas()
 }
 
-// El hacha se inclina un poco hacia donde se mueve (máximo 18°, para que la hoja siga en su zona de corte).
+function borrarRastro() {
+  puntos = []
+  rastroAncho.value?.setAttribute('points', '')
+  rastroNucleo.value?.setAttribute('points', '')
+}
+
+function marcarRastro(x, y) {
+  puntos.push(`${x.toFixed(1)},${y.toFixed(1)}`)
+  if (puntos.length > 10) puntos.shift()
+  const lista = puntos.join(' ')
+  rastroAncho.value?.setAttribute('points', lista)
+  rastroNucleo.value?.setAttribute('points', lista)
+  ultimoMovimiento = performance.now()
+}
+
 function inclinar(dx) {
   giro.value = Math.round(Math.max(-18, Math.min(18, dx * 0.9)))
   clearTimeout(temporizadorGiro)
@@ -142,7 +188,7 @@ function inclinar(dx) {
 
 function estallar(x, y) {
   const destello = { id: ++idDestello, x, y, texto: textosCorte[Math.min(cantidad.value, bolas.length) - 1] }
-  destellos.value.push(destello)
+  destellos.value = [...destellos.value.slice(-2), destello] // como máximo tres destellos a la vez
   const temporizador = setTimeout(() => {
     destellos.value = destellos.value.filter((d) => d.id !== destello.id)
     temporizadores.delete(temporizador)
@@ -150,85 +196,116 @@ function estallar(x, y) {
   temporizadores.add(temporizador)
 }
 
+function tomar(evento) {
+  if (puntero !== null || evento.button !== 0 || cantidad.value === bolas.length || bloqueado()) return
+  evento.currentTarget.setPointerCapture?.(evento.pointerId)
+  puntero = evento.pointerId
+  medir() // una sola lectura de geometría por gesto
+  agarre = {
+    x: (evento.clientX - medida.izq) / medida.escala - hacha.x * medida.ancho,
+    y: (evento.clientY - medida.arriba) / medida.escala - hacha.y * medida.alto
+  }
+  anterior = { x: hacha.x * medida.ancho, y: hacha.y * medida.alto }
+}
+
 function mover(evento) {
   if (puntero !== evento.pointerId || cantidad.value === bolas.length) return
   movimientoPendiente = evento
-  if (cuadroMovimiento !== null) return
+  if (cuadroMovimiento) return
   cuadroMovimiento = requestAnimationFrame(() => {
-    cuadroMovimiento = null
-    const movimiento = movimientoPendiente
+    cuadroMovimiento = 0
+    const m = movimientoPendiente
     movimientoPendiente = null
-    if (movimiento) procesarMovimiento(movimiento)
+    if (m) procesarMovimiento(m)
   })
 }
 
-function distanciaAlSegmento(x, y, x1, y1, x2, y2) {
+function distanciaCuadrada(px, py, x1, y1, x2, y2) {
   const dx = x2 - x1
   const dy = y2 - y1
-  const longitudCuadrada = dx * dx + dy * dy
-  const proporcion = longitudCuadrada === 0 ? 0 : Math.max(0, Math.min(1, ((x - x1) * dx + (y - y1) * dy) / longitudCuadrada))
-  const diferenciaX = x - (x1 + proporcion * dx)
-  const diferenciaY = y - (y1 + proporcion * dy)
-  return diferenciaX * diferenciaX + diferenciaY * diferenciaY
+  const l2 = dx * dx + dy * dy
+  const p = l2 === 0 ? 0 : Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / l2))
+  const ex = px - (x1 + p * dx)
+  const ey = py - (y1 + p * dy)
+  return ex * ex + ey * ey
 }
 
-function procesarMovimiento(evento) {
-  if (puntero !== evento.pointerId || cantidad.value === bolas.length || !campoActivo) return
-  const campo = campoActivo
-  const x = centro.value.x * campo.width / 100
-  const y = centro.value.y * campo.height / 100
-  const destinoX = Math.max(0, Math.min(campo.width, evento.clientX - campo.left - agarre.x))
-  const destinoY = Math.max(0, Math.min(campo.height, evento.clientY - campo.top - agarre.y))
-  const dx = destinoX - x
-  const dy = destinoY - y
-  centro.value = { x: destinoX / campo.width * 100, y: destinoY / campo.height * 100 }
-  if (dx !== 0 || dy !== 0) {
-    marcarRastro(campo, destinoX + anchoHacha * .1, destinoY - anchoHacha * .24)
-    inclinar(dx)
+function mueveHacha(destinoX, destinoY) {
+  const x = Math.max(0, Math.min(medida.ancho, destinoX))
+  const y = Math.max(0, Math.min(medida.alto, destinoY))
+  const dx = x - anterior.x
+  const dy = y - anterior.y
+  hacha.x = x / medida.ancho
+  hacha.y = y / medida.alto
+  colocarHacha()
+  const ox = medida.ancho_hacha * .1
+  const oy = -medida.alto_hacha * .24
+  if (dx !== 0 || dy !== 0) { marcarRastro(x + ox, y + oy); inclinar(dx) }
+  // Barrido del segmento recorrido por la hoja contra la posición actual de cada bola: no se «atraviesa» un objetivo.
+  const radio = medida.radioBola + medida.ancho_hacha * .21
+  for (const b of estadoBolas) {
+    if (transcurrido < b.salida || cortes.value[b.id] !== undefined) continue
+    const bx = posX(b, transcurrido) * medida.ancho
+    const by = b.altura / 100 * medida.alto
+    if (distanciaCuadrada(bx, by, anterior.x + ox, anterior.y + oy, x + ox, y + oy) > radio * radio) continue
+    cortes.value = { ...cortes.value, [b.id]: bx }
+    estallar(bx, by)
+    if (b.el) b.el.style.transform = `translate3d(${bx}px, ${by}px, 0)`
   }
-
-  for (const bola of bolas) {
-    if (transcurrido.value < bola.salida || cortes.value[bola.id] !== undefined) continue
-    const caja = elementosBola.get(bola.id)?.getBoundingClientRect()
-    if (!caja?.width) continue
-    const blancoX = caja.left + caja.width / 2
-    const blancoY = caja.top + caja.height / 2
-    const inicioX = campo.left + x + anchoHacha * .1
-    const inicioY = campo.top + y - alturaHacha * .24
-    const finalX = campo.left + destinoX + anchoHacha * .1
-    const finalY = campo.top + destinoY - alturaHacha * .24
-    const radio = caja.width / 2 + anchoHacha * .21
-    if (distanciaAlSegmento(blancoX, blancoY, inicioX, inicioY, finalX, finalY) > radio * radio) continue
-    cortes.value[bola.id] = (blancoX - campo.left) / campo.width * 100
-    estallar(cortes.value[bola.id], bola.altura)
-  }
+  anterior = { x, y }
   if (cantidad.value === bolas.length) emit('cortar')
 }
 
+function procesarMovimiento(evento) {
+  if (puntero !== evento.pointerId || cantidad.value === bolas.length || !medida.ancho || bloqueado()) return
+  mueveHacha((evento.clientX - medida.izq) / medida.escala - agarre.x, (evento.clientY - medida.arriba) / medida.escala - agarre.y)
+}
+
 function soltar(evento) {
-  if (cuadroMovimiento !== null) {
-    cancelAnimationFrame(cuadroMovimiento)
-    cuadroMovimiento = null
-    movimientoPendiente = null
-  }
+  if (cuadroMovimiento) { cancelAnimationFrame(cuadroMovimiento); cuadroMovimiento = 0; movimientoPendiente = null }
   if (puntero === evento.pointerId) procesarMovimiento(evento)
   cancelar(evento)
 }
 
 function cancelar(evento) {
   if (puntero !== evento.pointerId) return
-  if (cuadroMovimiento !== null) cancelAnimationFrame(cuadroMovimiento)
-  cuadroMovimiento = null
+  if (cuadroMovimiento) cancelAnimationFrame(cuadroMovimiento)
+  cuadroMovimiento = 0
   movimientoPendiente = null
   puntero = null
-  campoActivo = null
+  setTimeout(borrarRastro, 140)
 }
 
+// Alternativa sin puntero: las flechas desplazan el hacha a saltos del 6 % del campo y cortan lo que cruzan.
+function teclado(evento) {
+  const paso = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[evento.key]
+  if (!paso || cantidad.value === bolas.length || bloqueado()) return
+  evento.preventDefault()
+  if (!medida.ancho) medir()
+  anterior = { x: hacha.x * medida.ancho, y: hacha.y * medida.alto }
+  mueveHacha(anterior.x + paso[0] * medida.ancho * .06, anterior.y + paso[1] * medida.alto * .06)
+}
+
+onMounted(() => {
+  medir()
+  // Reutiliza la medida del campo; solo se vuelve a leer al cambiar su tamaño u orientación.
+  if (typeof ResizeObserver !== 'undefined') {
+    observador = new ResizeObserver(medir)
+    observador.observe(arena.value)
+  }
+  window.addEventListener('orientationchange', medir)
+  cuadro = requestAnimationFrame(bucle)
+})
+
+watch(() => props.pausado, (activo) => { if (activo && puntero !== null) { puntero = null; borrarRastro() } })
+
 onBeforeUnmount(() => {
-  if (cuadroMovimiento !== null) cancelAnimationFrame(cuadroMovimiento)
-  clearTimeout(temporizadorRastro)
+  cancelAnimationFrame(cuadro)
+  if (cuadroMovimiento) cancelAnimationFrame(cuadroMovimiento)
+  observador?.disconnect()
+  window.removeEventListener('orientationchange', medir)
   clearTimeout(temporizadorGiro)
-  temporizadores.forEach((temporizador) => clearTimeout(temporizador))
+  temporizadores.forEach((x) => clearTimeout(x))
   temporizadores.clear()
 })
 </script>
@@ -265,20 +342,19 @@ onBeforeUnmount(() => {
 
 /* Estela de la hoja */
 .rastro { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-.rastro line {
-  stroke: #fff4d2;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 4px var(--energia));
-}
+.rastro polyline { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.rastro .ancho { stroke: var(--energia); stroke-width: 9px; opacity: .45; }
+.rastro .nucleo { stroke: #fff4d2; stroke-width: 3px; }
 
 /* Bolas de energía */
 .bola {
   position: absolute;
   width: clamp(30px, 6vw, 58px);
   aspect-ratio: 1;
+  left: 0;
+  top: 0;
   translate: -50% -50%;
-  transition: left 100ms linear;
+  will-change: transform;
   animation: aparecer 380ms cubic-bezier(.2, 1.5, .4, 1) backwards;
 }
 @keyframes aparecer { from { scale: 0.1; opacity: 0; } }
@@ -319,7 +395,6 @@ onBeforeUnmount(() => {
 }
 .bola.peligro::after { background: linear-gradient(90deg, #ff6a4d, transparent); opacity: .75; }
 
-.bola.partida { transition: none; }
 .partida::after { display: none; }
 .partida span { clip-path: polygon(0 0, 100% 0, 0 100%); animation: separar 440ms ease-out both; }
 .partida span + span {
@@ -398,11 +473,14 @@ onBeforeUnmount(() => {
 .hacha {
   position: absolute;
   z-index: 2;
-  left: 34%;
-  top: 76%;
+  left: 0;
+  top: 0;
+  will-change: transform;
   width: clamp(76px, 13vmin, 108px);
   aspect-ratio: 1;
   translate: -50% -50%;
+  /* El giro y la escala pivotan sobre la hoja (≈ 59,5 % / 26,5 %): es el punto que usa la colisión */
+  transform-origin: 59.5% 26.5%;
   background: radial-gradient(ellipse, #dfa75b55, transparent 69%);
   pointer-events: auto;
   touch-action: none;
@@ -414,12 +492,12 @@ onBeforeUnmount(() => {
 .hacha.moviendo { filter: drop-shadow(0 0 8px var(--energia)) drop-shadow(0 2px 3px #000); }
 .hacha:active { cursor: grabbing; scale: 1.1; }
 .hacha span { position: absolute; pointer-events: none; }
+.arma { inset: 0; rotate: 31deg; transform-origin: 59.5% 26.5%; }
 .mango {
   width: 10%;
   height: 76%;
   left: 45%;
   top: 12%;
-  rotate: 31deg;
   border-radius: 3px;
   background: linear-gradient(90deg, #452619, #c29158 58%, #67402b);
 }
@@ -428,7 +506,6 @@ onBeforeUnmount(() => {
   height: 47%;
   left: 29%;
   top: 3%;
-  rotate: 31deg;
   clip-path: polygon(0 0, 19% 14%, 41% 27%, 59% 27%, 81% 14%, 100% 0, 96% 36%, 100% 100%, 77% 80%, 59% 65%, 41% 65%, 23% 80%, 0 100%, 4% 36%);
   background: linear-gradient(100deg, #f4eedc, #8896a4 15%, #4a525c 49%, #a1acb4 81%, #f4eedc);
 }

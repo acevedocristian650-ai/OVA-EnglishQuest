@@ -916,5 +916,235 @@
         "explicacion": "La luz roja indica que debes detenerte antes de entrar al cruce."
       }
     ]
+  },
+  {
+    "numero": 5,
+    "numeroArte": 4,
+    "remate": "sombras",
+    "nombre": "La última prueba del reino",
+    "tema": "Evaluación integradora",
+    "guardian": "Dragón de la Puerta Real",
+    "fondo": "/images/arenas/puerta-real-animado.svg",
+    "arte": "/images/personajes-mate/real",
+    "golpe": "Aliento Escarlata",
+    "efecto": "/images/jefes/real/aliento.svg",
+    "vida": 150,
+    "dano": 31,
+    "debilidad": "escudo",
+    "preguntas": [
+      {
+        "tipo": "cortar",
+        "texto": "Which expression talks about the future?",
+        "correcta": "Tonight",
+        "explicacion": "Tonight señala algo que ocurrirá más tarde hoy; last week y yesterday hablan del pasado.",
+        "tema": "Introducción al futuro",
+        "fase": 1,
+        "opciones": [
+          "Last week",
+          "Tonight",
+          "Yesterday"
+        ]
+      },
+      {
+        "tipo": "parejas",
+        "texto": "Match each time expression.",
+        "correcta": "tomorrow = mañana · next week = la próxima semana · last night = anoche",
+        "explicacion": "Tomorrow y next week miran al futuro; last night mira al pasado.",
+        "tema": "Introducción al futuro",
+        "fase": 1,
+        "contexto": "Une la expresión con su significado.",
+        "parejas": [
+          {
+            "izq": "tomorrow",
+            "der": "mañana"
+          },
+          {
+            "izq": "next week",
+            "der": "la próxima semana"
+          },
+          {
+            "izq": "last night",
+            "der": "anoche"
+          }
+        ]
+      },
+      {
+        "tipo": "ordenar",
+        "texto": "Assemble the plan for tomorrow.",
+        "correcta": "We are going to explore the forest tomorrow.",
+        "explicacion": "Sujeto + are + going to + verbo base + expresión de tiempo.",
+        "tema": "Introducción al futuro",
+        "fase": 1,
+        "fichas": [
+          "tomorrow.",
+          "are",
+          "We",
+          "going to",
+          "explore the forest"
+        ]
+      },
+      {
+        "tipo": "errores",
+        "texto": "Find the mistake in the plan.",
+        "correcta": "She is going to visit the bridge tomorrow.",
+        "explicacion": "Con she se usa is, no are.",
+        "tema": "Be going to",
+        "fase": 2,
+        "contexto": "Tap the wrong word.",
+        "frase": [
+          "She",
+          "are",
+          "going",
+          "to",
+          "visit",
+          "the",
+          "bridge",
+          "tomorrow."
+        ],
+        "error": 1
+      },
+      {
+        "tipo": "esquiva-frase",
+        "texto": "They ___ attack!",
+        "correcta": "are going to",
+        "explicacion": "Con they usamos are going to seguido del verbo base: They are going to attack!",
+        "tema": "Be going to",
+        "fase": 2,
+        "fichas": [
+          "is going to",
+          "are going to",
+          "am going to"
+        ]
+      },
+      {
+        "tipo": "escuchar",
+        "texto": "Listen to the warning.",
+        "correcta": "The dragon is not going to attack.",
+        "explicacion": "Is not going to + verbo base es la forma negativa de be going to.",
+        "tema": "Be going to",
+        "fase": 2,
+        "contexto": "Escucha y toca la frase que oíste.",
+        "audio": "The dragon is not going to attack.",
+        "opciones": [
+          "The dragon is going to attack.",
+          "The dragon is not going to attack.",
+          "The dragon attacked yesterday."
+        ]
+      },
+      {
+        "tipo": "romper-hechizo",
+        "texto": "Make the spell negative.",
+        "correcta": "The knight will not return.",
+        "explicacion": "Coloca not después de will para negar lo que anuncia el hechizo.",
+        "tema": "Will",
+        "fase": 3,
+        "invocacion": true,
+        "huecos": [
+          2,
+          3
+        ],
+        "frase": [
+          "The",
+          "knight",
+          "will",
+          "return!"
+        ]
+      },
+      {
+        "tipo": "proteger-aliado",
+        "texto": "Promise to help the villagers.",
+        "correcta": "We will help the villagers.",
+        "explicacion": "We will help the villagers expresa una promesa. Will va seguido del verbo base help.",
+        "tema": "Will",
+        "fase": 3,
+        "contexto": "Promise you will help us!",
+        "nodos": [
+          "We",
+          "will",
+          "did",
+          "help the villagers."
+        ]
+      },
+      {
+        "tipo": "errores",
+        "texto": "Find the mistake in the promise.",
+        "correcta": "He will return tomorrow.",
+        "explicacion": "Después de will el verbo va en forma base: return, no returns.",
+        "tema": "Will",
+        "fase": 3,
+        "contexto": "Tap the wrong word.",
+        "frase": [
+          "He",
+          "will",
+          "returns",
+          "tomorrow."
+        ],
+        "error": 2
+      },
+      {
+        "tipo": "zona",
+        "texto": "Let the other cars pass first.",
+        "correcta": "Give way to the cars",
+        "explicacion": "YIELD significa ceder el paso: Give way to the cars.",
+        "tema": "Traffic signs and rules",
+        "fase": 4,
+        "tablero": "calle",
+        "señal": {
+          "imagen": "/images/signs/yield.svg",
+          "alt": "Señal triangular con la palabra YIELD"
+        },
+        "zonas": [
+          {
+            "texto": "Go straight through fast",
+            "icono": "↑"
+          },
+          {
+            "texto": "Give way to the cars",
+            "icono": "▲"
+          },
+          {
+            "texto": "Turn back",
+            "icono": "↶"
+          }
+        ]
+      },
+      {
+        "tipo": "parejas",
+        "texto": "Match each traffic word.",
+        "correcta": "stop = detenerse · give way = ceder el paso · crossing = cruce",
+        "explicacion": "Son las palabras clave de las normas de la Puerta Real.",
+        "tema": "Traffic signs and rules",
+        "fase": 4,
+        "contexto": "Une la palabra con su significado.",
+        "parejas": [
+          {
+            "izq": "stop",
+            "der": "detenerse"
+          },
+          {
+            "izq": "give way",
+            "der": "ceder el paso"
+          },
+          {
+            "izq": "crossing",
+            "der": "cruce"
+          }
+        ]
+      },
+      {
+        "tipo": "ordenar",
+        "texto": "Assemble the prohibition.",
+        "correcta": "Do not cross the street.",
+        "explicacion": "Una prohibición se forma con Do not + verbo base.",
+        "tema": "Traffic signs and rules",
+        "fase": 4,
+        "fichas": [
+          "cross",
+          "the street.",
+          "not",
+          "Do"
+        ]
+      }
+    ]
   }
 ]

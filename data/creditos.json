@@ -1,0 +1,26 @@
+{
+  "_nota": "Datos de la sección Créditos y de la secuencia final. Edita SOLO este archivo: no hay nombres, fotografías ni datos académicos inventados. Copia las fotos a la carpeta public/images/creditos y escribe en «foto» su ruta pública, que empieza por /images/creditos/ y termina con el nombre del archivo. Mientras un dato sea null se muestra «pendiente».",
+  "ova": {
+    "nombre": "English Quest",
+    "descripcion": "Objeto Virtual de Aprendizaje en forma de videojuego medieval para practicar inglés básico: futuro con going to y will, y señales y normas de tránsito."
+  },
+  "institucion": {
+    "universidad": "Universidad de Córdoba",
+    "programa": "Licenciatura en Informática",
+    "asignatura": "Fundamentos de Programación",
+    "docente": null
+  },
+  "integrantes": [
+    { "nombre": "Acosprimi Polo Romero", "foto": "/images/creditos/miniaturas/Acosprimi Polo Romero.jpg", "rol": null },
+    { "nombre": "Valeria Altafulla Urango", "foto": "/images/creditos/miniaturas/Valeria Altafulla Urango.jpeg", "rol": null },
+    { "nombre": "Cristian Acevedo Pineda", "foto": "/images/creditos/miniaturas/Cristian Acevedo Pineda.jpeg", "rol": null },
+    { "nombre": "Lausabid Polo Romero", "foto": "/images/creditos/miniaturas/Lausabid Polo Romero.jpeg", "rol": null }
+  ],
+  "atribuciones": [
+    { "recurso": "Videos de YouTube incrustados en la Biblioteca del reino", "autor": "BBC Learning English, CodeLucky, English WOWcabulary, Easy English Learning Hub y Boost your Vocabulary", "nota": "Se reproducen con el reproductor oficial de YouTube; los derechos pertenecen a sus autores." },
+    { "recurso": "Lecturas de referencia gramatical", "autor": "BBC Learning English y British Council (LearnEnglish)", "nota": "Se enlazan al sitio original; no se copian ni se redistribuyen." },
+    { "recurso": "Arte, sprites, escenarios y audio del juego", "autor": "Recursos incluidos en el proyecto English Quest", "nota": "Autoría específica pendiente de confirmar por el equipo." }
+  ],
+  "agradecimientos": [],
+  "mensajeFinal": "Gracias por formar parte de esta aventura."
+}

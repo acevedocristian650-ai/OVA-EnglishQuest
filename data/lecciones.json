@@ -1,0 +1,319 @@
+{
+  "consejos": {
+    "ordenar": "Busca primero el sujeto, luego el verbo auxiliar y al final el verbo principal; revisa que la frase suene completa.",
+    "errores": "Lee la frase completa y comprueba el verbo auxiliar y la forma del verbo que lo sigue.",
+    "cortar": "Descarta primero las opciones que no encajan con la señal de tiempo o con el sentido de la frase.",
+    "clasificar": "Busca la señal de tiempo: palabras como tomorrow o next indican futuro; yesterday o last indican pasado.",
+    "parejas": "Empieza por las parejas que ya conoces; las que sobran son más fáciles de deducir.",
+    "escuchar": "Escucha buscando el verbo auxiliar y la palabra clave; compara con cada opción antes de elegir.",
+    "zona": "Lee la señal o el aviso y elige la acción que esa norma exige.",
+    "romper-hechizo": "Para negar con will, coloca not justo después de will.",
+    "proteger-aliado": "Una promesa con will lleva sujeto, will y el verbo en su forma base.",
+    "esquiva-frase": "Mira cómo empieza el aviso y elige el verbo auxiliar que completa el plan.",
+    "esquivar": "Lee de qué lado viene el ataque y muévete al lado contrario."
+  },
+  "niveles": {
+    "1": {
+      "titulo": "El plan del alba",
+      "voz": "La guardiana del bosque te recibe con un pergamino.",
+      "proposito": "Aprenderás a hablar del futuro: decir qué planeas hacer y cuándo.",
+      "regla": "Las expresiones de tiempo como tomorrow, tonight o next week señalan el futuro, y los planes se dicen con am/is/are + going to + verbo.",
+      "puntos": [
+        "Las señales de tiempo te dicen si hablas del futuro o del pasado.",
+        "Para un plan usa: sujeto + am / is / are + going to + verbo.",
+        "El verbo después de going to no cambia: I am going to explore, he is going to explore."
+      ],
+      "vocabulario": [
+        {
+          "en": "tomorrow",
+          "es": "mañana"
+        },
+        {
+          "en": "tonight",
+          "es": "esta noche"
+        },
+        {
+          "en": "next week",
+          "es": "la próxima semana"
+        },
+        {
+          "en": "yesterday",
+          "es": "ayer"
+        },
+        {
+          "en": "last night",
+          "es": "anoche"
+        }
+      ],
+      "ejemplos": [
+        {
+          "en": "We are going to explore the forest next week.",
+          "es": "Vamos a explorar el bosque la próxima semana."
+        },
+        {
+          "en": "I am going to check the gate tonight.",
+          "es": "Voy a revisar la puerta esta noche."
+        }
+      ],
+      "contraste": {
+        "titulo": "Futuro o pasado",
+        "a": {
+          "en": "tomorrow · next week",
+          "nota": "Futuro: todavía no ha ocurrido."
+        },
+        "b": {
+          "en": "yesterday · last night",
+          "nota": "Pasado: ya ocurrió."
+        }
+      },
+      "practica": [
+        {
+          "enunciado": "¿Cuál señal habla del futuro?",
+          "opciones": [
+            "yesterday",
+            "next week"
+          ],
+          "correcta": 1,
+          "porque": "Next week es la próxima semana: todavía no ha llegado."
+        },
+        {
+          "enunciado": "Completa: I ___ going to check the gate.",
+          "opciones": [
+            "am",
+            "is"
+          ],
+          "correcta": 0,
+          "porque": "Con I se usa am."
+        }
+      ],
+      "guia": "En el combate clasificarás señales de tiempo, buscarás un error en un plan, cortarás la frase de futuro, unirás parejas y armarás una frase con going to."
+    },
+    "2": {
+      "titulo": "Cruzar el puente",
+      "voz": "El barquero del río desenrolla un mapa de planes.",
+      "proposito": "Aprenderás a usar be going to para planes y para avisar de lo que va a pasar.",
+      "regla": "Be going to usa am/is/are según el sujeto: afirmativa (is going to), negativa (is not going to) y pregunta (Is he going to…?).",
+      "puntos": [
+        "Afirmativa: He is going to cross the bridge.",
+        "Negativa: pon not después de am / is / are: He is not going to cross.",
+        "Pregunta: el verbo to be va primero: Is he going to cross the bridge?",
+        "También sirve para avisar de algo que se ve venir: The stone is going to fall!"
+      ],
+      "vocabulario": [
+        {
+          "en": "bridge",
+          "es": "puente"
+        },
+        {
+          "en": "cross",
+          "es": "cruzar"
+        },
+        {
+          "en": "attack",
+          "es": "atacar"
+        },
+        {
+          "en": "left / right",
+          "es": "izquierda / derecha"
+        },
+        {
+          "en": "fall",
+          "es": "caer"
+        }
+      ],
+      "ejemplos": [
+        {
+          "en": "The basilisk is going to attack on the left!",
+          "es": "¡El basilisco va a atacar por la izquierda!"
+        },
+        {
+          "en": "We are going to cross the river.",
+          "es": "Vamos a cruzar el río."
+        }
+      ],
+      "contraste": {
+        "titulo": "am, is o are",
+        "a": {
+          "en": "I am · he / she / it is",
+          "nota": "Singular: am con I, is con he, she, it."
+        },
+        "b": {
+          "en": "we / you / they are",
+          "nota": "Plural y you: are."
+        }
+      },
+      "practica": [
+        {
+          "enunciado": "Completa: We ___ going to cross the river.",
+          "opciones": [
+            "are",
+            "is"
+          ],
+          "correcta": 0,
+          "porque": "Con we se usa are."
+        },
+        {
+          "enunciado": "¿Cuál frase es negativa?",
+          "opciones": [
+            "He is not going to cross.",
+            "He is going to cross."
+          ],
+          "correcta": 0,
+          "porque": "Not va después de is."
+        }
+      ],
+      "guia": "En el combate ordenarás frases, esquivarás avisos leyendo de qué lado vienen, cortarás el verbo correcto y escucharás una advertencia."
+    },
+    "3": {
+      "titulo": "Promesas en la torre",
+      "voz": "El vigía de la torre te entrega un pergamino sellado.",
+      "proposito": "Aprenderás a usar will para promesas, decisiones del momento y predicciones.",
+      "regla": "Will se escribe igual con todos los sujetos y va seguido del verbo en forma base: I will help, he will help; negativa will not (won't).",
+      "puntos": [
+        "Will no cambia con el sujeto: I will, she will, they will.",
+        "El verbo siguiente va en forma base, sin to y sin -s: He will return.",
+        "Negativa: will not o won't. Contracción: I'll.",
+        "Se usa para promesas y para opiniones sobre el futuro: I think the storm will reach the tower."
+      ],
+      "vocabulario": [
+        {
+          "en": "promise",
+          "es": "promesa"
+        },
+        {
+          "en": "protect",
+          "es": "proteger"
+        },
+        {
+          "en": "help",
+          "es": "ayudar"
+        },
+        {
+          "en": "return",
+          "es": "regresar"
+        },
+        {
+          "en": "storm",
+          "es": "tormenta"
+        }
+      ],
+      "ejemplos": [
+        {
+          "en": "I will protect you.",
+          "es": "Te protegeré."
+        },
+        {
+          "en": "The hero will not fall.",
+          "es": "El héroe no caerá."
+        }
+      ],
+      "contraste": {
+        "titulo": "Will o be going to",
+        "a": {
+          "en": "I will help you.",
+          "nota": "Will: una promesa o una decisión en el momento."
+        },
+        "b": {
+          "en": "I am going to visit the tower.",
+          "nota": "Going to: un plan que ya tenías o algo que se ve venir."
+        }
+      },
+      "practica": [
+        {
+          "enunciado": "Completa: I will ___ you.",
+          "opciones": [
+            "help",
+            "helps"
+          ],
+          "correcta": 0,
+          "porque": "Después de will el verbo va en forma base."
+        },
+        {
+          "enunciado": "¿Cuál es la forma negativa correcta?",
+          "opciones": [
+            "He will not fall.",
+            "He not will fall."
+          ],
+          "correcta": 0,
+          "porque": "Not va justo después de will."
+        }
+      ],
+      "guia": "En el combate encontrarás errores en predicciones, romperás un hechizo con will not, protegerás a un aliado con una promesa y completarás una frase con will o 'll."
+    },
+    "4": {
+      "titulo": "Las normas de la puerta",
+      "voz": "El capitán de la puerta real te muestra el edicto de caminos.",
+      "proposito": "Aprenderás el significado de las señales de tráfico y a dar órdenes sencillas.",
+      "regla": "Las señales y las normas se expresan con vocabulario clave (STOP, YIELD, NO ENTRY) y con órdenes que empiezan por el verbo: Stop at the line, Put on your helmet.",
+      "puntos": [
+        "STOP significa detenerse por completo; YIELD, ceder el paso; NO ENTRY, no entrar.",
+        "Una orden empieza con el verbo, sin sujeto: Stop before the crossing.",
+        "Para prohibir se usa Do not + verbo: Do not enter."
+      ],
+      "vocabulario": [
+        {
+          "en": "stop",
+          "es": "detenerse"
+        },
+        {
+          "en": "give way",
+          "es": "ceder el paso"
+        },
+        {
+          "en": "traffic light",
+          "es": "semáforo"
+        },
+        {
+          "en": "crossing",
+          "es": "cruce"
+        },
+        {
+          "en": "helmet",
+          "es": "casco"
+        }
+      ],
+      "ejemplos": [
+        {
+          "en": "Stop at the line.",
+          "es": "Detente en la línea."
+        },
+        {
+          "en": "Put on your helmet.",
+          "es": "Ponte el casco."
+        }
+      ],
+      "contraste": {
+        "titulo": "Detenerse o ceder",
+        "a": {
+          "en": "STOP",
+          "nota": "Debes detenerte por completo."
+        },
+        "b": {
+          "en": "YIELD",
+          "nota": "Cedes el paso; si el camino está libre, puedes continuar."
+        }
+      },
+      "practica": [
+        {
+          "enunciado": "¿Qué significa una señal STOP?",
+          "opciones": [
+            "Come to a full stop",
+            "Give way"
+          ],
+          "correcta": 0,
+          "porque": "STOP exige detenerse por completo."
+        },
+        {
+          "enunciado": "¿Cuál es una orden correcta?",
+          "opciones": [
+            "Put on your helmet.",
+            "You putting helmet."
+          ],
+          "correcta": 0,
+          "porque": "Una orden empieza con el verbo."
+        }
+      ],
+      "guia": "En el combate moverás al jinete según señales, unirás cada señal con su significado, cortarás el significado correcto y ordenarás una orden de seguridad."
+    }
+  }
+}

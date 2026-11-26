@@ -8,8 +8,7 @@
   <ol class="lista" :aria-label="t('Zonas del reino')">
     <li v-for="nivel in niveles" :key="nivel.numero">
       <AudioSonidoBoton @click="emit('elegir', nivel.numero)">
-        <button type="button" class="fila" :class="estadoDe(nivel.numero)"
-          :disabled="estadoDe(nivel.numero) === 'bloqueada'">
+        <button type="button" class="fila" :class="estadoDe(nivel.numero)">
           <span class="numero" aria-hidden="true">
             <template v-if="estadoDe(nivel.numero) === 'bloqueada'">🔒</template>
             <template v-else-if="estadoDe(nivel.numero) === 'completada'">✓</template>

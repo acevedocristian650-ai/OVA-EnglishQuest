@@ -20,6 +20,7 @@
       </v-list>
 
       <v-card-actions>
+        <v-btn variant="text" color="amber-lighten-2" @click="repetirRecorrido">{{ t('Repetir recorrido') }}</v-btn>
         <v-spacer />
         <v-btn color="amber" variant="flat" @click="open = false">{{ t('Entendido') }}</v-btn>
       </v-card-actions>
@@ -34,7 +35,7 @@ const { t } = useLanguage()
 
 // Pasos que se muestran (array de textos)
 const steps = [
-  "Explora el mapa del reino y escoge una zona.",
+  "Explora el mapa del reino y toca una zona para ver su ficha de misión. Desde la ficha puedes repasar el contenido o iniciar la batalla.",
   "Si juegas en celular, gira la pantalla para ver la arena en horizontal.",
   "Responde una pregunta de inglés. Si aciertas, elige un ataque con los botones en pantalla.",
   "Si fallas, el guardián te ataca. Después puedes revisar la respuesta correcta y su explicación.",
@@ -42,5 +43,7 @@ const steps = [
   "Derrota al guardián para desbloquear la siguiente zona."
 ];
 
+const recorrido = useRecorrido()
+function repetirRecorrido() { open.value = false; recorrido.iniciar() }
 const localizedSteps = computed(() => steps.map(t))
 </script>

@@ -67,11 +67,6 @@ img {
 }
 /* Perfiles gráficos de English Quest: los gestos y la secuencia central de
    combate siguen activos; estos selectores solo reducen decoración. */
-[data-graphics='equilibrada'] .particulas-brasas .brasa,
-[data-graphics='equilibrada'] .ambiente .mota,
-[data-graphics='equilibrada'] .polvo-frontal .mota-frontal,
-[data-graphics='equilibrada'] .particulas-carga .p { opacity: .45; }
-
 [data-graphics='lite'] .particulas-brasas,
 [data-graphics='lite'] .ambiente,
 [data-graphics='lite'] .bruma-frontal,
@@ -96,12 +91,78 @@ img {
 [data-graphics='lite'] .mapa,
 [data-graphics='lite'] .encuentro-pantalla { box-shadow: none; }
 
-[data-graphics='equilibrada'] .ambiente .mota:nth-child(even),
-[data-graphics='equilibrada'] .particulas-carga .p:nth-child(even),
-[data-graphics='equilibrada'] .escena-heroe .brasa:nth-child(even),
 [data-graphics='lite'] .escena-heroe .brasa,
 [data-graphics='lite'] .efectos .chispa-vuelo,
 [data-graphics='lite'] .efectos .residuo { display: none; }
 
 [data-graphics='lite'] .secuencia:not(.activa):not(.urgente),
 [data-graphics='lite'] .escena-heroe .cuerpo { animation: none; }
+
+/* Lite en TODA la aplicación (menú, portal, mapa, transiciones, lecciones, resultados): sin desenfoques, sin brillos
+   infinitos ni partículas decorativas. El contenido, la narrativa y los controles no cambian. */
+[data-graphics='lite'] .niebla,
+[data-graphics='lite'] .brasa,
+[data-graphics='lite'] .espiral-brazos,
+[data-graphics='lite'] .octagrama { display: none !important; }
+[data-graphics='lite'] .home-title__nombre,
+[data-graphics='lite'] .home-title__nombre .rombo,
+[data-graphics='lite'] .escena-heroe .aura,
+[data-graphics='lite'] .escena-heroe .sombra,
+[data-graphics='lite'] .disponible .numero { animation: none !important; }
+[data-graphics='lite'] .home-title__nombre,
+[data-graphics='lite'] .heroe,
+[data-graphics='lite'] .caballero-salto,
+[data-graphics='lite'] .avatar-caballero,
+[data-graphics='lite'] .avatar-guardian { filter: none !important; }
+[data-graphics='lite'] .eq-modal { background: #070b12; }
+[data-graphics='lite'] .eq-caja { box-shadow: 0 0 0 3px #2a2118; }
+[data-graphics='lite'] .v-overlay__scrim { backdrop-filter: none !important; }
+
+/* ───────── Interfaces del reino (pergaminos, informes, estadísticas) ───────── */
+.eq-modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); background: #070b12ee; overscroll-behavior: contain; }
+.eq-caja { width: min(40rem, 100%); max-height: 100%; overflow-y: auto; overscroll-behavior: contain; padding: clamp(.8rem, 3vw, 1.4rem); color: #f1e8d3; background: linear-gradient(#1c2430, #141b25); border: 2px solid #b3955c; border-radius: 10px; box-shadow: 0 0 0 4px #2a2118, 0 18px 40px #000a; }
+.eq-caja h2, .eq-caja h3 { font-family: Georgia, 'Cinzel', serif; color: #f5e5c2; margin: 0 0 .4rem; }
+.eq-caja p, .eq-caja li { line-height: 1.4; }
+.eq-ceja { margin: 0; color: #d9b873; letter-spacing: .12em; text-transform: uppercase; font-size: .75rem; }
+.eq-fila { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.eq-btn { min-height: 44px; min-width: 44px; padding: .45rem .95rem; color: #2b1d0e; background: #f2d28c; border: 1px solid #fff0c8; border-radius: 6px; font: 700 .95rem system-ui, sans-serif; cursor: pointer; }
+.eq-btn.sec { color: #f5e5c2; background: #25303f; border-color: #b3955c; }
+.eq-btn:disabled { opacity: .5; cursor: default; }
+.eq-opcion { display: block; width: 100%; min-height: 44px; margin: .3rem 0; padding: .5rem .8rem; text-align: left; color: #f1e8d3; background: #1f2937; border: 1px solid #6b5a3c; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+.eq-opcion.bien { border-color: #7fd9a8; background: #123226; }
+.eq-opcion.mal { border-color: #e08b78; background: #3a1c20; }
+.eq-barra { height: 10px; border-radius: 5px; background: #0b1018; border: 1px solid #6b5a3c; overflow: hidden; }
+.eq-barra > span { display: block; height: 100%; background: linear-gradient(90deg, #b3955c, #f2d28c); transform-origin: left; }
+.eq-estrellas { color: #f2d28c; letter-spacing: .15em; }
+.eq-estrellas .vacia { color: #4a4234; }
+.eq-tabla { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.eq-tabla th, .eq-tabla td { padding: .3rem .4rem; text-align: left; border-bottom: 1px solid #3a3326; }
+
+/* ───────── Accesibilidad (independiente del perfil gráfico) ───────── */
+:root { --eq-texto: 1; }
+html { font-size: calc(100% * var(--eq-texto)); }
+:focus-visible { outline: 3px solid #ffd27a !important; outline-offset: 2px; }
+button, [role='button'], .v-btn, summary { touch-action: manipulation; }
+html[data-contraste='alto'] body, html[data-contraste='alto'] .v-application { color: #fff; }
+html[data-contraste='alto'] .eq-caja { background: #000; border-color: #fff; color: #fff; }
+html[data-contraste='alto'] .eq-opcion, html[data-contraste='alto'] .eq-btn.sec { background: #000; color: #fff; border-color: #fff; }
+html[data-contraste='alto'] .desafio { background: #000; }
+html[data-contraste='alto'] .desafio p, html[data-contraste='alto'] .desafio small { color: #fff; }
+html[data-movimiento='reducido'] *, html[data-movimiento='reducido'] *::before, html[data-movimiento='reducido'] *::after {
+  animation-duration: .01ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-movimiento='sistema'] *, html[data-movimiento='sistema'] *::before, html[data-movimiento='sistema'] *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important;
+  }
+}
+/* Sin destellos: se anulan las capas de luz (sus animaciones siguen corriendo, así que los eventos y el combate no cambian) */
+html[data-destellos='no'] :is(.flash, .luz, .onda, .fogonazo, .resplandor-cielo, .pulso-solar, .anillo, .onda-lite) { opacity: 0 !important; }
+html[data-destellos='no'] .secuencia.activa .accion::after, html[data-destellos='no'] .intercepcion::after { display: none !important; }
+/* Sin movimientos de cámara: la secuencia conserva su duración, pero no se acerca ni se sacude */
+html[data-camara='no'] .secuencia { --sacudida: 0px; }
+html[data-camara='no'] .secuencia.activa:not(.final) { animation-name: eq-reloj !important; }
+html[data-camara='no'] .secuencia:not(.activa) { animation: none !important; }
+html[data-camara='no'] .secuencia.final.activa:not(.solar) { animation-name: eq-reloj !important; }
+
+@keyframes eq-reloj { to { opacity: 1; } }

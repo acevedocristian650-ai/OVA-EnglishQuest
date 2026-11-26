@@ -1,0 +1,6 @@
+/* Las fuentes WOFF2 no estaban incluidas en la exportación de Arena.
+   Usa Cinzel si está instalada localmente; los estilos del juego conservan
+   sus fuentes serif de respaldo. No se realizan solicitudes externas. */
+@font-face { font-family: 'Cinzel'; font-style: normal; font-weight: 400 900; font-display: swap; src: local('Cinzel'); }
+@font-face { font-family: 'Cinzel Decorative'; font-style: normal; font-weight: 700; font-display: swap; src: local('Cinzel Decorative Bold'), local('CinzelDecorative-Bold'); }
+@font-face { font-family: 'Cinzel Decorative'; font-style: normal; font-weight: 900; font-display: swap; src: local('Cinzel Decorative Black'), local('CinzelDecorative-Black'); }

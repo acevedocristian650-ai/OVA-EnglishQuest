@@ -1,0 +1,1318 @@
+{
+ "/images/arenas/static/bosque-del-alba": {
+  "alta": [
+   "/images/arenas/static/bosque-del-alba.webp",
+   960,
+   540,
+   15432,
+   0
+  ]
+ },
+ "/images/arenas/static/puente-del-rio": {
+  "alta": [
+   "/images/arenas/static/puente-del-rio.webp",
+   960,
+   540,
+   8352,
+   0
+  ]
+ },
+ "/images/arenas/static/puerta-real": {
+  "alta": [
+   "/images/arenas/static/puerta-real.webp",
+   960,
+   540,
+   8440,
+   0
+  ]
+ },
+ "/images/arenas/static/torre-del-viento": {
+  "alta": [
+   "/images/arenas/static/torre-del-viento.webp",
+   960,
+   540,
+   6436,
+   0
+  ]
+ },
+ "/images/jefes/real/aliento-fuego": {
+  "alta": [
+   "/images/jefes/real/aliento-fuego.png",
+   2172,
+   724,
+   1275459,
+   1
+  ],
+  "lite": [
+   "/images/jefes/real/aliento-fuego-lite.webp",
+   1303,
+   434,
+   126486,
+   1
+  ]
+ },
+ "/images/jefes/rio/ola-venenosa": {
+  "alta": [
+   "/images/jefes/rio/ola-venenosa.png",
+   2172,
+   724,
+   1205119,
+   1
+  ],
+  "lite": [
+   "/images/jefes/rio/ola-venenosa-lite.webp",
+   1303,
+   434,
+   116664,
+   1
+  ]
+ },
+ "/images/jefes/viento/relampago-tormenta": {
+  "alta": [
+   "/images/jefes/viento/relampago-tormenta.png",
+   1024,
+   1536,
+   1185499,
+   1
+  ],
+  "lite": [
+   "/images/jefes/viento/relampago-tormenta-lite.webp",
+   614,
+   922,
+   47544,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/anticipacion": {
+  "alta": [
+   "/images/personajes-mate/caballero/anticipacion.webp",
+   346,
+   296,
+   26474,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/anticipacion-lite.webp",
+   208,
+   178,
+   7914,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/caida": {
+  "alta": [
+   "/images/personajes-mate/caballero/caida.png",
+   512,
+   512,
+   139022,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/caida-lite.webp",
+   307,
+   307,
+   10962,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/dolor": {
+  "alta": [
+   "/images/personajes-mate/caballero/dolor.png",
+   512,
+   512,
+   158427,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/dolor-lite.webp",
+   307,
+   307,
+   11644,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/esquiva": {
+  "alta": [
+   "/images/personajes-mate/caballero/esquiva.webp",
+   333,
+   328,
+   25326,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/esquiva-lite.webp",
+   200,
+   197,
+   7766,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/final-1": {
+  "alta": [
+   "/images/personajes-mate/caballero/final-1.webp",
+   301,
+   367,
+   32086,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/final-1-lite.webp",
+   181,
+   220,
+   9178,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/final-2": {
+  "alta": [
+   "/images/personajes-mate/caballero/final-2.webp",
+   393,
+   366,
+   34556,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/final-2-lite.webp",
+   236,
+   220,
+   9854,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/final-3": {
+  "alta": [
+   "/images/personajes-mate/caballero/final-3.webp",
+   361,
+   280,
+   27092,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/final-3-lite.webp",
+   217,
+   168,
+   7712,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/golpeado": {
+  "alta": [
+   "/images/personajes-mate/caballero/golpeado.webp",
+   390,
+   345,
+   29386,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/golpeado-lite.webp",
+   234,
+   207,
+   9080,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/guardia": {
+  "alta": [
+   "/images/personajes-mate/caballero/guardia.webp",
+   320,
+   302,
+   26316,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/guardia-lite.webp",
+   192,
+   181,
+   7392,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/impacto-barrido": {
+  "alta": [
+   "/images/personajes-mate/caballero/impacto-barrido.png",
+   512,
+   512,
+   236309,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/impacto-barrido-lite.webp",
+   307,
+   307,
+   16838,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/impacto-escudo": {
+  "alta": [
+   "/images/personajes-mate/caballero/impacto-escudo.png",
+   512,
+   512,
+   242232,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/impacto-escudo-lite.webp",
+   307,
+   307,
+   18324,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/impacto-fenix": {
+  "alta": [
+   "/images/personajes-mate/caballero/impacto-fenix.png",
+   512,
+   512,
+   171683,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/impacto-fenix-lite.webp",
+   307,
+   307,
+   12326,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/impacto-hachazo": {
+  "alta": [
+   "/images/personajes-mate/caballero/impacto-hachazo.png",
+   512,
+   512,
+   207311,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/impacto-hachazo-lite.webp",
+   307,
+   307,
+   13892,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/impacto-rayo": {
+  "alta": [
+   "/images/personajes-mate/caballero/impacto-rayo.png",
+   512,
+   512,
+   160658,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/impacto-rayo-lite.webp",
+   307,
+   307,
+   11360,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/preparacion-barrido": {
+  "alta": [
+   "/images/personajes-mate/caballero/preparacion-barrido.png",
+   512,
+   512,
+   222892,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/preparacion-barrido-lite.webp",
+   307,
+   307,
+   16268,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/preparacion-escudo": {
+  "alta": [
+   "/images/personajes-mate/caballero/preparacion-escudo.png",
+   512,
+   512,
+   207067,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/preparacion-escudo-lite.webp",
+   307,
+   307,
+   14894,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/preparacion-fenix": {
+  "alta": [
+   "/images/personajes-mate/caballero/preparacion-fenix.png",
+   512,
+   512,
+   169583,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/preparacion-fenix-lite.webp",
+   307,
+   307,
+   12240,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/preparacion-hachazo": {
+  "alta": [
+   "/images/personajes-mate/caballero/preparacion-hachazo.png",
+   512,
+   512,
+   193929,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/preparacion-hachazo-lite.webp",
+   307,
+   307,
+   13388,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/preparacion-rayo": {
+  "alta": [
+   "/images/personajes-mate/caballero/preparacion-rayo.png",
+   512,
+   512,
+   180503,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/preparacion-rayo-lite.webp",
+   307,
+   307,
+   12850,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/recuperacion": {
+  "alta": [
+   "/images/personajes-mate/caballero/recuperacion.png",
+   512,
+   512,
+   172152,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/recuperacion-lite.webp",
+   307,
+   307,
+   13310,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/reposo": {
+  "alta": [
+   "/images/personajes-mate/caballero/reposo.png",
+   512,
+   512,
+   183741,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/reposo-lite.webp",
+   307,
+   307,
+   12370,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/retroceso": {
+  "alta": [
+   "/images/personajes-mate/caballero/retroceso.png",
+   512,
+   512,
+   211330,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/retroceso-lite.webp",
+   307,
+   307,
+   14740,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/salida-barrido": {
+  "alta": [
+   "/images/personajes-mate/caballero/salida-barrido.png",
+   512,
+   512,
+   244637,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/salida-barrido-lite.webp",
+   307,
+   307,
+   16216,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/salida-escudo": {
+  "alta": [
+   "/images/personajes-mate/caballero/salida-escudo.png",
+   512,
+   512,
+   231987,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/salida-escudo-lite.webp",
+   307,
+   307,
+   16246,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/salida-hachazo": {
+  "alta": [
+   "/images/personajes-mate/caballero/salida-hachazo.png",
+   512,
+   512,
+   227370,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/salida-hachazo-lite.webp",
+   307,
+   307,
+   15068,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/salida-magia": {
+  "alta": [
+   "/images/personajes-mate/caballero/salida-magia.png",
+   512,
+   512,
+   237294,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/salida-magia-lite.webp",
+   307,
+   307,
+   15782,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/sin-arma": {
+  "alta": [
+   "/images/personajes-mate/caballero/sin-arma.webp",
+   572,
+   540,
+   48480,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/sin-arma-lite.webp",
+   343,
+   324,
+   15546,
+   1
+  ]
+ },
+ "/images/personajes-mate/caballero/tambaleo": {
+  "alta": [
+   "/images/personajes-mate/caballero/tambaleo.png",
+   512,
+   512,
+   167704,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/caballero/tambaleo-lite.webp",
+   307,
+   307,
+   12934,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/ataque": {
+  "alta": [
+   "/images/personajes-mate/grifo/ataque.webp",
+   493,
+   271,
+   40912,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/ataque-lite.webp",
+   296,
+   163,
+   11048,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/caida": {
+  "alta": [
+   "/images/personajes-mate/grifo/caida.png",
+   560,
+   512,
+   142860,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/caida-lite.webp",
+   336,
+   307,
+   9680,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/carga-1": {
+  "alta": [
+   "/images/personajes-mate/grifo/carga-1.webp",
+   351,
+   274,
+   35086,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/carga-1-lite.webp",
+   211,
+   164,
+   9680,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/carga-2": {
+  "alta": [
+   "/images/personajes-mate/grifo/carga-2.webp",
+   471,
+   457,
+   78190,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/carga-2-lite.webp",
+   283,
+   274,
+   21586,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/derrota-1": {
+  "alta": [
+   "/images/personajes-mate/grifo/derrota-1.webp",
+   458,
+   359,
+   55556,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/derrota-1-lite.webp",
+   275,
+   215,
+   16194,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/derrota-2": {
+  "alta": [
+   "/images/personajes-mate/grifo/derrota-2.webp",
+   428,
+   246,
+   26506,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/derrota-2-lite.webp",
+   257,
+   148,
+   7068,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/dolor": {
+  "alta": [
+   "/images/personajes-mate/grifo/dolor.png",
+   560,
+   512,
+   183288,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/dolor-lite.webp",
+   336,
+   307,
+   13980,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/impacto": {
+  "alta": [
+   "/images/personajes-mate/grifo/impacto.png",
+   560,
+   512,
+   228935,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/impacto-lite.webp",
+   336,
+   307,
+   16252,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/preparacion": {
+  "alta": [
+   "/images/personajes-mate/grifo/preparacion.png",
+   560,
+   512,
+   214120,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/preparacion-lite.webp",
+   336,
+   307,
+   15104,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/recuperacion": {
+  "alta": [
+   "/images/personajes-mate/grifo/recuperacion.png",
+   560,
+   512,
+   198397,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/recuperacion-lite.webp",
+   336,
+   307,
+   15002,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/reposo": {
+  "alta": [
+   "/images/personajes-mate/grifo/reposo.png",
+   560,
+   512,
+   181317,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/reposo-lite.webp",
+   336,
+   307,
+   12942,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/retroceso": {
+  "alta": [
+   "/images/personajes-mate/grifo/retroceso.png",
+   560,
+   512,
+   217819,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/retroceso-lite.webp",
+   336,
+   307,
+   16184,
+   1
+  ]
+ },
+ "/images/personajes-mate/grifo/tambaleo": {
+  "alta": [
+   "/images/personajes-mate/grifo/tambaleo.png",
+   560,
+   512,
+   173602,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/grifo/tambaleo-lite.webp",
+   336,
+   307,
+   11798,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/ataque": {
+  "alta": [
+   "/images/personajes-mate/real/ataque.webp",
+   560,
+   512,
+   88350,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/ataque-lite.webp",
+   336,
+   307,
+   9544,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/caida": {
+  "alta": [
+   "/images/personajes-mate/real/caida.png",
+   560,
+   512,
+   148815,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/caida-lite.webp",
+   336,
+   307,
+   12592,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/carga-1": {
+  "alta": [
+   "/images/personajes-mate/real/carga-1.webp",
+   560,
+   512,
+   109154,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/carga-1-lite.webp",
+   336,
+   307,
+   11066,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/carga-2": {
+  "alta": [
+   "/images/personajes-mate/real/carga-2.webp",
+   560,
+   512,
+   107272,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/carga-2-lite.webp",
+   336,
+   307,
+   11050,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/dolor": {
+  "alta": [
+   "/images/personajes-mate/real/dolor.png",
+   560,
+   512,
+   236556,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/dolor-lite.webp",
+   336,
+   307,
+   19904,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/impacto": {
+  "alta": [
+   "/images/personajes-mate/real/impacto.png",
+   560,
+   512,
+   258357,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/impacto-lite.webp",
+   336,
+   307,
+   20220,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/preparacion": {
+  "alta": [
+   "/images/personajes-mate/real/preparacion.png",
+   560,
+   512,
+   237769,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/preparacion-lite.webp",
+   336,
+   307,
+   18690,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/recuperacion": {
+  "alta": [
+   "/images/personajes-mate/real/recuperacion.png",
+   560,
+   512,
+   240607,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/recuperacion-lite.webp",
+   336,
+   307,
+   21214,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/reposo": {
+  "alta": [
+   "/images/personajes-mate/real/reposo.png",
+   560,
+   512,
+   204136,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/reposo-lite.webp",
+   336,
+   307,
+   16382,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/retroceso": {
+  "alta": [
+   "/images/personajes-mate/real/retroceso.png",
+   560,
+   512,
+   236944,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/retroceso-lite.webp",
+   336,
+   307,
+   18300,
+   1
+  ]
+ },
+ "/images/personajes-mate/real/tambaleo": {
+  "alta": [
+   "/images/personajes-mate/real/tambaleo.png",
+   560,
+   512,
+   197858,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/real/tambaleo-lite.webp",
+   336,
+   307,
+   17308,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/ataque": {
+  "alta": [
+   "/images/personajes-mate/rio/ataque.webp",
+   560,
+   512,
+   111154,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/ataque-lite.webp",
+   336,
+   307,
+   11760,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/caida": {
+  "alta": [
+   "/images/personajes-mate/rio/caida.png",
+   560,
+   512,
+   128742,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/caida-lite.webp",
+   336,
+   307,
+   10514,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/carga-1": {
+  "alta": [
+   "/images/personajes-mate/rio/carga-1.webp",
+   560,
+   512,
+   121568,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/carga-1-lite.webp",
+   336,
+   307,
+   12316,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/carga-2": {
+  "alta": [
+   "/images/personajes-mate/rio/carga-2.webp",
+   560,
+   512,
+   135732,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/carga-2-lite.webp",
+   336,
+   307,
+   14008,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/dolor": {
+  "alta": [
+   "/images/personajes-mate/rio/dolor.png",
+   560,
+   512,
+   199054,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/dolor-lite.webp",
+   336,
+   307,
+   16838,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/impacto": {
+  "alta": [
+   "/images/personajes-mate/rio/impacto.png",
+   560,
+   512,
+   225126,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/impacto-lite.webp",
+   336,
+   307,
+   17714,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/preparacion": {
+  "alta": [
+   "/images/personajes-mate/rio/preparacion.png",
+   560,
+   512,
+   240976,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/preparacion-lite.webp",
+   336,
+   307,
+   18110,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/recuperacion": {
+  "alta": [
+   "/images/personajes-mate/rio/recuperacion.png",
+   560,
+   512,
+   178082,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/recuperacion-lite.webp",
+   336,
+   307,
+   15190,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/reposo": {
+  "alta": [
+   "/images/personajes-mate/rio/reposo.png",
+   560,
+   512,
+   227986,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/reposo-lite.webp",
+   336,
+   307,
+   18206,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/retroceso": {
+  "alta": [
+   "/images/personajes-mate/rio/retroceso.png",
+   560,
+   512,
+   245217,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/retroceso-lite.webp",
+   336,
+   307,
+   19708,
+   1
+  ]
+ },
+ "/images/personajes-mate/rio/tambaleo": {
+  "alta": [
+   "/images/personajes-mate/rio/tambaleo.png",
+   560,
+   512,
+   196607,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/rio/tambaleo-lite.webp",
+   336,
+   307,
+   15780,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/ataque": {
+  "alta": [
+   "/images/personajes-mate/viento/ataque.webp",
+   560,
+   512,
+   115068,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/ataque-lite.webp",
+   336,
+   307,
+   12010,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/caida": {
+  "alta": [
+   "/images/personajes-mate/viento/caida.png",
+   560,
+   512,
+   157278,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/caida-lite.webp",
+   336,
+   307,
+   11766,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/carga-1": {
+  "alta": [
+   "/images/personajes-mate/viento/carga-1.webp",
+   560,
+   512,
+   101914,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/carga-1-lite.webp",
+   336,
+   307,
+   10582,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/carga-2": {
+  "alta": [
+   "/images/personajes-mate/viento/carga-2.webp",
+   560,
+   512,
+   152606,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/carga-2-lite.webp",
+   336,
+   307,
+   15702,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/dolor": {
+  "alta": [
+   "/images/personajes-mate/viento/dolor.png",
+   560,
+   512,
+   218183,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/dolor-lite.webp",
+   336,
+   307,
+   16660,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/gigante": {
+  "alta": [
+   "/images/personajes-mate/viento/gigante.webp",
+   658,
+   720,
+   121414,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/gigante-lite.webp",
+   395,
+   432,
+   36046,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/impacto": {
+  "alta": [
+   "/images/personajes-mate/viento/impacto.png",
+   560,
+   512,
+   280974,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/impacto-lite.webp",
+   336,
+   307,
+   21740,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/preparacion": {
+  "alta": [
+   "/images/personajes-mate/viento/preparacion.png",
+   560,
+   512,
+   274409,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/preparacion-lite.webp",
+   336,
+   307,
+   20404,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/recuperacion": {
+  "alta": [
+   "/images/personajes-mate/viento/recuperacion.png",
+   560,
+   512,
+   287759,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/recuperacion-lite.webp",
+   336,
+   307,
+   22172,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/reposo": {
+  "alta": [
+   "/images/personajes-mate/viento/reposo.png",
+   560,
+   512,
+   183646,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/reposo-lite.webp",
+   336,
+   307,
+   12044,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/retroceso": {
+  "alta": [
+   "/images/personajes-mate/viento/retroceso.png",
+   560,
+   512,
+   245928,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/retroceso-lite.webp",
+   336,
+   307,
+   19420,
+   1
+  ]
+ },
+ "/images/personajes-mate/viento/tambaleo": {
+  "alta": [
+   "/images/personajes-mate/viento/tambaleo.png",
+   560,
+   512,
+   232884,
+   1
+  ],
+  "lite": [
+   "/images/personajes-mate/viento/tambaleo-lite.webp",
+   336,
+   307,
+   16160,
+   1
+  ]
+ },
+ "/images/transiciones/cinta-nombre": {
+  "alta": [
+   "/images/transiciones/cinta-nombre.png",
+   2172,
+   724,
+   1682197,
+   1
+  ],
+  "lite": [
+   "/images/transiciones/cinta-nombre-lite.webp",
+   1303,
+   434,
+   97050,
+   1
+  ]
+ },
+ "/images/transiciones/emblema-vs": {
+  "alta": [
+   "/images/transiciones/emblema-vs.png",
+   1448,
+   1086,
+   1583881,
+   1
+  ],
+  "lite": [
+   "/images/transiciones/emblema-vs-lite.webp",
+   869,
+   652,
+   148328,
+   1
+  ]
+ }
+}

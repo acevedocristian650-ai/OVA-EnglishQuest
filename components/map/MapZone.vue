@@ -1,7 +1,7 @@
 <template>
   <div class="punto">
     <AudioSonidoBoton @click="emit('elegir', nivel.numero)">
-      <button type="button" class="zona" :class="estado" :disabled="estado === 'bloqueada'"
+      <button type="button" class="zona" :class="estado" 
         :aria-label="`${nivel.numero}. ${nivel.nombre} · ${nivel.tema} · ${t(estado)}`">
         <span class="numero">
           <span v-if="estado === 'bloqueada'" aria-hidden="true">🔒</span>

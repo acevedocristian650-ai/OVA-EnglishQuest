@@ -1,9 +1,22 @@
+# Dependencias y archivos generados por Nuxt
+node_modules/
 .nuxt/
 .output/
-node_modules/
 dist/
-.nuxt/ 
-.output/ 
-node_modules/ 
-dist/
-MEMORIA_PROYECTO.md
+
+# Informes internos y paquetes de entrega
+/INFORME_OPTIMIZACION.md
+/MEMORIA_PROYECTO.md
+*.zip
+
+# Configuración local y registros de desarrollo
+.env
+.env.*
+!.env.example
+!.env.sample
+npm-debug.log*
+
+# Metadatos del sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini

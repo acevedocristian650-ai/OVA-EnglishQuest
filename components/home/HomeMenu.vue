@@ -14,19 +14,29 @@
 <template>
   <div>
     <nav class="home-menu" :aria-label="t('Menú principal')">
-      <div class="home-menu__item" style="--i: 0">
+      <div class="home-menu__item" style="--i: 0" data-tour="comenzar">
         <AudioSonidoBoton @click="emit('start')">
           <BaseBoton variante="principal">{{ t('Comenzar aventura') }}</BaseBoton>
         </AudioSonidoBoton>
       </div>
-      <div class="home-menu__item" style="--i: 1">
+      <div class="home-menu__item" style="--i: 1" data-tour="contenidos">
+        <AudioSonidoBoton @click="irA('/biblioteca?desde=menu')">
+          <BaseBoton>{{ t('Contenidos') }}</BaseBoton>
+        </AudioSonidoBoton>
+      </div>
+      <div class="home-menu__item" style="--i: 2" data-tour="como-jugar">
         <AudioSonidoBoton @click="showHowToPlay = true">
           <BaseBoton>{{ t('Cómo jugar') }}</BaseBoton>
         </AudioSonidoBoton>
       </div>
-      <div class="home-menu__item" style="--i: 2">
+      <div class="home-menu__item" style="--i: 3" data-tour="opciones">
         <AudioSonidoBoton @click="showOptions = true">
           <BaseBoton>{{ t('Opciones') }}</BaseBoton>
+        </AudioSonidoBoton>
+      </div>
+      <div class="home-menu__item" style="--i: 4" data-tour="creditos">
+        <AudioSonidoBoton @click="irA('/creditos')">
+          <BaseBoton>{{ t('Créditos') }}</BaseBoton>
         </AudioSonidoBoton>
       </div>
     </nav>
@@ -45,13 +55,14 @@ const emit = defineEmits(["start"]);
 const showHowToPlay = ref(false);
 const showOptions = ref(false);
 const { t } = useLanguage()
+const irA = (ruta) => navigateTo(ruta)
 </script>
 
 <style scoped>
 .home-menu {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: clamp(8px, 2.2dvh, 22px);
   max-width: 440px;
 }
 
@@ -66,7 +77,8 @@ const { t } = useLanguage()
 
 /* Celular en horizontal: botones más juntos */
 @media (max-height: 520px) and (orientation: landscape) {
-  .home-menu { gap: 8px; max-width: 340px; }
+  .home-menu { gap: 5px; max-width: 340px; }
+  .home-menu :deep(button), .home-menu :deep(.base-boton) { min-height: 38px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -4,7 +4,7 @@
     <template v-if="pregunta.tipo === 'romper-hechizo'">
       <div v-if="pregunta.invocacion" class="invocado" :class="{ repelido: resuelto }">
         <span class="portal" aria-hidden="true" />
-        <img src="/images/personajes-mate/viento/gigante.webp" :alt="t('Gigante invocado')" draggable="false" />
+        <img :src="imageUrl('/images/personajes-mate/viento/gigante.webp')" :alt="t('Gigante invocado')" draggable="false" />
       </div>
       <span v-if="pregunta.invocacion && resuelto" class="retorno" aria-hidden="true" />
       <div v-if="!invocando" class="hechizo" :class="{ roto: resuelto }">
@@ -32,7 +32,7 @@
       <svg v-if="trazo.length" class="trazo" aria-hidden="true"><polyline :points="trazo.map(p => p.join(',')).join(' ')" /></svg>
 
       <div class="aliado" :class="{ protegido: resuelto }">
-        <img src="/images/personajes-mate/caballero/guardia.webp" :alt="t('Espíritu aliado')" draggable="false" />
+        <img :src="imageUrl('/images/personajes-mate/caballero/guardia.webp')" :alt="t('Espíritu aliado')" draggable="false" />
         <span class="barrera" aria-hidden="true" />
         <span class="nombre-aliado">{{ resuelto ? t('¡Aliado protegido!') : t('Aliado') }}</span>
       </div>
@@ -49,6 +49,8 @@
 </template>
 
 <script setup>
+// Las imágenes pasan por el gestor para que Lite use su variante reducida
+const { imageUrl } = useGameGraphics()
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 
 const { t } = useLanguage()

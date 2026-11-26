@@ -1,36 +1,28 @@
-// Simula el flujo de combate (acierto, contraataque, parada con tiempo, Furia, enfurecimiento) con el <script> real de CombatDesafio.vue.
+// Simula el flujo de combate (acierto, contraataque, parada con tiempo, Furia, enfurecimiento, remates) con el
+// MÓDULO REAL que usa el juego: composables/useCombatEngine.js (y su reloj). No hay copia de la lógica aquí:
+// si cambian las reglas de producción, esta prueba lo detecta. Solo se sustituye el tiempo por un reloj falso.
 // Uso: node scripts/simular-combate.mjs
 import { readFileSync } from 'node:fs'
-const vue = readFileSync(new URL('../components/combat/CombatDesafio.vue', import.meta.url),'utf8').replace(/\r\n/g,'\n')
-let code = /<script setup>([\s\S]*?)<\/script>/.exec(vue)[1].replace(/^import .*$/gm,'').replace(/import\.meta\.dev/g,'true')
+import { nextTick } from 'vue'
+import { useCombatEngine } from '../composables/useCombatEngine.js'
 const niveles = JSON.parse(readFileSync(new URL('../data/niveles.json', import.meta.url), 'utf8'))
 
-// --- mini Vue
-const ref = (v) => ({ value: v })
-const computed = (fn) => ({ get value() { return fn() } })
-const reactive = (o) => o
-const watchers = []
-const watch = (src, cb) => { const get = Array.isArray(src) ? () => src.map(s=>s.value) : () => src.value; watchers.push({ get, cb, old: JSON.stringify(get()) }) }
-const flush = () => watchers.forEach(w => { const n = JSON.stringify(w.get()); if (n !== w.old) { const prev = w.old; w.old = n; w.cb(JSON.parse(n), JSON.parse(prev)) } })
-const onMounted = () => {}, onBeforeUnmount = () => {}
-// --- tiempo falso
+// --- tiempo falso (los temporizadores del motor se ejecutan al «avanzar»)
 let timers = [], now = 0, idT = 0
 const setTimeoutF = (fn, ms) => { const id = ++idT; timers.push({ id, at: now + ms, fn }); return id }
 const clearTimeoutF = (id) => { timers = timers.filter(t => t.id !== id) }
 const setIntervalF = () => 0, clearIntervalF = () => {}
-const avanzar = (ms) => { now += ms; timers.filter(t => t.at <= now).forEach(t => { clearTimeoutF(t.id); t.fn() }) }
+const avanzar = (ms) => { const meta = now + ms; for (;;) { const due = timers.filter(t => t.at <= meta).sort((a, b) => a.at - b.at)[0]; if (!due) break; now = due.at; clearTimeoutF(due.id); due.fn() } now = meta }
 
 const emitted = []
 const nivel = niveles[0]
-const exportar = `return { fase, indice, furia, bloqueo, avisoFase, vidaCaballero, vidaRival, ataque, danoAplicado, historial, escudoPreparado, enfurecido, danoContra,
- responder, atacar, ataques, impactar, terminarAtaque, parar, paradaActiva, paradaPronto, duracionAnillo, siguiente, fuerza, textoAtaque, carga, completarPalabras, aplicarPalabra, resolverConjuro, esquivar, completarAviso, cortarAtaque, agotar, tiempoTotal, probarRemate, rondaHacha, rondaEsquiva, FURIA_MAXIMA }`
-const f = new Function('ref','computed','reactive','watch','onMounted','onBeforeUnmount','defineProps','defineEmits','useLanguage','document','window','performance','setTimeout','clearTimeout','setInterval','clearInterval',
-  code + exportar)
 function crearCombate(nivel, eventos) {
-  return f(ref, computed, reactive, watch, onMounted, onBeforeUnmount,
-    () => ({ nivel }), () => evento => eventos.push(evento), () => ({ t: texto => texto }),
-    { hidden: false }, { matchMedia: () => ({ matches: false }) }, { now: () => now },
-    setTimeoutF, clearTimeoutF, setIntervalF, clearIntervalF)
+  const juego = useCombatEngine({
+    nivel, emit: evento => eventos.push(evento),
+    entorno: { ahora: () => now, setTimeout: setTimeoutF, clearTimeout: clearTimeoutF, setInterval: setIntervalF, clearInterval: clearIntervalF, oculto: () => false }
+  })
+  juego.iniciar()
+  return juego
 }
 const g = crearCombate(nivel, emitted)
 
@@ -87,12 +79,14 @@ g.parar()
 ok(g.bloqueo.value==='','tocar cuando ya terminó no hace nada')
 g.siguiente()
 // 6) Furia ×1,5 (debilidad del nivel 1: hachazo +4)
-ok(g.fuerza(g.ataques[0])===42,'con furia llena el hachazo hace 42 ((24+4)×1,5)')
+const plano = () => g.planDano().find((x) => x.indice === g.indice.value).dano
+ok(g.fuerza(g.ataques[0]) === Math.round(Math.round(plano() * 1.15) * 1.5), 'con furia llena el hachazo hace el daño planificado de la ronda ×1,15 (debilidad) ×1,5')
+ok(g.planDano().every((x, i, a) => i === 0 || x.dano >= a[i - 1].dano) && g.planDano().at(-1).dano > g.planDano()[0].dano * 2, 'el daño planificado crece ronda a ronda y el último golpe es el mayor')
 g.vidaRival.value = 100
 g.responder(nivel.preguntas[3].correcta)
 const antes = g.vidaRival.value
 g.atacar(g.ataques[0]); g.impactar()
-ok(antes - g.vidaRival.value===42 && g.furia.value===0,'el ataque con furia quita 42 y gasta la furia')
+ok(antes - g.vidaRival.value === Math.round(Math.round(plano() * 1.15) * 1.5) && g.furia.value === 0, 'el ataque con furia quita el daño con bono y gasta la furia')
 g.terminarAtaque()
 // ronda 4 es de hacha: sin contraataque
 ok(g.rondaHacha.value===true && g.fase.value==='revision','en la ronda del hacha no hay contraataque')
@@ -107,9 +101,9 @@ golpearYEsperarAviso(1)
 avanzar(700); avanzar(1404); resolverContra()
 ok(g.vidaCaballero.value===1,'el contraataque deja mínimo 1 PV')
 // 9) enfurecimiento
-g.vidaRival.value = 58; flush()
+g.vidaRival.value = 58; await nextTick()
 ok(g.enfurecido.value===false && g.avisoFase.value===false,'con 58 PV (>50 %) no está enfurecido')
-g.vidaRival.value = Math.floor(nivel.vida/2); flush()
+g.vidaRival.value = Math.floor(nivel.vida/2); await nextTick()
 ok(g.enfurecido.value===true && g.avisoFase.value===true,'a la mitad de vida se enfurece y sale el aviso')
 ok(g.danoContra.value===Math.round(nivel.dano*0.75),'enfurecido: contraataque 75 %')
 avanzar(2300); ok(g.avisoFase.value===false,'el aviso desaparece a los 2,2 s')

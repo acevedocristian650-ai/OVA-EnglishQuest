@@ -80,7 +80,7 @@ const props = defineProps({
 })
 
 const { t } = useLanguage()
-const { imageUrl, prepareImages, levelEssentials } = useGameGraphics()
+const { imageUrl, prepareImages, levelEssentials, quality } = useGameGraphics()
 
 const emit = defineEmits(['listo', 'cancelar'])
 
@@ -103,6 +103,7 @@ const brasas = Array.from({ length: 16 }, (_, i) => {
 })
 
 let timer = null
+let timerLimite = null
 let ciclo = 0
 const preparando = ref(false)
 const progreso = ref({ loaded: 0, total: 1, failed: 0 })
@@ -113,6 +114,7 @@ watch([() => props.activo, reintentos], async ([val]) => {
   ciclo++
   const actual = ciclo
   clearTimeout(timer)
+  clearTimeout(timerLimite)
   if (!val) {
     preparando.value = false
     return
@@ -127,20 +129,28 @@ watch([() => props.activo, reintentos], async ([val]) => {
     emit('listo')
   }
   timer = setTimeout(() => { transicionTerminada = true; comprobar() }, 2000)
+  // Nunca se bloquea indefinidamente: pasado el límite se ofrece reintentar o volver al mapa de forma segura.
+  timerLimite = setTimeout(() => { if (actual === ciclo && !recursosListos) fallo.value = true }, 20000)
+  // Calienta únicamente el módulo de la escena del perfil elegido (el otro nunca se descarga).
+  ;(quality.value === 'lite' ? import('./../combat/CombatEscenaLite.vue') : import('./../combat/CombatEscena.vue')).catch(() => {})
   const extras = ['/images/transiciones/cinta-nombre.png', '/images/transiciones/emblema-vs.png', '/images/transiciones/fondo-versus.jpg']
   const resultado = await prepareImages([...levelEssentials(props.nivel), ...extras], {
+    ambito: `nivel-${props.nivel.numero}`,
     signal: { get aborted() { return actual !== ciclo } },
     onProgress: (value) => { if (actual === ciclo) progreso.value = value }
   })
   if (actual !== ciclo) return
+  if (resultado.cancelled) return
   recursosListos = resultado.loaded === resultado.total && !resultado.failed
   fallo.value = !recursosListos
+  clearTimeout(timerLimite)
   comprobar()
 })
 
 onUnmounted(() => {
   ciclo++
   if (timer) clearTimeout(timer)
+  clearTimeout(timerLimite)
 })
 </script>
 

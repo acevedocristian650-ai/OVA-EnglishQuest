@@ -18,7 +18,7 @@
 import { ref, onBeforeUnmount } from 'vue'
 
 const { t } = useLanguage()
-const props = defineProps({ pregunta: { type: Object, required: true } })
+const props = defineProps({ pregunta: { type: Object, required: true }, detenido: { type: Function, default: null } })
 const emit = defineEmits(['responder'])
 const fichas = ref(null)
 const cortadas = ref([])
@@ -27,51 +27,71 @@ const trazo = ref(null)
 const sugerencia = ref(false)
 let gesto = null
 let temporizadorSugerencia = null
+let geometria = null // se mide UNA vez por gesto (no en cada movimiento)
+let pendiente = null
+let cuadro = 0
 
-onBeforeUnmount(() => clearTimeout(temporizadorSugerencia))
+onBeforeUnmount(() => { clearTimeout(temporizadorSugerencia); if (cuadro) cancelAnimationFrame(cuadro); gesto = null })
 
-function iniciar(evento) {
-  if (terminado.value || gesto || evento.button !== 0) return
-  evento.currentTarget.setPointerCapture(evento.pointerId)
-  gesto = { id: evento.pointerId, x: evento.clientX, y: evento.clientY }
+function medir(contenedor) {
+  const arena = contenedor.getBoundingClientRect()
+  geometria = {
+    left: arena.left, top: arena.top,
+    cajas: Array.from(fichas.value.children, (ficha) => { const r = ficha.getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom } })
+  }
 }
 
+function iniciar(evento) {
+  if (terminado.value || gesto || evento.button !== 0 || props.detenido?.()) return
+  evento.currentTarget.setPointerCapture(evento.pointerId)
+  gesto = { id: evento.pointerId, x: evento.clientX, y: evento.clientY }
+  medir(evento.currentTarget)
+}
+
+// Los eventos de puntero llegan a más frecuencia que los fotogramas: se procesa solo el último de cada fotograma.
 function mover(evento) {
   if (terminado.value || gesto?.id !== evento.pointerId) return
-  const dx = evento.clientX - gesto.x
-  const dy = evento.clientY - gesto.y
+  pendiente = { x: evento.clientX, y: evento.clientY }
+  if (!cuadro) cuadro = requestAnimationFrame(() => { cuadro = 0; const p = pendiente; pendiente = null; if (p) avanzar(p.x, p.y) })
+}
+
+function avanzar(px, py) {
+  if (terminado.value || !gesto || !geometria || props.detenido?.()) return // en pausa o con la ayuda abierta no hay cortes
+  const dx = px - gesto.x
+  const dy = py - gesto.y
   const distancia = Math.hypot(dx, dy)
   if (distancia < 7) return
   gesto.movio = true
-
-  const arena = evento.currentTarget.getBoundingClientRect()
   trazo.value = {
-    left: (gesto.x - arena.left) + 'px',
-    top: (gesto.y - arena.top) + 'px',
+    left: (gesto.x - geometria.left) + 'px',
+    top: (gesto.y - geometria.top) + 'px',
     width: distancia + 'px',
     transform: `rotate(${Math.atan2(dy, dx)}rad)`
   }
-
   // Recorre el segmento para detectar fichas incluso si el gesto pasa rápido.
-  const cajas = Array.from(fichas.value.children, ficha => ficha.getBoundingClientRect())
+  const cajas = geometria.cajas
   const pasos = Math.ceil(distancia / 6)
   for (let paso = 0; paso <= pasos && !terminado.value; paso++) {
     const x = gesto.x + dx * paso / pasos
     const y = gesto.y + dy * paso / pasos
-    const indice = cajas.findIndex(caja => x >= caja.left && x <= caja.right && y >= caja.top && y <= caja.bottom)
+    const indice = cajas.findIndex((caja) => x >= caja.left && x <= caja.right && y >= caja.top && y <= caja.bottom)
     if (indice !== -1) cortar(indice)
   }
-  gesto.x = evento.clientX
-  gesto.y = evento.clientY
+  gesto.x = px
+  gesto.y = py
 }
 
 function soltar(evento) {
-  mover(evento)
+  if (gesto?.id === evento.pointerId) {
+    if (cuadro) { cancelAnimationFrame(cuadro); cuadro = 0; pendiente = null }
+    avanzar(evento.clientX, evento.clientY)
+  }
   cancelar(evento)
 }
 
 function cancelar(evento) {
   if (gesto?.id !== evento.pointerId) return
+  if (cuadro) { cancelAnimationFrame(cuadro); cuadro = 0; pendiente = null }
   // Un toque sin deslizar no corta nada: se recuerda cómo se juega
   if (!gesto.movio && !terminado.value && evento.type === 'pointerup') {
     sugerencia.value = true
@@ -79,11 +99,12 @@ function cancelar(evento) {
     temporizadorSugerencia = setTimeout(() => { sugerencia.value = false }, 1800)
   }
   gesto = null
+  geometria = null
   if (!terminado.value) trazo.value = null
 }
 
 function cortarConTeclado(evento, indice) {
-  if (evento.detail === 0) cortar(indice)
+  if (evento.detail === 0 && !props.detenido?.()) cortar(indice)
 }
 
 function cortar(indice) {
