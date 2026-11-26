@@ -1,7 +1,7 @@
 <template>
   <div class="errores">
     <h2 lang="en">{{ pregunta.texto }}</h2>
-    <p v-if="pregunta.contexto" class="contexto" lang="en">{{ pregunta.contexto }}</p>
+    <p v-if="contextoUtil(pregunta)" class="contexto" lang="en">{{ contextoUtil(pregunta) }}</p>
     <div class="frase" role="group" :aria-label="t('Frase con un error')" lang="en">
       <AudioSonidoBoton v-for="(palabra, posicion) in pregunta.frase" :key="posicion" @click="elegir(posicion)">
         <button type="button" class="palabra" :class="{ elegida: elegida === posicion }"

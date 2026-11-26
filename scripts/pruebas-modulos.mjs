@@ -198,7 +198,7 @@ const partida = (extra = {}) => ({ nivel: 1, tema: 'Introducción al futuro', re
   q.reiniciar()
   ok(q.xp.value === 0 && q.estado.progreso.desbloqueado === 1, 'reiniciar deja el progreso en cero')
   p.guardarYa()
-  ok(JSON.parse(s.d[CLAVE]).version === 2, 'se guarda con formato versionado (v2)')
+  ok(JSON.parse(s.d[CLAVE]).version === 3, 'se guarda con formato versionado (v3)')
   const d = crearProgreso(memoriaAlmacen()); d.cargar()
   d.registrarPartida(partida({ resultado: 'derrota', vidaCaballero: 0 }))
   ok(d.estado.progreso.niveles[1].derrotas === 1 && d.estado.progreso.desbloqueado === 1 && !d.estado.progreso.niveles[1].completado, 'derrota: se cuenta, no desbloquea ni da estrellas')

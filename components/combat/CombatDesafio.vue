@@ -6,7 +6,7 @@
       <AudioSonidoBoton @click="pedirSalida">
         <v-btn variant="text" color="amber-lighten-3" class="btn-volver">{{ t('Volver al mapa') }}</v-btn>
       </AudioSonidoBoton>
-      <h1>{{ nivel.nombre }} <small>{{ nivel.tema }}</small></h1>
+      <h1>{{ nivel.nombre }} <small>{{ nivel.tema }}</small> <span v-if="nivel.dificultad === 'dificil'" class="modo-activo">{{ t('Difícil') }}</span></h1>
       <v-btn v-if="puedePausar" variant="text" color="amber-lighten-3" class="boton-pausa" :aria-label="t('Pausar el desafío')" @click="abrirPausa">{{ t('Pausa') }}</v-btn>
       <!-- Gráficos y Accesibilidad: dos controles independientes. Al abrirlos el combate se pausa; el cambio de perfil se aplica en un momento seguro. -->
       <UiOpcionesRapidas ref="rapidas" class="rapidas-combate" diferido :pendiente="perfilPendiente" :preparando="preparandoPerfil" :error-perfil="errorPerfil"
@@ -21,10 +21,17 @@
     </header>
 
     <div class="banda-ronda">
-      <p class="etiqueta">{{ t('DESAFÍO') }} {{ indice + 1 }} / {{ nivel.preguntas.length }}</p>
-      <details v-if="fase === 'pregunta'" :key="indice" class="ayuda-desafio" @toggle="ayudaAbierta = $event.currentTarget.open">
+      <div class="ronda-id">
+        <span class="sr-solo">{{ t('DESAFÍO') }} {{ indice + 1 }} / {{ nivel.preguntas.length }}</span>
+        <span class="pips" aria-hidden="true"><i v-for="(_, n) in nivel.preguntas" :key="n" :class="{ hecho: n < indice, actual: n === indice }" /></span>
+        <span v-if="insignia" :key="indice" class="insignia" aria-hidden="true"><b>{{ insignia[0] }}</b><em>{{ t(insignia[1]) }}</em></span>
+      </div>
+      <details v-if="fase === 'pregunta'" :key="indice" class="ayuda-desafio" @toggle="alternarAyuda('jugar', $event.currentTarget.open)">
         <summary>{{ t('Cómo jugar') }}</summary>
         <p>{{ instruccion }}</p>
+      </details>
+      <details v-if="fase === 'pregunta' && pista" :key="'pista' + indice" class="ayuda-desafio pista" @toggle="alternarAyuda('pista', $event.currentTarget.open)">
+        <summary>{{ t('Pista') }}</summary><p>{{ t(pista) }}</p>
       </details>
       <div v-if="fase === 'pregunta'" class="reloj" :class="{ urgente: !sinLimite && tiempoRestante <= 3 }" role="timer" :aria-label="sinLimite ? t('Sin límite de tiempo') : t('Tiempo restante')">
         <span class="reloj-barra"><span :style="{ transform: `scaleX(${sinLimite ? 1 : tiempoRestante / tiempoTotal})` }" /></span>
@@ -64,7 +71,7 @@
               @impactar="impactar" @terminar="terminarAtaque">
               <template #actividad>
                 <CombatEscuchar v-if="fase === 'pregunta' && pregunta.tipo === 'escuchar'"
-                  :key="indice" :pregunta="pregunta" @responder="responder" />
+                  :key="indice" :pregunta="pregunta" @responder="responder" @ayuda="ayudaRonda = $event" />
                 <CombatHacha v-if="rondaHacha && ['pregunta', 'intercepcion'].includes(fase)"
                   :key="indice" :pregunta="pregunta" :nivel="nivel.numero"
                   :restante="tiempoRestante" :total="tiempoTotal" :pausado="pausado" :sin-limite="sinLimite"
@@ -72,7 +79,7 @@
                 <CombatCortar v-if="rondaCortes && ['pregunta', 'elegir'].includes(fase)"
                   :key="indice" :pregunta="pregunta" :detenido="motor.relojDetenido" @responder="responder" />
                 <CombatClasificar v-if="fase === 'pregunta' && pregunta.tipo === 'clasificar'" :key="indice" :pregunta="pregunta"
-                  @impacto="aplicarPalabra" @error="palabraIncorrecta" @completar="completarPalabras" />
+                  @impacto="aplicarPalabra" @error="registrarErrorClasificacion" @completar="completarPalabras" />
                 <CombatConjuro v-if="rondaConjuro && ['invocacion', 'pregunta', 'conjuro'].includes(fase)"
                   :key="indice" :pregunta="pregunta" :invocando="fase === 'invocacion'"
                   :resuelto="fase === 'conjuro'" @responder="resolverConjuro" />
@@ -106,7 +113,7 @@
       <aside v-if="(fase !== 'pregunta' && fase !== 'resultado') || (fase === 'pregunta' && rondaPanel)" class="panel sin-barra" :class="{ revision: fase === 'revision' }" :aria-label="t('Desafío de inglés')">
         <template v-if="fase === 'pregunta'">
           <CombatErrores v-if="pregunta.tipo === 'errores'" :key="indice" :pregunta="pregunta" @responder="responder" />
-          <CombatParejas v-if="pregunta.tipo === 'parejas'" :key="indice" :pregunta="pregunta" @responder="responder" />
+          <CombatParejas v-if="pregunta.tipo === 'parejas'" :key="indice" :pregunta="pregunta" @responder="responder" @error="corregida = true" />
           <CombatPreguntaDuelo v-if="pregunta.tipo === 'zona'" :key="indice" :pregunta="pregunta" @responder="responder" />
         </template>
 
@@ -158,9 +165,18 @@
               <strong :class="retro.acierto ? 'rv-ok' : 'rv-mal'">{{ retro.acierto ? '✔ ' + t('Respuesta correcta') : '✖ ' + t('Respuesta incorrecta') }}</strong>
               <span v-if="textoConsecuencia" class="rv-cons">{{ textoConsecuencia }}</span>
             </p>
-            <p class="rv-expl"><b lang="en">{{ pregunta.correcta }}</b> — {{ pregunta.explicacion }}</p>
+            <div class="rv-carta" :class="retro.acierto ? 'ok' : 'mal'">
+              <span class="rv-icono" aria-hidden="true">{{ retro.acierto ? '⚔️' : '🛡️' }}</span>
+              <div>
+                <b lang="en">{{ pregunta.correcta }}</b>
+                <small>{{ explicacionCorta.corta }}</small>
+              </div>
+            </div>
+            <p v-if="razonFallo" class="rv-razon" lang="es"><b lang="en">{{ retro.respuesta }}</b> — {{ razonFallo }}</p>
+            <p v-if="ultimaRespuesta?.ayuda" class="rv-razon">📝 {{ t(['transcripcion', 'sin-voz'].includes(ultimaRespuesta.ayuda) ? 'Contó como lectura con ayuda, no como comprensión auditiva.' : ultimaRespuesta.ayuda === 'correccion' ? 'Respuesta corregida tras un error.' : 'Respuesta con pista.') }}</p>
             <details class="rv-mas">
               <summary>{{ t('Más ayuda') }}</summary>
+              <p v-if="explicacionCorta.resto" class="retro">{{ explicacionCorta.resto }}</p>
               <p v-if="!retro.acierto && retro.respuesta && !esMotriz">{{ t('Tu respuesta') }} <span lang="en">{{ retro.respuesta }}</span></p>
               <p v-if="retro.regla" class="retro"><b>{{ t('Regla para repasar') }}</b> {{ t(retro.regla) }}</p>
               <p v-if="retro.consejo" class="retro"><b>{{ t('Cómo resolver algo parecido') }}</b> {{ t(retro.consejo) }}</p>
@@ -183,7 +199,7 @@
     <button v-if="fase === 'resultado' && !mostrarResultados" type="button" class="ver-resultados" @click="mostrarResultados = true">{{ t('Ver resultados') }}</button>
     <LazyCombatResultados v-if="mostrarResultados" :informe="informe" :nivel="nivel" :historial="historial" :victoria="vidaRival === 0" :prueba-remate="pruebaRemate"
       :practica="progreso.estado.ajustes.practica" :aciertos="aciertos"
-      @volver="emit('volver')" @reintentar="emit('reintentar')" @reforzar="(n) => emit('reforzar', n)" @menu="emit('menu')" />
+      @volver="emit('volver')" @reintentar="emit('reintentar')" @reforzar="(n) => emit('reforzar', n)" @menu="emit('menu')" @corregir="emit('corregir')" />
 
     <div v-if="menuPausa || confirmandoSalida" class="pausa" role="dialog" aria-modal="true" aria-labelledby="pausa-titulo" @keydown.esc.stop="confirmandoSalida ? cancelarSalida() : continuarPausa()">
       <div class="pausa-caja">
@@ -225,7 +241,7 @@ import lecciones from '~/data/lecciones.json'
 import evaluacion from '~/data/evaluacion.json'
 
 const props = defineProps({ nivel: { type: Object, required: true } })
-const emit = defineEmits(['victoria', 'volver', 'reintentar', 'reforzar', 'menu'])
+const emit = defineEmits(['victoria', 'volver', 'reintentar', 'reforzar', 'menu', 'corregir'])
 const { t } = useLanguage()
 const { quality, recomendacion, aplicarRecomendacion, descartarRecomendacion, levelEssentials, prepareImages, setQuality, releaseScope } = useGameGraphics()
 const progreso = usePlayerProgress()
@@ -254,15 +270,20 @@ function sonar(canal, clave) {
   destino.disparo++
 }
 
+const ayudaRonda = ref('')
+const pistaUsada = ref(false)
+const corregida = ref(false)
 const motor = useCombatEngine({
   nivel: () => props.nivel,
   t,
   sonar,
   emit,
   ajustes: { tiempoExtra: () => progreso.estado.ajustes.tiempoExtra, practica: () => progreso.estado.ajustes.practica },
+  // Ayuda usada en la ronda actual (transcripción / sin voz): se guarda en el historial y cambia el valor de la evidencia.
+  datosRonda: () => ({ ayuda: ayudaRonda.value || (pistaUsada.value ? 'pista' : corregida.value ? 'correccion' : ''), pistaUsada: pistaUsada.value, corregida: corregida.value }),
   alTerminar: (resumen) => {
     const r = resumen.resultado === 'incompleto' ? { ...resumen, resultado: 'derrota' } : resumen
-    informe.value = progreso.registrarPartida({ ...r, aprobacion: evaluacion.aprobacion, minimoPorTema: evaluacion.minimoPorTema })
+    informe.value = progreso.registrarPartida({ ...r, aprobacion: evaluacion.aprobacion, minimoPorTema: evaluacion.minimoPorTema, pesoAyuda: evaluacion.pesoAyuda })
   }
 })
 const {
@@ -275,6 +296,16 @@ const {
 const { responder, resolverConjuro, cortarAtaque, esquivar, completarAviso, aplicarPalabra, palabraIncorrecta,
   completarPalabras, atacar, probarRemate, impactar, parar, siguiente, danoDisponible, fuerza } = motor
 const terminarAtaque = motor.terminarAtaque
+const ayudasAbiertas = { jugar: false, pista: false }
+function alternarAyuda(clave, abierta) {
+  if (fase.value !== 'pregunta') return
+  ayudasAbiertas[clave] = abierta
+  ayudaAbierta.value = Object.values(ayudasAbiertas).some(Boolean)
+  if (clave === 'pista' && abierta) pistaUsada.value = true
+}
+watch(indice, () => { ayudaRonda.value = ''; pistaUsada.value = false; corregida.value = false; ayudasAbiertas.jugar = ayudasAbiertas.pista = false; ayudaAbierta.value = false }, { flush: 'sync' })
+const pista = computed(() => lecciones.consejos?.[pregunta.value?.tipo] ?? '')
+function registrarErrorClasificacion(destino) { if (fase.value !== 'pregunta' || pausado.value || ayudaAbierta.value) return; corregida.value = true; palabraIncorrecta(destino) }
 const indiceRepaso = ref(null)
 const registroRepaso = computed(() => historial.value[indiceRepaso.value])
 
@@ -326,12 +357,29 @@ const instruccion = computed(() => {
   if (pregunta.value.tipo === 'proteger-aliado') return t('Une las palabras de la promesa en un trazo. Si te equivocas, suelta y vuelve a empezar.')
   if (pregunta.value.tipo === 'esquivar') return t('Lee el aviso y arrastra al héroe hacia un lado del puente.')
   if (pregunta.value.tipo === 'esquiva-frase') return t('Arrastra la ficha al espacio del aviso para activar la esquiva.')
-  if (pregunta.value.tipo === 'errores') return t('Toca la palabra incorrecta de la frase.')
+  if (pregunta.value.tipo === 'errores') return t('Toca la palabra incorrecta.')
   if (pregunta.value.tipo === 'parejas') return t('Toca una carta de cada columna para unir las parejas. Tienes dos errores.')
-  if (pregunta.value.tipo === 'escuchar') return t('Escucha la frase y toca la opción que oíste.')
+  if (pregunta.value.tipo === 'escuchar') return t('Escucha y toca la frase que oíste.')
   if (pregunta.value.tipo === 'clasificar') return t('Suelta las palabras sobre los personajes antes de que ataque el guardián.')
   return t('Si aciertas, eliges un ataque. Si fallas o se acaba el tiempo, el guardián te ataca.')
 })
+// Insignia de la actividad: icono + verbo corto, para entender de un vistazo qué hay que hacer sin leer.
+const INSIGNIAS = {
+  ordenar: ['🧩', 'Forja la frase'], errores: ['🔍', 'Caza el error'], parejas: ['🔗', 'Une las runas'], cortar: ['⚔️', 'Corta lo falso'],
+  escuchar: ['👂', 'Escucha'], clasificar: ['🎯', 'Lanza al blanco'], hacha: ['🪓', 'Corta los orbes'], esquivar: ['💨', 'Esquiva'],
+  'esquiva-frase': ['🛡️', 'Completa y esquiva'], 'romper-hechizo': ['✨', 'Rompe el hechizo'], 'proteger-aliado': ['🤝', 'Cumple la promesa'], zona: ['🚦', 'Elige tu posición']
+}
+const insignia = computed(() => INSIGNIAS[pregunta.value?.tipo] ?? null)
+
+// Retroalimentación breve: solo la primera frase de la explicación; el resto queda plegado en «Más ayuda».
+const explicacionCorta = computed(() => {
+  const texto = String(pregunta.value?.explicacion ?? '').trim()
+  const corte = texto.search(/[.!?»”]["”»]?\s+(?=\S)/)
+  if (corte === -1 || texto.length < 90) return { corta: texto, resto: '' }
+  const fin = texto.indexOf(' ', corte + 1)
+  return { corta: texto.slice(0, fin).trim(), resto: texto.slice(fin).trim() }
+})
+
 const consignaCampo = computed(() => {
   if (fase.value !== 'pregunta') return ''
   if (pregunta.value.tipo === 'proteger-aliado') return pregunta.value.contexto
@@ -341,6 +389,7 @@ const consignaCampo = computed(() => {
 // Retroalimentación: por qué es correcta, qué falló, qué regla revisar y cómo resolver algo parecido.
 const leccion = computed(() => lecciones.niveles[pregunta.value?.fase ?? props.nivel.numero])
 const esMotriz = computed(() => TIPOS_MOTRICES.includes(pregunta.value.tipo))
+const razonFallo = computed(() => (!retro.value?.acierto && pregunta.value?.porQue ? pregunta.value.porQue[retro.value?.respuesta] ?? '' : ''))
 const retro = computed(() => {
   const r = ultimaRespuesta.value
   if (!r) return null
@@ -475,6 +524,7 @@ onBeforeUnmount(() => {
 .ver-resultados:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 /* Retroalimentación compacta: ocupa poco, el detalle se pliega y «Siguiente» no se mueve */
 .panel.revision { display: flex; flex-direction: column; gap: .4rem; max-height: 44%; overflow: hidden; }
+.rv-razon { margin: 4px 0; padding: 4px 8px; border-left: 3px solid #e6b96e; background: #ffffff0f; font-size: .85rem; line-height: 1.25; }
 .rv-cuerpo { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .rv-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .6rem; margin: 0 0 .15rem; }
 .rv-ok { color: #8fe0b0; } .rv-mal { color: #ff9d90; }
@@ -506,13 +556,14 @@ onBeforeUnmount(() => {
 .cabecera { flex: none; display: flex; align-items: center; flex-wrap: wrap; gap: 0.15rem 0.75rem; margin-bottom: 0.4rem; }
 .cabecera :deep(.v-btn) { min-height: 40px; letter-spacing: 0.06em; }
 h1 { min-width: 0; color: #f5e5c2; font-family: Georgia, serif; font-size: clamp(1rem, 3vw, 1.45rem); }
+.modo-activo { display: inline-block; color: #f4af88; font: 700 .7em system-ui, sans-serif; margin-inline-start: .25rem; }
 h1 small { color: #c4c7cd; font-family: system-ui, sans-serif; font-size: 0.68em; font-weight: 500; }
 .contenido { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.55rem; }
 
 .zona-escena { position: relative; flex: 1 1 0; min-height: 0; min-width: 0; display: flex; flex-direction: column; }
 .vista-arena { min-height: 0; min-width: 0; flex: 1; display: flex; flex-direction: column; }
 .campo { flex: 1; min-height: 0; container-type: size; display: grid; align-items: center; --alto-escena: min(100cqh, 62cqw); }
-.banda-ronda { flex: none; width: 100%; max-width: 1240px; margin: 0 auto 4px; display: flex; align-items: center; gap: 12px; }
+.banda-ronda { flex: none; width: 100%; max-width: 1240px; margin: 0 auto 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
 .banda-ronda .reloj { flex: 1; max-width: 24rem; margin: 0 0 0 auto; }
 .banda-ronda .ayuda-desafio { margin: 0; }
 .ayuda-desafio[open] p { position: absolute; top: 100%; left: 0; z-index: 20; width: min(270px, 60vw); padding: 8px; background: #121c2b; border: 1px solid #b3955c; border-radius: 5px; }
@@ -869,4 +920,26 @@ summary { cursor: pointer; color: #ffe09a; }
   .banda-ronda { gap: 6px; }
   .banda-ronda .reloj { min-width: 65px; }
 }
+
+/* ── Presentación de la ronda: insignia de actividad y camino de desafíos ── */
+.sr-solo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.ronda-id { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.pips { display: inline-flex; gap: 4px; }
+.pips i { width: 9px; height: 9px; transform: rotate(45deg); border: 1px solid #b68a48; background: #0b1325; }
+.pips i.hecho { background: #e6b96e; }
+.pips i.actual { background: #ffe09a; box-shadow: 0 0 8px #ffe09a; animation: latir-pip 1.2s ease-in-out infinite; }
+@keyframes latir-pip { 50% { scale: 1.35; } }
+.insignia { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px 2px 4px; border: 1px solid #b68a48; border-radius: 999px; background: linear-gradient(90deg, #3a2a14, #1a2338); animation: entra-insignia 380ms cubic-bezier(.2, 1.4, .4, 1) both; }
+.insignia b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #0b1325; font-size: 14px; }
+.insignia em { color: #ffe09a; font: 800 0.7rem system-ui, sans-serif; font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+@keyframes entra-insignia { from { opacity: 0; translate: -14px 0; } }
+@media (max-height: 520px), (max-width: 560px) { .insignia em { display: none; } .insignia { padding-right: 4px; } }
+.rv-carta { display: flex; align-items: center; gap: 10px; margin: 6px 0; padding: 8px 10px; border: 1px solid #b68a48; border-radius: 10px; background: linear-gradient(135deg, #2b2113, #141c2c); animation: entra-carta 420ms cubic-bezier(.2, 1.3, .4, 1) both; }
+.rv-carta.ok { border-color: #6fcf97; box-shadow: 0 0 14px #6fcf9740; }
+.rv-carta.mal { border-color: #e0786b; }
+.rv-icono { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #0b1325; font-size: 20px; }
+.rv-carta b { display: block; color: #fff0cc; font: 700 1rem Georgia, serif; }
+.rv-carta small { display: block; margin-top: 2px; color: #d8cdb8; font-size: 0.82rem; line-height: 1.3; }
+@keyframes entra-carta { from { opacity: 0; translate: 0 10px; scale: .96; } }
+@media (prefers-reduced-motion: reduce) { .pips i.actual, .insignia, .rv-carta { animation: none; } }
 </style>

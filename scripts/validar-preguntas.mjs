@@ -15,6 +15,8 @@ function revisar(q, donde) {
   if (q.tipo === 'ordenar') {
     if (!mismasPalabras(q.fichas.join(' '), q.correcta)) falla('las fichas no forman la frase correcta')
     if (q.fichas.length > 6) falla('más de 6 fichas: difícil en 10 s')
+    if ((q.sobran ?? []).some((x) => q.fichas.includes(x))) falla('una runa falsa («sobran») repite una ficha real')
+    if ((q.sobran ?? []).length > 2) falla('demasiadas runas falsas')
   }
   if (q.tipo === 'errores') {
     const arreglada = q.frase.map((p, i) => (i === q.error ? null : p)).filter(Boolean)
@@ -23,6 +25,7 @@ function revisar(q, donde) {
     if (arreglada.length !== q.frase.length - 1) falla('índice de error inválido')
   }
   if (q.tipo === 'parejas' && q.parejas?.length !== 3) falla('parejas necesita exactamente 3 pares')
+  if (q.tipo === 'parejas' && (q.señuelos ?? []).some((x) => q.parejas.some((p) => p.der === x))) falla('un señuelo coincide con una pareja real')
   if (q.tipo === 'escuchar') {
     if (!q.audio) falla('falta audio')
     if (!q.opciones?.includes(q.correcta)) falla('la correcta no está entre las opciones')

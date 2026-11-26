@@ -1,7 +1,7 @@
 <template>
   <div class="parejas">
     <h2 lang="en">{{ pregunta.texto }}</h2>
-    <p v-if="pregunta.contexto" class="contexto">{{ pregunta.contexto }}</p>
+    <p v-if="contextoUtil(pregunta)" class="contexto">{{ contextoUtil(pregunta) }}</p>
     <div class="columnas">
       <div class="columna" role="group" :aria-label="t('Izquierda')">
         <AudioSonidoBoton v-for="(pareja, i) in pregunta.parejas" :key="'i' + i" @click="tocarIzquierda(i)">
@@ -18,7 +18,7 @@
           <button type="button" class="carta" lang="en"
             :class="[{ elegida: derecha === i, hecha: hechas.includes(i), error: fallo === 'd' + i }, hechas.includes(i) ? 'par-' + i : '']"
             :disabled="hechas.includes(i)">
-            <span>{{ pregunta.parejas[i].der }}</span>
+            <span>{{ textoDerecha(i) }}</span>
           </button>
         </AudioSonidoBoton>
       </div>
@@ -28,11 +28,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import { barajar } from '~/composables/useBarajar.js'
 
 // Datos: { parejas: [{ izq, der, imagen?, alt? }], correcta: 'texto resumen' }
 const props = defineProps({ pregunta: { type: Object, required: true } })
-const emit = defineEmits(['responder'])
+const emit = defineEmits(['responder', 'error'])
 const { t } = useLanguage()
 
 const MAX_FALLOS = 2
@@ -43,8 +44,11 @@ const fallos = ref(0)
 const fallo = ref('')
 let terminado = false
 
-// Orden fijo (rotado una posición) para que servidor y cliente pinten lo mismo y ninguna pareja quede alineada.
-const ordenDerecha = computed(() => props.pregunta.parejas.map((_, i, lista) => (i + 1) % lista.length))
+// Columna derecha: se mezcla al montar independientemente de la columna izquierda. Si la pregunta trae «señuelos»,
+// se añaden tarjetas falsas (sin pareja) que cuentan como error si se eligen.
+const total = props.pregunta.parejas.length
+const textoDerecha = (i) => (i < total ? props.pregunta.parejas[i].der : props.pregunta.señuelos[i - total])
+const ordenDerecha = barajar(Array.from({ length: total + (props.pregunta.señuelos?.length ?? 0) }, (_, i) => i))
 
 function tocarIzquierda(i) {
   izquierda.value = izquierda.value === i ? null : i
@@ -73,6 +77,7 @@ function comprobar() {
   }
 
   fallos.value++
+  emit('error')
   fallo.value = 'i' + i
   setTimeout(() => { fallo.value = '' }, 350)
   if (fallos.value >= MAX_FALLOS) {

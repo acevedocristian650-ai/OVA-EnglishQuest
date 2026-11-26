@@ -12,20 +12,23 @@
       <div class="frase fichas" role="group" :aria-label="t('Tu frase')" lang="en">
         <template v-for="posicion in pregunta.fichas.length" :key="posicion">
           <AudioSonidoBoton v-if="orden[posicion - 1] !== undefined" @click="orden.splice(posicion - 1, 1)">
-            <v-btn type="button" variant="tonal" color="amber-lighten-3"
-              :aria-label="t('Quitar ') + pregunta.fichas[orden[posicion - 1]]">{{ pregunta.fichas[orden[posicion - 1]] }}</v-btn>
+            <v-btn type="button" class="runa colocada" variant="tonal" color="amber-lighten-3"
+              :aria-label="t('Quitar ') + banco[orden[posicion - 1]].texto">{{ banco[orden[posicion - 1]].texto }}</v-btn>
           </AudioSonidoBoton>
-          <span v-else class="hueco" aria-hidden="true" />
+          <span v-else class="hueco" aria-hidden="true"><b>{{ posicion }}</b></span>
         </template>
       </div>
-      <div class="fichas" role="group" :aria-label="t('Fichas disponibles')" lang="en">
-        <AudioSonidoBoton v-for="(palabra, indice) in pregunta.fichas" :key="indice" @click="orden.push(indice)">
-          <v-btn type="button" v-show="!orden.includes(indice)" :disabled="orden.includes(indice)" color="amber-lighten-3"
-            variant="outlined">{{ palabra }}</v-btn>
+      <div class="fichas banco-runas" role="group" :aria-label="t('Fichas disponibles')" lang="en">
+        <AudioSonidoBoton v-for="(pieza, indice) in banco" :key="indice" @click="orden.push(indice)">
+          <v-btn type="button" class="runa" v-show="!orden.includes(indice)" :disabled="orden.includes(indice)" color="amber-lighten-3"
+            variant="outlined">{{ pieza.texto }}</v-btn>
         </AudioSonidoBoton>
       </div>
       <div class="barra-orden">
-        <p class="ayuda">{{ t('Toca fichas ·') }} <span class="contador-fichas" aria-live="polite">{{ orden.length }}/{{ pregunta.fichas.length }}</span></p>
+        <p class="ayuda">
+          <span class="contador-fichas" aria-live="polite">{{ orden.length }}/{{ pregunta.fichas.length }}</span>
+          <span v-if="banco.length > pregunta.fichas.length" class="sobra">🌀 {{ t('Sobra una runa falsa') }}</span>
+        </p>
         <span class="acciones-orden">
           <AudioSonidoBoton @click="orden.pop()">
             <v-btn type="button" size="x-small" variant="text" color="amber-lighten-3" :disabled="!orden.length">↶ {{ t('Deshacer') }}</v-btn>
@@ -65,13 +68,19 @@
 </template>
 
 <script setup>
+import { bancoOrdenar } from '~/composables/useBarajar.js'
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['responder'])
 const { t } = useLanguage()
 const orden = ref([])
 const seleccion = ref('')
+
+// Banco de runas (fichas): se mezcla al montar y NUNCA queda en el orden de la frase. Si la pregunta trae
+// «sobran», se añaden fichas falsas que no forman parte de la respuesta.
+const banco = props.pregunta.tipo === 'ordenar' ? bancoOrdenar(props.pregunta) : []
+
 const respuesta = computed(() => {
-  if (props.pregunta.tipo === 'ordenar') return orden.value.map((indice) => props.pregunta.fichas[indice]).join(' ')
+  if (props.pregunta.tipo === 'ordenar') return orden.value.map((indice) => banco[indice].texto).join(' ')
   if (props.pregunta.tipo === 'zona') return seleccion.value
   return ''
 })
@@ -192,4 +201,13 @@ h2 { margin: 0.2rem 0 0.4rem; color: #fff0cc; font: 600 clamp(1rem, 2.5vw, 1.3re
   .mesa-frase { align-content: start; }
   .mesa-frase :deep(.v-btn) { min-height: 32px; padding-inline: 6px; }
 }
+
+/* ── Runas: las fichas son piedras talladas, no botones genéricos ── */
+.runa.v-btn { position: relative; border-radius: 10px 10px 14px 14px; background: linear-gradient(#4a4338, #2c2822) !important; color: #ffe9b8 !important; border: 1px solid #c9a35b !important; box-shadow: 0 3px 0 #120f0b, inset 0 1px 0 #fff3 ; text-transform: none; letter-spacing: 0; font-weight: 700; font-family: Georgia, serif; }
+.runa.v-btn:hover { filter: brightness(1.15); }
+.runa.colocada.v-btn { background: linear-gradient(#6b5524, #3f3114) !important; border-color: #ffd98a !important; box-shadow: 0 0 10px #ffd98a55, 0 3px 0 #120f0b; }
+.banco-runas { padding: 6px; border-radius: 10px; background: repeating-linear-gradient(135deg, #0e131c 0 8px, #121926 8px 16px); border: 1px dashed #b3955c55; }
+.hueco { display: inline-grid; place-items: center; }
+.hueco b { color: #b3955c88; font: 700 0.75rem Georgia, serif; }
+.sobra { margin-inline-start: 0.5rem; color: #9fd8ff; font-size: 0.75rem; }
 </style>

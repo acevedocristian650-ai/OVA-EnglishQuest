@@ -97,7 +97,7 @@
         "Afirmativa: He is going to cross the bridge.",
         "Negativa: pon not después de am / is / are: He is not going to cross.",
         "Pregunta: el verbo to be va primero: Is he going to cross the bridge?",
-        "También sirve para avisar de algo que se ve venir: The stone is going to fall!"
+        "También sirve para avisar de algo que se ve venir por la evidencia de ahora: The stone is going to fall!"
       ],
       "vocabulario": [
         {
@@ -168,12 +168,13 @@
       "titulo": "Promesas en la torre",
       "voz": "El vigía de la torre te entrega un pergamino sellado.",
       "proposito": "Aprenderás a usar will para promesas, decisiones del momento y predicciones.",
-      "regla": "Will se escribe igual con todos los sujetos y va seguido del verbo en forma base: I will help, he will help; negativa will not (won't).",
+      "regla": "Will se escribe igual con todos los sujetos y va seguido del verbo en forma base: I will help, he will help; negativa will not (won't). Se usa para promesas, ofertas, decisiones en el momento y opiniones sobre el futuro.",
       "puntos": [
         "Will no cambia con el sujeto: I will, she will, they will.",
         "El verbo siguiente va en forma base, sin to y sin -s: He will return.",
         "Negativa: will not o won't. Contracción: I'll.",
-        "Se usa para promesas y para opiniones sobre el futuro: I think the storm will reach the tower."
+        "Se usa para promesas, ofertas y decisiones en el momento (I'll answer it!) y para opiniones sobre el futuro: I think the storm will reach the tower.",
+        "Will y be going to no son rivales: a veces valen las dos y solo cambia el matiz. Mira el contexto: ¿lo decides ahora, ya estaba planeado, hay señales visibles?"
       ],
       "vocabulario": [
         {
@@ -208,14 +209,14 @@
         }
       ],
       "contraste": {
-        "titulo": "Will o be going to",
+        "titulo": "Will o be going to: depende de la situación",
         "a": {
-          "en": "I will help you.",
-          "nota": "Will: una promesa o una decisión en el momento."
+          "en": "I'll answer it! · I think she will win.",
+          "nota": "Will: decisión en el momento, oferta, promesa u opinión sin pruebas visibles."
         },
         "b": {
-          "en": "I am going to visit the tower.",
-          "nota": "Going to: un plan que ya tenías o algo que se ve venir."
+          "en": "We are going to fly to Paris. · Look! It is going to rain.",
+          "nota": "Going to: plan anterior a hablar o predicción basada en señales que ves ahora. En predicciones generales, muchas veces valen ambas."
         }
       },
       "practica": [
@@ -238,7 +239,7 @@
           "porque": "Not va justo después de will."
         }
       ],
-      "guia": "En el combate encontrarás errores en predicciones, romperás un hechizo con will not, protegerás a un aliado con una promesa y completarás una frase con will o 'll."
+      "guia": "En el combate encontrarás errores en predicciones, romperás un hechizo con will not, protegerás a un aliado con una promesa y aplicarás will en situaciones nuevas. Prueba el Laboratorio para ver cuándo usar will y cuándo be going to."
     },
     "4": {
       "titulo": "Las normas de la puerta",

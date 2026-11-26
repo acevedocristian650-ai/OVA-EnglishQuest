@@ -97,12 +97,12 @@
           "titulo": "Ordena el plan",
           "instruccion": "Toca las fichas en el orden correcto.",
           "fichas": [
-            "tomorrow.",
+            "explore",
+            "the forest",
             "am",
             "I",
-            "explore",
             "going to",
-            "the forest"
+            "tomorrow."
           ],
           "correcta": "I am going to explore the forest tomorrow.",
           "porque": "Sujeto + am + going to + verbo base + lugar + expresión de tiempo."
@@ -131,6 +131,37 @@
           ],
           "correcta": 1,
           "porque": "Is going to + verbo base anuncia un plan; la primera oración describe el presente."
+        },
+        {
+          "id": "f6",
+          "tipo": "opcion",
+          "titulo": "El plan del caballero",
+          "instruccion": "¿Qué oración anuncia un plan para mañana?",
+          "opciones": [
+            "I am going to check the gate tomorrow.",
+            "I checked the gate yesterday.",
+            "I check the gate every day."
+          ],
+          "correcta": 0,
+          "porque": "Am going to + verbo base anuncia un plan futuro."
+        },
+        {
+          "id": "f7",
+          "tipo": "corregir",
+          "titulo": "Encuentra el error",
+          "instruccion": "Toca la palabra incorrecta.",
+          "frase": [
+            "We",
+            "are",
+            "going",
+            "to",
+            "explored",
+            "the",
+            "forest."
+          ],
+          "error": 4,
+          "correccion": "explore",
+          "porque": "Después de going to va el verbo base: explore, no explored."
         }
       ],
       "recursos": [
@@ -232,11 +263,11 @@
           "titulo": "Afirmativa",
           "instruccion": "Ordena la oración afirmativa.",
           "fichas": [
-            "going to",
             "cross",
-            "is",
             "the bridge.",
-            "He"
+            "going to",
+            "He",
+            "is"
           ],
           "correcta": "He is going to cross the bridge.",
           "porque": "Afirmativa: sujeto + is + going to + verbo base."
@@ -248,11 +279,11 @@
           "instruccion": "Ordena la oración negativa.",
           "fichas": [
             "not",
-            "going to",
-            "cross",
+            "is",
             "He",
             "the bridge.",
-            "is"
+            "going to",
+            "cross"
           ],
           "correcta": "He is not going to cross the bridge.",
           "porque": "Negativa: not va justo después de is."
@@ -263,11 +294,11 @@
           "titulo": "Pregunta",
           "instruccion": "Ordena la pregunta.",
           "fichas": [
-            "going to",
             "he",
-            "the bridge?",
+            "going to",
+            "cross",
             "Is",
-            "cross"
+            "the bridge?"
           ],
           "correcta": "Is he going to cross the bridge?",
           "porque": "En la pregunta, el verbo to be pasa al inicio."
@@ -358,6 +389,34 @@
           "error": 4,
           "correccion": "Is he going to cross the bridge?",
           "porque": "Después de going to va el verbo en forma base: cross."
+        },
+        {
+          "id": "g10",
+          "tipo": "opcion",
+          "titulo": "La pregunta del barquero",
+          "instruccion": "Completa: ___ he going to cross the bridge?",
+          "opciones": [
+            "Is",
+            "Are",
+            "Am"
+          ],
+          "correcta": 0,
+          "porque": "La pregunta empieza con Is + sujeto: Is he going to…?"
+        },
+        {
+          "id": "g11",
+          "tipo": "ordenar",
+          "titulo": "La advertencia",
+          "instruccion": "Toca las fichas en el orden correcto.",
+          "fichas": [
+            "fall!",
+            "The",
+            "stone",
+            "is",
+            "going to"
+          ],
+          "correcta": "The stone is going to fall!",
+          "porque": "Sujeto + is + going to + verbo base."
         }
       ],
       "recursos": [
@@ -488,10 +547,10 @@
           "titulo": "Negación",
           "instruccion": "Ordena la negación.",
           "fichas": [
-            "not",
             "fall.",
-            "The hero",
-            "will"
+            "will",
+            "not",
+            "The hero"
           ],
           "correcta": "The hero will not fall.",
           "porque": "Negativa: will + not + verbo base."
@@ -502,10 +561,10 @@
           "titulo": "Pregunta",
           "instruccion": "Ordena la pregunta.",
           "fichas": [
-            "protect",
+            "me?",
             "Will",
-            "you",
-            "me?"
+            "protect",
+            "you"
           ],
           "correcta": "Will you protect me?",
           "porque": "En la pregunta, will va antes del sujeto."
@@ -554,6 +613,48 @@
           ],
           "correcta": 1,
           "porque": "Un plan que ya tenías se expresa con be going to."
+        },
+        {
+          "id": "w9",
+          "tipo": "opcion",
+          "titulo": "La promesa del águila",
+          "instruccion": "Completa: I will ___ you tomorrow.",
+          "opciones": [
+            "help",
+            "helps",
+            "helped"
+          ],
+          "correcta": 0,
+          "porque": "Después de will va el verbo base: help."
+        },
+        {
+          "id": "w10",
+          "tipo": "clasificar",
+          "titulo": "Promesa o predicción",
+          "instruccion": "¿Para qué se usa will en cada oración?",
+          "grupos": [
+            "Promesa",
+            "Predicción"
+          ],
+          "items": [
+            {
+              "texto": "I will return the key.",
+              "grupo": 0
+            },
+            {
+              "texto": "The storm will come.",
+              "grupo": 1
+            },
+            {
+              "texto": "We will guard the gate.",
+              "grupo": 0
+            },
+            {
+              "texto": "The river will rise.",
+              "grupo": 1
+            }
+          ],
+          "porque": "Las promesas hablan de lo que yo haré; las predicciones, de lo que pasará."
         }
       ],
       "recursos": [
@@ -731,9 +832,9 @@
           "titulo": "Ordena la norma",
           "instruccion": "Ordena la norma.",
           "fichas": [
+            "your",
             "helmet.",
-            "Put on",
-            "your"
+            "Put on"
           ],
           "correcta": "Put on your helmet.",
           "porque": "Las órdenes empiezan con el verbo."
@@ -745,8 +846,8 @@
           "instruccion": "Ordena la prohibición.",
           "fichas": [
             "enter.",
-            "Do",
-            "not"
+            "not",
+            "Do"
           ],
           "correcta": "Do not enter.",
           "porque": "Prohibición: Do not + verbo base."
@@ -763,6 +864,40 @@
           ],
           "correcta": 0,
           "porque": "Con el semáforo en rojo debes detenerte en la línea."
+        },
+        {
+          "id": "s9",
+          "tipo": "opcion",
+          "titulo": "La luz verde",
+          "instruccion": "The traffic light is green. What should you do?",
+          "opciones": [
+            "Stop",
+            "Go",
+            "Turn back"
+          ],
+          "correcta": 1,
+          "porque": "Con luz verde puedes cruzar."
+        },
+        {
+          "id": "s10",
+          "tipo": "relacionar",
+          "titulo": "Señales y acciones",
+          "instruccion": "Toca una señal y luego su acción.",
+          "parejas": [
+            {
+              "izq": "STOP",
+              "der": "Detente por completo"
+            },
+            {
+              "izq": "YIELD",
+              "der": "Cede el paso"
+            },
+            {
+              "izq": "NO ENTRY",
+              "der": "Prohibido entrar"
+            }
+          ],
+          "porque": "Cada señal ordena una acción distinta."
         }
       ],
       "recursos": [

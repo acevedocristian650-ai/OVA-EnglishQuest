@@ -1,6 +1,6 @@
 // Utilidades compartidas del OVA: pantalla completa, voz del navegador, avance de la biblioteca y estado del recorrido.
 // Solo usa localStorage (clave propia, separada del progreso de combate) y la reactividad nativa de Vue.
-import { reactive } from 'vue'
+import { reactive, getCurrentInstance, onMounted } from 'vue'
 
 // ---------- Pantalla completa (Fullscreen API) ----------
 let escuchandoPantalla = false
@@ -60,8 +60,9 @@ function guardarBiblioteca() {
   try { localStorage.setItem(CLAVE_BIBLIOTECA, JSON.stringify({ consultados: biblioteca.consultados, practica: biblioteca.practica })) } catch { /* sin almacenamiento */ }
 }
 export function useBiblioteca() {
-  if (import.meta.client && !biblioteca.cargada) {
-    biblioteca.cargada = true
+  // El progreso del Grimorio vive en localStorage: se lee DESPUÉS de hidratar (onMounted) para que el HTML del cliente coincida
+  // con el prerrenderizado (si no, un estudiante con progreso veía «Hydration mismatch»). `biblioteca` es reactivo: la vista se actualiza.
+  function leerGuardado() {
     try {
       const bruto = JSON.parse(localStorage.getItem(CLAVE_BIBLIOTECA) || '{}')
       if (bruto && typeof bruto === 'object') {
@@ -69,6 +70,10 @@ export function useBiblioteca() {
         if (bruto.practica && typeof bruto.practica === 'object') biblioteca.practica = bruto.practica
       }
     } catch { /* datos dañados: se empieza limpio */ }
+  }
+  if (import.meta.client && !biblioteca.cargada) {
+    biblioteca.cargada = true
+    if (getCurrentInstance()) onMounted(leerGuardado); else leerGuardado()
   }
   function marcarConsultado(nivel) {
     if (biblioteca.consultados[nivel]) return

@@ -60,6 +60,7 @@
         <v-btn @click="emit('cancelar')">{{ t('Volver al mapa') }}</v-btn>
       </div>
       <p v-else-if="preparando" class="estado-carga" role="status">{{ t('Preparando combate') }} · {{ progreso.loaded }} / {{ progreso.total }}</p>
+      <v-btn v-if="!fallo" variant="text" size="small" color="amber-lighten-3" class="omitir" @click="omitir">{{ t('Saltar') }} ▸</v-btn>
     </div>
 
     <!-- Flash final de choque de combate -->
@@ -69,6 +70,7 @@
 
 <script setup>
 const props = defineProps({
+  breve: { type: Boolean, default: false },
   activo: {
     type: Boolean,
     default: false
@@ -102,6 +104,9 @@ const brasas = Array.from({ length: 16 }, (_, i) => {
   }
 })
 
+let omitirActual = null
+function omitir() { omitirActual?.() }
+const progresoJugador = usePlayerProgress()
 let timer = null
 let timerLimite = null
 let ciclo = 0
@@ -128,7 +133,10 @@ watch([() => props.activo, reintentos], async ([val]) => {
     preparando.value = false
     emit('listo')
   }
-  timer = setTimeout(() => { transicionTerminada = true; comprobar() }, 2000)
+  // Duración de la presentación: breve en misiones ya jugadas o con movimiento reducido; siempre se puede saltar.
+  const reducido = typeof window !== 'undefined' && (progresoJugador.estado.ajustes.movimiento === 'reducido' || (progresoJugador.estado.ajustes.movimiento === 'sistema' && window.matchMedia('(prefers-reduced-motion: reduce)').matches))
+  omitirActual = () => { transicionTerminada = true; comprobar() }
+  timer = setTimeout(omitirActual, reducido ? 300 : props.breve ? 800 : 1500)
   // Nunca se bloquea indefinidamente: pasado el límite se ofrece reintentar o volver al mapa de forma segura.
   timerLimite = setTimeout(() => { if (actual === ciclo && !recursosListos) fallo.value = true }, 20000)
   // Calienta únicamente el módulo de la escena del perfil elegido (el otro nunca se descarga).

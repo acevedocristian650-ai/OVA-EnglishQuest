@@ -1,0 +1,950 @@
+{
+  "_nota": "Preguntas originales antes de la versión 3: sirve para migrar progreso guardado con la clave antigua «nivel|texto». No se usa para jugar.",
+  "preguntas": [
+    {
+      "id": "n1-clasificar.01",
+      "nivel": 1,
+      "tipo": "clasificar",
+      "texto": "Arrastra futuro al héroe y pasado al monstruo.",
+      "correcta": "Héroe: tomorrow, next week · Monstruo: yesterday, last night"
+    },
+    {
+      "id": "n1-clasificar.02",
+      "nivel": 1,
+      "tipo": "clasificar",
+      "texto": "Arrastra futuro al héroe y pasado al monstruo.",
+      "correcta": "Héroe: tonight, in two days · Monstruo: last week, a week ago"
+    },
+    {
+      "id": "n1-clasificar.03",
+      "nivel": 1,
+      "tipo": "clasificar",
+      "texto": "Arrastra futuro al héroe y pasado al monstruo.",
+      "correcta": "Héroe: soon, next year · Monstruo: last month, two days ago"
+    },
+    {
+      "id": "n1-clasificar.04",
+      "nivel": 1,
+      "tipo": "clasificar",
+      "texto": "Arrastra futuro al héroe y pasado al monstruo.",
+      "correcta": "Héroe: tomorrow morning, next summer · Monstruo: last Friday, yesterday afternoon"
+    },
+    {
+      "id": "n1-errores.01",
+      "nivel": 1,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "We are going to explore the forest next week."
+    },
+    {
+      "id": "n1-errores.02",
+      "nivel": 1,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "I am going to visit the castle tomorrow."
+    },
+    {
+      "id": "n1-errores.03",
+      "nivel": 1,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "She is going to cook dinner tonight."
+    },
+    {
+      "id": "n1-errores.04",
+      "nivel": 1,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "They are going to cook dinner tonight."
+    },
+    {
+      "id": "n1-errores.05",
+      "nivel": 1,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "It is going to rain tonight."
+    },
+    {
+      "id": "n1-errores.06",
+      "nivel": 1,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "I am going to visit the lake next week."
+    },
+    {
+      "id": "n1-cortar.01",
+      "nivel": 1,
+      "tipo": "cortar",
+      "texto": "Which sentence is about the future?",
+      "correcta": "She is going to cook dinner tonight."
+    },
+    {
+      "id": "n1-cortar.02",
+      "nivel": 1,
+      "tipo": "cortar",
+      "texto": "Which expression is about the future?",
+      "correcta": "In two days"
+    },
+    {
+      "id": "n1-cortar.03",
+      "nivel": 1,
+      "tipo": "cortar",
+      "texto": "Which sentence is about the future?",
+      "correcta": "I am going to visit the lake."
+    },
+    {
+      "id": "n1-cortar.04",
+      "nivel": 1,
+      "tipo": "cortar",
+      "texto": "Pick the plan for next week.",
+      "correcta": "We are going to climb the hill next week."
+    },
+    {
+      "id": "n1-hacha.01",
+      "nivel": 1,
+      "tipo": "hacha",
+      "texto": "The griffin will strike!",
+      "correcta": "Cut all three energy balls."
+    },
+    {
+      "id": "n1-parejas.01",
+      "nivel": 1,
+      "tipo": "parejas",
+      "texto": "Match each time expression.",
+      "correcta": "tomorrow = mañana · yesterday = ayer · next week = la próxima semana"
+    },
+    {
+      "id": "n1-parejas.02",
+      "nivel": 1,
+      "tipo": "parejas",
+      "texto": "Match each time expression.",
+      "correcta": "tonight = esta noche · next year = el próximo año · last night = anoche"
+    },
+    {
+      "id": "n1-parejas.03",
+      "nivel": 1,
+      "tipo": "parejas",
+      "texto": "Match each time expression.",
+      "correcta": "soon = pronto · two days ago = hace dos días · next month = el próximo mes"
+    },
+    {
+      "id": "n1-parejas.04",
+      "nivel": 1,
+      "tipo": "parejas",
+      "texto": "Match each plan with its meaning.",
+      "correcta": "She is going to cook = Ella va a cocinar · They are going to sleep = Ellos van a dormir · I am going to read = Voy a leer"
+    },
+    {
+      "id": "n1-ordenar.01",
+      "nivel": 1,
+      "tipo": "ordenar",
+      "texto": "Assemble the knight's plan for this evening.",
+      "correcta": "I am going to check the gate tonight."
+    },
+    {
+      "id": "n1-ordenar.02",
+      "nivel": 1,
+      "tipo": "ordenar",
+      "texto": "Put the painter's plan in order.",
+      "correcta": "She is going to paint the wall tomorrow."
+    },
+    {
+      "id": "n1-ordenar.03",
+      "nivel": 1,
+      "tipo": "ordenar",
+      "texto": "Put the guards' plan in order.",
+      "correcta": "They are going to open the gate tonight."
+    },
+    {
+      "id": "n1-ordenar.04",
+      "nivel": 1,
+      "tipo": "ordenar",
+      "texto": "Plan the explorers' trip.",
+      "correcta": "We are going to explore the cave next week."
+    },
+    {
+      "id": "n1-ordenar.05",
+      "nivel": 1,
+      "tipo": "ordenar",
+      "texto": "Plan the stable work.",
+      "correcta": "He is going to feed the horse tomorrow."
+    },
+    {
+      "id": "n2-ordenar.01",
+      "nivel": 2,
+      "tipo": "ordenar",
+      "texto": "Cancel the crossing. Make the sentence negative.",
+      "correcta": "He is not going to cross the bridge."
+    },
+    {
+      "id": "n2-ordenar.02",
+      "nivel": 2,
+      "tipo": "ordenar",
+      "texto": "Cancel the trip. Make the sentence negative.",
+      "correcta": "She is not going to cross the river."
+    },
+    {
+      "id": "n2-ordenar.03",
+      "nivel": 2,
+      "tipo": "ordenar",
+      "texto": "Close the gate. Make the sentence negative.",
+      "correcta": "We are not going to open the gate."
+    },
+    {
+      "id": "n2-ordenar.04",
+      "nivel": 2,
+      "tipo": "ordenar",
+      "texto": "Ask about the plan. Make a question.",
+      "correcta": "Is he going to cross the bridge?"
+    },
+    {
+      "id": "n2-esquivar.01",
+      "nivel": 2,
+      "tipo": "esquivar",
+      "texto": "The basilisk is going to attack on the left!",
+      "correcta": "Move right."
+    },
+    {
+      "id": "n2-esquivar.02",
+      "nivel": 2,
+      "tipo": "esquivar",
+      "texto": "The basilisk is going to attack on the right!",
+      "correcta": "Move left."
+    },
+    {
+      "id": "n2-cortar.01",
+      "nivel": 2,
+      "tipo": "cortar",
+      "texto": "We ___ going to cross the river.",
+      "correcta": "are"
+    },
+    {
+      "id": "n2-cortar.02",
+      "nivel": 2,
+      "tipo": "cortar",
+      "texto": "I ___ going to cross the bridge.",
+      "correcta": "am"
+    },
+    {
+      "id": "n2-cortar.03",
+      "nivel": 2,
+      "tipo": "cortar",
+      "texto": "They ___ going to cross the bridge.",
+      "correcta": "are"
+    },
+    {
+      "id": "n2-cortar.04",
+      "nivel": 2,
+      "tipo": "cortar",
+      "texto": "Everyone ___ going to cross the bridge.",
+      "correcta": "is"
+    },
+    {
+      "id": "n2-cortar.05",
+      "nivel": 2,
+      "tipo": "cortar",
+      "texto": "My sister and I ___ going to cross.",
+      "correcta": "are"
+    },
+    {
+      "id": "n2-hacha.01",
+      "nivel": 2,
+      "tipo": "hacha",
+      "texto": "The basilisk is going to attack!",
+      "correcta": "Cut all three energy balls."
+    },
+    {
+      "id": "n2-esquiva-frase.01",
+      "nivel": 2,
+      "tipo": "esquiva-frase",
+      "texto": "It ___ attack!",
+      "correcta": "is going to"
+    },
+    {
+      "id": "n2-esquiva-frase.02",
+      "nivel": 2,
+      "tipo": "esquiva-frase",
+      "texto": "I ___ jump!",
+      "correcta": "am going to"
+    },
+    {
+      "id": "n2-esquiva-frase.03",
+      "nivel": 2,
+      "tipo": "esquiva-frase",
+      "texto": "We ___ cross now!",
+      "correcta": "are going to"
+    },
+    {
+      "id": "n2-escuchar.01",
+      "nivel": 2,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "The stone is going to fall!"
+    },
+    {
+      "id": "n2-escuchar.02",
+      "nivel": 2,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "The bridge is going to break!"
+    },
+    {
+      "id": "n2-escuchar.03",
+      "nivel": 2,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "We are going to cross the river tomorrow."
+    },
+    {
+      "id": "n2-escuchar.04",
+      "nivel": 2,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "The basilisk is not going to attack."
+    },
+    {
+      "id": "n2-escuchar.05",
+      "nivel": 2,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "They are going to cross at night."
+    },
+    {
+      "id": "n3-errores.01",
+      "nivel": 3,
+      "tipo": "errores",
+      "texto": "Find the mistake in the prediction.",
+      "correcta": "I think the storm will reach the tower tonight."
+    },
+    {
+      "id": "n3-errores.02",
+      "nivel": 3,
+      "tipo": "errores",
+      "texto": "Find the mistake in the prediction.",
+      "correcta": "I think it will rain tomorrow."
+    },
+    {
+      "id": "n3-errores.03",
+      "nivel": 3,
+      "tipo": "errores",
+      "texto": "Find the mistake in the prediction.",
+      "correcta": "The eagle will fly over the tower."
+    },
+    {
+      "id": "n3-errores.04",
+      "nivel": 3,
+      "tipo": "errores",
+      "texto": "Find the mistake in the prediction.",
+      "correcta": "They will help us tonight."
+    },
+    {
+      "id": "n3-errores.05",
+      "nivel": 3,
+      "tipo": "errores",
+      "texto": "Find the mistake in the promise.",
+      "correcta": "I will not forget you."
+    },
+    {
+      "id": "n3-errores.06",
+      "nivel": 3,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "The storm will stop soon."
+    },
+    {
+      "id": "n3-romper-hechizo.01",
+      "nivel": 3,
+      "tipo": "romper-hechizo",
+      "texto": "Make the spell negative.",
+      "correcta": "The hero will not fall."
+    },
+    {
+      "id": "n3-romper-hechizo.02",
+      "nivel": 3,
+      "tipo": "romper-hechizo",
+      "texto": "Make the spell negative.",
+      "correcta": "The storm will not stop."
+    },
+    {
+      "id": "n3-romper-hechizo.03",
+      "nivel": 3,
+      "tipo": "romper-hechizo",
+      "texto": "Make the spell negative.",
+      "correcta": "We will not win."
+    },
+    {
+      "id": "n3-cortar.01",
+      "nivel": 3,
+      "tipo": "cortar",
+      "texto": "I will ___ you.",
+      "correcta": "help"
+    },
+    {
+      "id": "n3-cortar.02",
+      "nivel": 3,
+      "tipo": "cortar",
+      "texto": "She will ___ the door.",
+      "correcta": "open"
+    },
+    {
+      "id": "n3-cortar.03",
+      "nivel": 3,
+      "tipo": "cortar",
+      "texto": "They will ___ the tower.",
+      "correcta": "climb"
+    },
+    {
+      "id": "n3-cortar.04",
+      "nivel": 3,
+      "tipo": "cortar",
+      "texto": "Which sentence is correct?",
+      "correcta": "She will go home."
+    },
+    {
+      "id": "n3-cortar.05",
+      "nivel": 3,
+      "tipo": "cortar",
+      "texto": "Which promise is correct?",
+      "correcta": "I will not tell anyone."
+    },
+    {
+      "id": "n3-hacha.01",
+      "nivel": 3,
+      "tipo": "hacha",
+      "texto": "The eagle will strike!",
+      "correcta": "Cut all three energy balls."
+    },
+    {
+      "id": "n3-proteger-aliado.01",
+      "nivel": 3,
+      "tipo": "proteger-aliado",
+      "texto": "Promise to protect the ally.",
+      "correcta": "I will protect you."
+    },
+    {
+      "id": "n3-proteger-aliado.02",
+      "nivel": 3,
+      "tipo": "proteger-aliado",
+      "texto": "Promise to help the ally.",
+      "correcta": "We will help you."
+    },
+    {
+      "id": "n3-proteger-aliado.03",
+      "nivel": 3,
+      "tipo": "proteger-aliado",
+      "texto": "Promise to stay with the ally.",
+      "correcta": "I will stay with you."
+    },
+    {
+      "id": "n3-ordenar.01",
+      "nivel": 3,
+      "tipo": "ordenar",
+      "texto": "Complete the knight's promise. Use will.",
+      "correcta": "I promise I will return the key tomorrow."
+    },
+    {
+      "id": "n3-ordenar.02",
+      "nivel": 3,
+      "tipo": "ordenar",
+      "texto": "Complete the knight's promise.",
+      "correcta": "I promise I will help you tomorrow."
+    },
+    {
+      "id": "n3-ordenar.03",
+      "nivel": 3,
+      "tipo": "ordenar",
+      "texto": "Complete the guard's promise.",
+      "correcta": "I promise I will guard the gate tonight."
+    },
+    {
+      "id": "n3-ordenar.04",
+      "nivel": 3,
+      "tipo": "ordenar",
+      "texto": "Make a promise you will keep.",
+      "correcta": "I will not forget you."
+    },
+    {
+      "id": "n4-zona.01",
+      "nivel": 4,
+      "tipo": "zona",
+      "texto": "Bring the rider to a complete stop.",
+      "correcta": "Stop at the line"
+    },
+    {
+      "id": "n4-zona.02",
+      "nivel": 4,
+      "tipo": "zona",
+      "texto": "Keep the rider out of the street.",
+      "correcta": "Do not enter"
+    },
+    {
+      "id": "n4-zona.03",
+      "nivel": 4,
+      "tipo": "zona",
+      "texto": "Let the other rider go first.",
+      "correcta": "Wait and give way"
+    },
+    {
+      "id": "n4-zona.04",
+      "nivel": 4,
+      "tipo": "zona",
+      "texto": "A red circle with a white bar. What now?",
+      "correcta": "Turn around and go back"
+    },
+    {
+      "id": "n4-parejas.01",
+      "nivel": 4,
+      "tipo": "parejas",
+      "texto": "Match each sign with its meaning.",
+      "correcta": "STOP = Come to a full stop · YIELD = Give way · NO ENTRY = Do not enter"
+    },
+    {
+      "id": "n4-parejas.02",
+      "nivel": 4,
+      "tipo": "parejas",
+      "texto": "Match the road words.",
+      "correcta": "helmet = casco · crossing = cruce · lane = carril"
+    },
+    {
+      "id": "n4-parejas.03",
+      "nivel": 4,
+      "tipo": "parejas",
+      "texto": "Match the road words.",
+      "correcta": "speed = velocidad · traffic light = semáforo · road = camino"
+    },
+    {
+      "id": "n4-parejas.04",
+      "nivel": 4,
+      "tipo": "parejas",
+      "texto": "Match the road words.",
+      "correcta": "wear a helmet = usar un casco · red light = luz roja · speed limit = límite de velocidad"
+    },
+    {
+      "id": "n4-cortar.01",
+      "nivel": 4,
+      "tipo": "cortar",
+      "texto": "What does a STOP sign mean?",
+      "correcta": "Come to a full stop"
+    },
+    {
+      "id": "n4-cortar.02",
+      "nivel": 4,
+      "tipo": "cortar",
+      "texto": "What does a YIELD sign mean?",
+      "correcta": "Give way"
+    },
+    {
+      "id": "n4-cortar.03",
+      "nivel": 4,
+      "tipo": "cortar",
+      "texto": "What does a NO ENTRY sign mean?",
+      "correcta": "Do not enter"
+    },
+    {
+      "id": "n4-cortar.04",
+      "nivel": 4,
+      "tipo": "cortar",
+      "texto": "Which sentence is a prohibition?",
+      "correcta": "Do not cross the street."
+    },
+    {
+      "id": "n4-cortar.05",
+      "nivel": 4,
+      "tipo": "cortar",
+      "texto": "What does GIVE WAY mean?",
+      "correcta": "Let others go first"
+    },
+    {
+      "id": "n4-hacha.01",
+      "nivel": 4,
+      "tipo": "hacha",
+      "texto": "The dragon will breathe fire!",
+      "correcta": "Cut all three energy balls."
+    },
+    {
+      "id": "n4-ordenar.01",
+      "nivel": 4,
+      "tipo": "ordenar",
+      "texto": "Equip the rider before the ride.",
+      "correcta": "Put on your helmet."
+    },
+    {
+      "id": "n4-ordenar.02",
+      "nivel": 4,
+      "tipo": "ordenar",
+      "texto": "Obey the traffic light.",
+      "correcta": "Stop at the red light."
+    },
+    {
+      "id": "n4-ordenar.03",
+      "nivel": 4,
+      "tipo": "ordenar",
+      "texto": "Be polite on the road.",
+      "correcta": "Give way to other riders."
+    },
+    {
+      "id": "n4-ordenar.04",
+      "nivel": 4,
+      "tipo": "ordenar",
+      "texto": "Learn the rule.",
+      "correcta": "Do not cross the street."
+    },
+    {
+      "id": "n4-zona-2.01",
+      "nivel": 4,
+      "tipo": "zona",
+      "texto": "Move the rider according to the traffic light.",
+      "correcta": "Stop before the crossing"
+    },
+    {
+      "id": "n4-zona-2.02",
+      "nivel": 4,
+      "tipo": "zona",
+      "texto": "A STOP sign appears. What does the rider do?",
+      "correcta": "Stop at the line"
+    },
+    {
+      "id": "n5-f1-cortar.L01",
+      "nivel": 5,
+      "tipo": "cortar",
+      "texto": "Which expression talks about the future?",
+      "correcta": "Tonight"
+    },
+    {
+      "id": "n5-f1-cortar.L02",
+      "nivel": 5,
+      "tipo": "cortar",
+      "texto": "Which expression is about the future?",
+      "correcta": "In two days"
+    },
+    {
+      "id": "n5-f1-cortar.L03",
+      "nivel": 5,
+      "tipo": "cortar",
+      "texto": "Which sentence is about the future?",
+      "correcta": "I am going to visit the lake."
+    },
+    {
+      "id": "n5-f1-cortar.L04",
+      "nivel": 5,
+      "tipo": "cortar",
+      "texto": "Pick the plan for next week.",
+      "correcta": "We are going to climb the hill next week."
+    },
+    {
+      "id": "n5-f1-parejas.L01",
+      "nivel": 5,
+      "tipo": "parejas",
+      "texto": "Match each time expression.",
+      "correcta": "tomorrow = mañana · next week = la próxima semana · last night = anoche"
+    },
+    {
+      "id": "n5-f1-parejas.L02",
+      "nivel": 5,
+      "tipo": "parejas",
+      "texto": "Match each time expression.",
+      "correcta": "tonight = esta noche · next year = el próximo año · last night = anoche"
+    },
+    {
+      "id": "n5-f1-parejas.L03",
+      "nivel": 5,
+      "tipo": "parejas",
+      "texto": "Match each time expression.",
+      "correcta": "soon = pronto · two days ago = hace dos días · next month = el próximo mes"
+    },
+    {
+      "id": "n5-f1-parejas.L04",
+      "nivel": 5,
+      "tipo": "parejas",
+      "texto": "Match each plan with its meaning.",
+      "correcta": "She is going to cook = Ella va a cocinar · They are going to sleep = Ellos van a dormir · I am going to read = Voy a leer"
+    },
+    {
+      "id": "n5-f1-ordenar.L01",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Assemble the plan for tomorrow.",
+      "correcta": "We are going to explore the forest tomorrow."
+    },
+    {
+      "id": "n5-f1-ordenar.L02",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Put the painter's plan in order.",
+      "correcta": "She is going to paint the wall tomorrow."
+    },
+    {
+      "id": "n5-f1-ordenar.L03",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Put the guards' plan in order.",
+      "correcta": "They are going to open the gate tonight."
+    },
+    {
+      "id": "n5-f1-ordenar.L04",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Plan the explorers' trip.",
+      "correcta": "We are going to explore the cave next week."
+    },
+    {
+      "id": "n5-f1-ordenar.L05",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Plan the stable work.",
+      "correcta": "He is going to feed the horse tomorrow."
+    },
+    {
+      "id": "n5-f2-errores.L01",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "She is going to visit the bridge tomorrow."
+    },
+    {
+      "id": "n5-f2-errores.L02",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "I am going to visit the castle tomorrow."
+    },
+    {
+      "id": "n5-f2-errores.L03",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "She is going to cook dinner tonight."
+    },
+    {
+      "id": "n5-f2-errores.L04",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "They are going to cook dinner tonight."
+    },
+    {
+      "id": "n5-f2-esquiva-frase.L01",
+      "nivel": 5,
+      "tipo": "esquiva-frase",
+      "texto": "They ___ attack!",
+      "correcta": "are going to"
+    },
+    {
+      "id": "n5-f2-esquiva-frase.L02",
+      "nivel": 5,
+      "tipo": "esquiva-frase",
+      "texto": "I ___ jump!",
+      "correcta": "am going to"
+    },
+    {
+      "id": "n5-f2-esquiva-frase.L03",
+      "nivel": 5,
+      "tipo": "esquiva-frase",
+      "texto": "We ___ cross now!",
+      "correcta": "are going to"
+    },
+    {
+      "id": "n5-f2-escuchar.L01",
+      "nivel": 5,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "The dragon is not going to attack."
+    },
+    {
+      "id": "n5-f2-escuchar.L02",
+      "nivel": 5,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "The bridge is going to break!"
+    },
+    {
+      "id": "n5-f2-escuchar.L03",
+      "nivel": 5,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "We are going to cross the river tomorrow."
+    },
+    {
+      "id": "n5-f2-escuchar.L04",
+      "nivel": 5,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "The basilisk is not going to attack."
+    },
+    {
+      "id": "n5-f2-escuchar.L05",
+      "nivel": 5,
+      "tipo": "escuchar",
+      "texto": "Listen to the warning.",
+      "correcta": "They are going to cross at night."
+    },
+    {
+      "id": "n5-f3-romper-hechizo.L01",
+      "nivel": 5,
+      "tipo": "romper-hechizo",
+      "texto": "Make the spell negative.",
+      "correcta": "The knight will not return."
+    },
+    {
+      "id": "n5-f3-romper-hechizo.L02",
+      "nivel": 5,
+      "tipo": "romper-hechizo",
+      "texto": "Make the spell negative.",
+      "correcta": "The storm will not stop."
+    },
+    {
+      "id": "n5-f3-romper-hechizo.L03",
+      "nivel": 5,
+      "tipo": "romper-hechizo",
+      "texto": "Make the spell negative.",
+      "correcta": "We will not win."
+    },
+    {
+      "id": "n5-f3-proteger-aliado.L01",
+      "nivel": 5,
+      "tipo": "proteger-aliado",
+      "texto": "Promise to help the villagers.",
+      "correcta": "We will help the villagers."
+    },
+    {
+      "id": "n5-f3-proteger-aliado.L02",
+      "nivel": 5,
+      "tipo": "proteger-aliado",
+      "texto": "Promise to help the ally.",
+      "correcta": "We will help you."
+    },
+    {
+      "id": "n5-f3-proteger-aliado.L03",
+      "nivel": 5,
+      "tipo": "proteger-aliado",
+      "texto": "Promise to stay with the ally.",
+      "correcta": "I will stay with you."
+    },
+    {
+      "id": "n5-f3-errores.L01",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the promise.",
+      "correcta": "He will return tomorrow."
+    },
+    {
+      "id": "n5-f3-errores.L02",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the prediction.",
+      "correcta": "I think it will rain tomorrow."
+    },
+    {
+      "id": "n5-f3-errores.L03",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the prediction.",
+      "correcta": "The eagle will fly over the tower."
+    },
+    {
+      "id": "n5-f3-errores.L04",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the prediction.",
+      "correcta": "They will help us tonight."
+    },
+    {
+      "id": "n5-f3-errores.L05",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the promise.",
+      "correcta": "I will not forget you."
+    },
+    {
+      "id": "n5-f3-errores.L06",
+      "nivel": 5,
+      "tipo": "errores",
+      "texto": "Find the mistake in the plan.",
+      "correcta": "The storm will stop soon."
+    },
+    {
+      "id": "n5-f4-zona.L01",
+      "nivel": 5,
+      "tipo": "zona",
+      "texto": "Let the other cars pass first.",
+      "correcta": "Give way to the cars"
+    },
+    {
+      "id": "n5-f4-zona.L02",
+      "nivel": 5,
+      "tipo": "zona",
+      "texto": "Keep the rider out of the street.",
+      "correcta": "Do not enter"
+    },
+    {
+      "id": "n5-f4-zona.L03",
+      "nivel": 5,
+      "tipo": "zona",
+      "texto": "Let the other rider go first.",
+      "correcta": "Wait and give way"
+    },
+    {
+      "id": "n5-f4-zona.L04",
+      "nivel": 5,
+      "tipo": "zona",
+      "texto": "A red circle with a white bar. What now?",
+      "correcta": "Turn around and go back"
+    },
+    {
+      "id": "n5-f4-parejas.L01",
+      "nivel": 5,
+      "tipo": "parejas",
+      "texto": "Match each traffic word.",
+      "correcta": "stop = detenerse · give way = ceder el paso · crossing = cruce"
+    },
+    {
+      "id": "n5-f4-parejas.L02",
+      "nivel": 5,
+      "tipo": "parejas",
+      "texto": "Match the road words.",
+      "correcta": "helmet = casco · crossing = cruce · lane = carril"
+    },
+    {
+      "id": "n5-f4-parejas.L03",
+      "nivel": 5,
+      "tipo": "parejas",
+      "texto": "Match the road words.",
+      "correcta": "speed = velocidad · traffic light = semáforo · road = camino"
+    },
+    {
+      "id": "n5-f4-parejas.L04",
+      "nivel": 5,
+      "tipo": "parejas",
+      "texto": "Match the road words.",
+      "correcta": "wear a helmet = usar un casco · red light = luz roja · speed limit = límite de velocidad"
+    },
+    {
+      "id": "n5-f4-ordenar.L01",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Assemble the prohibition.",
+      "correcta": "Do not cross the street."
+    },
+    {
+      "id": "n5-f4-ordenar.L02",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Obey the traffic light.",
+      "correcta": "Stop at the red light."
+    },
+    {
+      "id": "n5-f4-ordenar.L03",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Be polite on the road.",
+      "correcta": "Give way to other riders."
+    },
+    {
+      "id": "n5-f4-ordenar.L04",
+      "nivel": 5,
+      "tipo": "ordenar",
+      "texto": "Learn the rule.",
+      "correcta": "Do not cross the street."
+    }
+  ]
+}

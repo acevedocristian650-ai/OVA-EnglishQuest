@@ -16,7 +16,7 @@
           <v-btn variant="tonal" size="small" class="boton-opciones" @click="verEstadisticas = true">{{ t('Estadísticas') }}</v-btn>
           <UiOpcionesRapidas class="rapidas-mapa" />
           <h1>{{ t('Mapa del Reino') }}</h1>
-          <p>{{ t('Sigue el camino dorado. Toca un marcador para entrar en la zona.') }}</p>
+          <p class="guia-mapa">{{ t('Toca un destino: el caballero viajará hasta allí.') }}</p>
           <p v-if="nivelDesbloqueado > niveles.length" class="conquista">{{ t('Completaste todas las zonas del reino.') }}</p>
         </header>
         <!-- El tablero se escala para caber completo en el espacio que queda (sin scroll) -->
@@ -28,7 +28,7 @@
         <div class="zona-mapa">
           <MapBoard class="tablero" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" @elegir="entrar" />
         </div>
-        <MapListaZonas class="lista-zonas sin-barra" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" @elegir="entrar" />
+        <MapListaZonas class="lista-zonas sin-barra" :niveles="niveles" :nivel-desbloqueado="nivelDesbloqueado" :niveles-progreso="progreso.estado.progreso.niveles" @elegir="entrar" />
         <HomeOptions v-model="showOptions" progreso @estadisticas="verEstadisticas = true" />
       </div>
     </section>
@@ -40,11 +40,12 @@
       @volver="volverAlMapa"
       @reforzar="reforzar"
       @menu="irAlMenu"
+      @corregir="volverAlMapa(); practicando = true"
       @reintentar="reintentar"
     />
 
     <!-- Ficha de misión: informa, permite repasar o iniciar. No hay lecciones ni preguntas obligatorias antes del combate. -->
-    <MapMisionFicha v-if="ficha" :nivel="ficha" :info="infoFicha" :bloqueada="ficha.numero > nivelDesbloqueado"
+    <MapMisionFicha v-if="ficha" :key="ficha.numero" :nivel="ficha" :info="infoFicha" :registro="progreso.estado.progreso.niveles[ficha.numero] ?? null" :bloqueada="ficha.numero > nivelDesbloqueado"
       @cerrar="ficha = null" @repasar="repasarDesdeFicha" @iniciar="iniciarDesdeFicha" />
     <ProgressProgressPanel v-if="verEstadisticas" @cerrar="verEstadisticas = false" @practicar="verEstadisticas = false; practicando = true" />
     <ProgressPracticePanel v-if="practicando" @cerrar="practicando = false" />
@@ -52,6 +53,7 @@
     <!-- Transición Cinemática de Encuentro / Versus al entrar al nivel -->
     <MapEncuentroTransicion
       :activo="enTransicion"
+      :breve="Boolean(nivelSeleccionado) && nivelSeleccionado.numero < nivelDesbloqueado"
       :nivel="nivelSeleccionado"
       @listo="iniciarCombate"
       @cancelar="cancelarTransicion"
@@ -60,7 +62,10 @@
 </template>
 
 <script setup>
-import nivelesBase from '~/data/niveles.json'
+import { mezclarPregunta } from '~/composables/useBarajar.js'
+import { bancoPreguntas } from '~/composables/useBancoPreguntas.js'
+import { aplicarDificultad } from '~/lib/dificultad.js'
+const nivelesBase = bancoPreguntas.niveles // misma fuente que el motor de selección (ids permanentes)
 import contenidos from '~/data/contenidos.json'
 
 const { language, t, translateContent } = useLanguage()
@@ -100,6 +105,7 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', actualiza
 const pantalla = ref('mapa')
 const nivelActual = ref(null)
 const nivelSeleccionado = ref(null)
+const dificultadSeleccionada = ref('normal')
 const enTransicion = ref(false)
 const nivelDesbloqueado = computed(() => progreso.estado.progreso.desbloqueado)
 const intento = ref(0)
@@ -142,10 +148,11 @@ function repasarDesdeFicha() {
   const n = ficha.value.numero
   navigateTo(`/biblioteca?desde=mision&mision=${n}&tema=${n === 5 ? 'final' : n}`)
 }
-function iniciarDesdeFicha() {
+function iniciarDesdeFicha(dificultad = 'normal') {
   const nivel = ficha.value
   if (!nivel || nivel.numero > nivelDesbloqueado.value) return
   nivelSeleccionado.value = nivel
+  dificultadSeleccionada.value = dificultad === 'dificil' ? 'dificil' : 'normal'
   ficha.value = null
   enTransicion.value = true
 }
@@ -154,29 +161,26 @@ function cancelarTransicion() {
   enTransicion.value = false
   if (nivelSeleccionado.value) releaseScope(`nivel-${nivelSeleccionado.value.numero}`)
 }
-// Cada ronda puede tener «variantes»: en cada intento se sortea una, distinta de la anterior.
-const ultimaVariante = {}
-function prepararNivel(nivel) {
-  const preguntas = nivel.preguntas.map((base, i) => {
-    const opciones = [base, ...(base.variantes ?? [])]
-    if (opciones.length === 1) return base
-    const clave = `${nivel.numero}-${i}`
-    let elegido
-    do { elegido = Math.floor(Math.random() * opciones.length) } while (elegido === ultimaVariante[clave])
-    ultimaVariante[clave] = elegido
-    return opciones[elegido]
+// Cada ronda tiene una familia de variantes con id permanente. Se elige una que no se repita: primero las no vistas y,
+// cuando se han visto todas, la menos reciente (el historial de ids vive en el progreso y sobrevive a recargar).
+function prepararNivel(nivel, dificultad = 'normal') {
+  const preguntas = nivel.preguntas.map((base) => {
+    const elegida = bancoPreguntas.elegirVariante(base.ronda, progreso.vistasDe(base.ronda)) ?? base
+    // El nivel puede estar traducido: se toma la variante traducida con el mismo id.
+    const familia = [base, ...(base.variantes ?? [])]
+    return mezclarPregunta(familia.find((q) => q.id === elegida.id) ?? elegida)
   })
-  return { ...nivel, preguntas }
+  return aplicarDificultad({ ...nivel, preguntas }, dificultad)
 }
 
 function reintentar() {
-  nivelActual.value = prepararNivel(niveles.value.find((zona) => zona.numero === nivelActual.value.numero))
+  nivelActual.value = prepararNivel(niveles.value.find((zona) => zona.numero === nivelActual.value.numero), nivelActual.value.dificultad)
   intento.value++
 }
 
 function iniciarCombate() {
   releaseLevelsExcept(nivelSeleccionado.value.numero)
-  nivelActual.value = prepararNivel(nivelSeleccionado.value)
+  nivelActual.value = prepararNivel(nivelSeleccionado.value, dificultadSeleccionada.value)
   pantalla.value = 'combate'
   enTransicion.value = false
 }
@@ -203,7 +207,7 @@ function volverAlMapa() {
     max(12px, env(safe-area-inset-right))
     max(10px, env(safe-area-inset-bottom))
     max(12px, env(safe-area-inset-left));
-  background: #0b1325;
+  background: radial-gradient(ellipse at 50% 0%, #1b2a4a 0%, #0b1325 60%);
   animation: aparicion-mapa 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -234,6 +238,7 @@ function volverAlMapa() {
 h1 {
   margin-top: 0.25rem;
   color: #ffe09a;
+  text-shadow: 0 0 18px #ffb84d55, 0 2px 0 #000a;
   font-family: 'Cinzel', Georgia, serif;
   font-size: clamp(1.4rem, 4.5vw, 2.4rem);
   line-height: 1.15;

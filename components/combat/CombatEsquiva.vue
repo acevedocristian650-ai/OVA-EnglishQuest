@@ -2,7 +2,7 @@
   <div class="esquiva-actividad" :class="{ arrastre: gesto }" @pointermove="mover" @pointerup="soltar"
     @pointercancel="cancelar" @lostpointercapture="cancelar">
     <p v-if="pregunta.tipo === 'esquiva-frase'" class="aviso" lang="en">
-      It <span ref="hueco" class="hueco" :class="{ resaltado: sobreHueco }">___</span> attack!
+      {{ pregunta.texto.split('___')[0] }}<span ref="hueco" class="hueco" :class="{ resaltado: sobreHueco }">___</span>{{ pregunta.texto.split('___')[1] }}
     </p>
     <div v-if="pregunta.tipo === 'esquivar'" class="carriles" aria-hidden="true">
       <span :class="{ elegido: ladoElegido === 'izquierda' }">← {{ t('Izquierda') }}</span>

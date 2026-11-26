@@ -38,9 +38,16 @@
             </ul>
             <!-- Evaluación final: victoria de combate y resultado educativo van por separado -->
             <div v-if="informe.final" class="final" :class="informe.final.aprobada ? 'apr' : 'noapr'" role="status">
-              <p><strong>{{ t('Combate') }}:</strong> {{ victoria ? t('guardián derrotado') : t('derrota') }} · <strong>{{ t('Educativo') }}:</strong>
-                {{ informe.final.aprobada ? t('aprobado') : informe.final.completo ? t('necesitas reforzar tus conocimientos') : t('evaluación incompleta') }}
-                ({{ Math.round(informe.precision * 100) }} % · {{ t('mínimo') }} {{ Math.round(informe.final.umbral * 100) }} %)</p>
+              <!-- Tres cosas distintas: ganar el combate NO es lo mismo que demostrar inglés -->
+              <p><strong>⚔ {{ t('Combate') }}:</strong> {{ victoria ? t('guardián derrotado') : t('derrota') }}</p>
+              <p><strong>📘 {{ t('Aprendizaje demostrado') }}:</strong>
+                {{ informe.final.aprendizaje === 'demostrado' ? t('sí, en las cuatro temáticas') : informe.final.completo ? (informe.final.aprendizaje === 'parcial' ? t('parcial: refuerza lo marcado') : t('todavía no: repasa y vuelve a intentarlo')) : t('evaluación incompleta') }}</p>
+              <p class="evid">
+                <span>✔ {{ informe.final.global.primerIntento }} {{ t('sin ayuda') }}</span>
+                <span v-if="informe.final.global.conAyuda">📝 {{ informe.final.global.conAyuda }} {{ t('con ayuda') }}</span>
+                <span>✖ {{ informe.final.global.falladas }} {{ t('falladas') }}</span>
+                <span v-if="informe.final.global.sinResponder">⏱ {{ informe.final.global.sinResponder }} {{ t('sin responder') }}</span>
+              </p>
               <p v-if="!informe.final.aprobada && informe.final.reforzar.length" class="repasar">{{ t('Repasa') }}: {{ informe.final.reforzar.map((g) => g.tema).join(' · ') }}</p>
             </div>
             <p v-else-if="victoria && nivel.numero === 4" class="nota">{{ t('Se abrió «La última prueba del reino» en el mapa.') }}</p>
@@ -55,8 +62,8 @@
             <ul>
               <li v-for="g in informe.final.porTema" :key="g.tema" :class="g.aprobado ? 'ok' : 'no'">
                 <span>{{ t('Fase') }} {{ g.fase }} · {{ g.tema }}</span>
-                <strong>{{ g.aciertos }} / {{ g.total }} ({{ Math.round(g.precision * 100) }} %)</strong>
-                <small>{{ g.aprobado ? t('Superada') : t('Necesita refuerzo') }}</small>
+                <strong>{{ g.aciertos }} / {{ g.total }}</strong>
+                <small>{{ g.estado === 'dominado' ? t('Dominada') : g.aprobado ? t('Lograda (2 de 3)') : t('Necesita refuerzo') }}<template v-if="g.conAyuda"> · 📝 {{ g.conAyuda }} {{ t('con ayuda') }}</template></small>
               </li>
             </ul>
             <p v-if="!informe.final.completo" class="nota">{{ t('La evaluación terminó antes de completar todos los desafíos; la aprobación exige todos los desafíos lingüísticos.') }}</p>
@@ -70,6 +77,8 @@
           <p>{{ t('Tu respuesta') }}: <span lang="en">{{ registro.respuesta || t('Sin respuesta') }}</span> · <strong :class="registro.acierto ? 'si' : 'no-t'">{{ registro.acierto ? t('Correcta') : t('Incorrecta') }}</strong></p>
           <p>{{ t('Respuesta correcta') }}: <strong lang="en">{{ registro.correcta }}</strong></p>
           <p>{{ registro.explicacion }}</p>
+          <p v-if="!registro.acierto && registro.porQue?.[registro.respuesta]" class="evid"><span>{{ registro.porQue[registro.respuesta] }}</span></p>
+          <p v-if="registro.ayuda" class="evid"><span>📝 {{ t(['transcripcion', 'sin-voz'].includes(registro.ayuda) ? 'Contó como lectura con ayuda, no como comprensión auditiva.' : registro.ayuda === 'correccion' ? 'Respuesta corregida tras un error.' : 'Respuesta con pista.') }}</span></p>
           <div class="pag">
             <button type="button" class="b-sec" :disabled="indiceRepaso === 0" @click="indiceRepaso--">{{ t('Anterior') }}</button>
             <span>{{ indiceRepaso + 1 }} / {{ historial.length }}</span>
@@ -83,6 +92,7 @@
           <button v-if="informe" type="button" class="b-sec" @click="ir('informe')">{{ t('Ver informe de aprendizaje') }}</button>
           <button v-if="historial.length" type="button" class="b-sec" @click="indiceRepaso = 0; ir('repaso')">{{ t('Revisar respuestas') }}</button>
           <button v-if="refuerzo !== null" type="button" class="b-sec" @click="emit('reforzar', refuerzo)">{{ t('Reforzar contenido') }}</button>
+          <button v-if="(informe?.falladas ?? []).length" type="button" class="b-sec" @click="emit('corregir')">{{ t('Corregir mis errores') }}</button>
           <button v-if="informe?.final?.aprobada" type="button" class="b-sec" @click="ir('cierre')">{{ t('Ver cierre del reino') }}</button>
         </template>
         <button v-else type="button" class="b-sec" @click="ir('resumen')">{{ t('Volver al resultado') }}</button>
@@ -105,7 +115,7 @@ const props = defineProps({
   informe: { type: Object, default: null }, nivel: { type: Object, required: true }, historial: { type: Array, default: () => [] },
   victoria: Boolean, pruebaRemate: Boolean, practica: Boolean, aciertos: { type: Number, default: 0 }
 })
-const emit = defineEmits(['volver', 'reintentar', 'reforzar', 'menu'])
+const emit = defineEmits(['volver', 'reintentar', 'reforzar', 'menu', 'corregir'])
 const { t } = useLanguage()
 const store = usePlayerProgress()
 const esFinal = computed(() => props.nivel.numero === 5)
@@ -128,6 +138,7 @@ function ir(v) { vista.value = v; nextTick(() => { zona.value?.scrollTo?.({ top:
 </script>
 
 <style scoped>
+.evid { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 2px 0; font-size: .85rem; color: #e8dcc2; }
 .velo { position: absolute; inset: 0; z-index: 55; display: grid; place-items: center; padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); background: radial-gradient(ellipse at center, #0b1018b8, #05080ff0); animation: aparecer .35s ease-out both; }
 @keyframes aparecer { from { opacity: 0; } }
 .caja { display: flex; flex-direction: column; width: min(100%, 720px); max-height: 100%; border: 1px solid #b68a48; border-radius: 14px; background: linear-gradient(145deg, #30271f, #121a29 78%); color: #f7edda; box-shadow: 0 18px 60px #000a; overflow: hidden; }

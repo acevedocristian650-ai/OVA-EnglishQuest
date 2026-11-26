@@ -10,7 +10,7 @@ export function useLanguage() {
     if (value && typeof value === 'object') {
       return Object.fromEntries(Object.entries(value).map(([key, item]) => [
         key,
-        key === 'debilidad' || key === 'id' || key === 'tipo' ? item : translateContent(item)
+        key === 'debilidad' || key === 'id' || key === 'ronda' || key === 'tipo' || key === 'der' || key === 'señuelos' ? item : translateContent(item)
       ]))
     }
     return value

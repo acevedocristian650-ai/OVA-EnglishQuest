@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/validar-preguntas.mjs && node scripts/simular-combate.mjs && node scripts/pruebas-modulos.mjs && node scripts/validar-traducciones.mjs && node scripts/generar-variantes.mjs --verificar",
+    "test": "node scripts/validar-preguntas.mjs && node scripts/simular-combate.mjs && node scripts/pruebas-modulos.mjs && node scripts/validar-traducciones.mjs && node scripts/generar-variantes.mjs --verificar && node scripts/pruebas-barajado.mjs && node scripts/pruebas-v3.mjs && node scripts/pruebas-recursos.mjs && node scripts/pruebas-integracion.mjs && node scripts/pruebas-dificultad.mjs",
     "dev": "nuxt dev",
     "build": "nuxt generate",
     "generate": "nuxt generate",

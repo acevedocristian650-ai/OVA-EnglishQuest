@@ -42,7 +42,9 @@ export function useCombatEngine({
   emit = () => {},
   alTerminar = () => {},
   ajustes = {},
-  entorno = {}
+  entorno = {},
+  // Datos extra de la ronda para el historial (p. ej. ayuda usada en una actividad de escucha). No altera ninguna regla de combate.
+  datosRonda = () => ({})
 } = {}) {
   const ahora = entorno.ahora ?? (() => performance.now())
   const poner = entorno.setTimeout ?? ((fn, ms) => setTimeout(fn, ms))
@@ -147,8 +149,9 @@ export function useCombatEngine({
   function registrar(acierto, extra = {}) {
     const q = pregunta.value
     historial.value.push({
-      pregunta: q, respuesta: respuesta.value, acierto, agotado: agotado.value, ...extra,
+      pregunta: q, respuesta: respuesta.value, acierto, agotado: agotado.value, ...extra, ...datosRonda(q),
       tipo: q.tipo, texto: q.texto, correcta: q.correcta, explicacion: q.explicacion, indice: indice.value, tema: q.tema, fase: q.fase,
+      id: q.id, ronda: q.ronda, porQue: q.porQue,
       segundos: Math.round(segundosRonda * 10) / 10
     })
   }

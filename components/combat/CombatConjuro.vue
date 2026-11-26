@@ -13,19 +13,21 @@
           <template v-for="(palabra, indice) in pregunta.frase" :key="indice">
             <span v-if="!resuelto && (!pregunta.huecos || pregunta.huecos.includes(indice))"
               class="insercion" :class="{ activo: destino === indice }"
-              :data-hueco="indice">·</span>
+              :data-hueco="indice" role="button" tabindex="0" :aria-label="t('Colocar not aquí')"
+              @click="colocarNot(indice)" @keydown.enter.prevent="colocarNot(indice)" @keydown.space.prevent="colocarNot(indice)">·</span>
             <strong v-if="resuelto && indice === colocacion" class="negacion">not</strong>
             <span>{{ palabra }}</span>
           </template>
           <span v-if="!resuelto && (!pregunta.huecos || pregunta.huecos.includes(pregunta.frase.length))"
             class="insercion" :class="{ activo: destino === pregunta.frase.length }"
-            :data-hueco="pregunta.frase.length">·</span>
+            :data-hueco="pregunta.frase.length" role="button" tabindex="0" :aria-label="t('Colocar not aquí')"
+            @click="colocarNot(pregunta.frase.length)" @keydown.enter.prevent="colocarNot(pregunta.frase.length)" @keydown.space.prevent="colocarNot(pregunta.frase.length)">·</span>
           <strong v-if="resuelto && colocacion === pregunta.frase.length" class="negacion">not</strong>
         </div>
       </div>
       <button v-if="!resuelto && !invocando" type="button" class="runa" :class="{ arrastrando: gesto }"
         :style="gesto ? { translate: `${gesto.dx}px ${gesto.dy}px` } : null"
-        @pointerdown="tomar" lang="en" :aria-label="t('Arrastra not al lugar que convierte el hechizo en una negación')">not</button>
+        @pointerdown="tomar" lang="en" :aria-label="t('Arrastra not al lugar que convierte el hechizo en una negación, o toca el lugar con el teclado')">not</button>
     </template>
 
     <template v-else>
@@ -39,10 +41,11 @@
       <div class="cadena" :class="{ completa: resuelto }" :lang="frasePromesa ? 'en' : 'es'" aria-live="polite">
         {{ frasePromesa || t('Une las palabras de la promesa') }}
       </div>
+      <button v-if="!resuelto" type="button" class="modo-nodos" :aria-pressed="modoToque" @click="alternarModo">{{ t(modoToque ? 'Unir arrastrando' : 'Elegir por pulsaciones') }}</button>
       <div v-if="!resuelto" class="nodos">
         <button v-for="(palabra, indice) in pregunta.nodos" :key="indice"
-          type="button" :data-nodo="indice" :aria-pressed="seleccion.includes(indice)"
-          @pointerdown="iniciarPromesa($event, indice)" lang="en">{{ palabra }}</button>
+          type="button" :data-nodo="indice" :aria-pressed="seleccion.includes(indice) || clic.includes(indice)"
+          @pointerdown="!modoToque && iniciarPromesa($event, indice)" @click="(modoToque || $event.detail === 0) && tocarNodo(indice)" lang="en">{{ palabra }}</button>
       </div>
     </template>
   </div>
@@ -67,7 +70,23 @@ const seleccion = ref([])
 const colocacion = ref(null)
 const puntos = ref([])
 const trazo = ref([])
-const frasePromesa = computed(() => seleccion.value.map(i => props.pregunta.nodos[i]).join(' '))
+const clic = ref([])
+const modoToque = ref(false)
+function alternarModo() { modoToque.value = !modoToque.value; clic.value = []; seleccion.value = []; puntos.value = []; trazo.value = [] }
+const frasePromesa = computed(() => (seleccion.value.length ? seleccion.value : clic.value).map(i => props.pregunta.nodos[i]).join(' '))
+const cantidadNodosCorrectos = computed(() => {
+  const objetivo = props.pregunta.correcta.trim().split(/\s+/)
+  const buscar = (pos, usados) => {
+    if (pos === objetivo.length) return usados.length
+    for (const [i, nodo] of (props.pregunta.nodos ?? []).entries()) {
+      if (usados.includes(i)) continue
+      const partes = nodo.trim().split(/\s+/)
+      if (partes.every((w, j) => objetivo[pos + j] === w)) { const n = buscar(pos + partes.length, [...usados, i]); if (n) return n }
+    }
+    return 0
+  }
+  return buscar(0, []) || (props.pregunta.nodos ?? []).length
+})
 const audioEnPrimerPlano = useState('audio-en-primer-plano', () => false)
 
 let vozGigante = null
@@ -167,6 +186,22 @@ function enlazarNodos(evento, actual) {
   trazo.value = [...puntos.value, [actual.x - campo.left, actual.y - campo.top]]
 }
 
+// Alternativas accesibles al arrastre (teclado, lector de pantalla, toque simple): emiten exactamente la misma respuesta.
+function colocarNot(posicion) {
+  if (props.resuelto || props.invocando || gesto.value) return
+  colocacion.value = posicion
+  const frase = [...props.pregunta.frase]
+  frase.splice(posicion, 0, 'not')
+  emit('responder', frase.join(' '))
+}
+
+function tocarNodo(indice) {
+  if (props.resuelto || gesto.value || clic.value.includes(indice) || seleccion.value.length) return
+  clic.value.push(indice)
+  if (frasePromesa.value === props.pregunta.correcta) { emit('responder', frasePromesa.value); return }
+  if (clic.value.length >= cantidadNodosCorrectos.value || clic.value.length === props.pregunta.nodos.length) emit('responder', frasePromesa.value)
+}
+
 function cancelar(evento) {
   if (gesto.value?.puntero !== evento.pointerId) return
   gesto.value = null
@@ -196,6 +231,7 @@ function soltar(evento) {
 </script>
 
 <style scoped>
+.modo-nodos { position: absolute; z-index: 4; top: 2px; right: 2px; min-height: 36px; padding: 4px 8px; font-size: .8rem; border: 1px solid #c7a263; border-radius: 6px; background: #101928f5; color: #fff0cf; pointer-events: auto; }
 .conjuro { position: absolute; inset: 0; z-index: 3; pointer-events: none; color: #fff0cf; }
 .hechizo {
   position: absolute;

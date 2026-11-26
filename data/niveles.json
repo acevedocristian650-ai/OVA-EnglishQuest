@@ -60,7 +60,9 @@
               }
             ],
             "correcta": "Héroe: tonight, in two days · Monstruo: last week, a week ago",
-            "explicacion": "Tonight e in two days miran al futuro. Last week y a week ago indican pasado."
+            "explicacion": "Tonight e in two days miran al futuro. Last week y a week ago indican pasado.",
+            "ronda": "n1-clasificar",
+            "id": "n1-clasificar.02"
           },
           {
             "tipo": "clasificar",
@@ -84,9 +86,39 @@
               }
             ],
             "correcta": "Héroe: soon, next year · Monstruo: last month, two days ago",
-            "explicacion": "Soon y next year indican futuro. Last month y two days ago indican pasado."
+            "explicacion": "Soon y next year indican futuro. Last month y two days ago indican pasado.",
+            "ronda": "n1-clasificar",
+            "id": "n1-clasificar.03"
+          },
+          {
+            "tipo": "clasificar",
+            "texto": "Arrastra futuro al héroe y pasado al monstruo.",
+            "palabras": [
+              {
+                "texto": "tomorrow morning",
+                "futuro": true
+              },
+              {
+                "texto": "next summer",
+                "futuro": true
+              },
+              {
+                "texto": "last Friday",
+                "futuro": false
+              },
+              {
+                "texto": "yesterday afternoon",
+                "futuro": false
+              }
+            ],
+            "correcta": "Héroe: tomorrow morning, next summer · Monstruo: last Friday, yesterday afternoon",
+            "explicacion": "Next y tomorrow miran al futuro; last y yesterday miran al pasado.",
+            "ronda": "n1-clasificar",
+            "id": "n1-clasificar.04"
           }
-        ]
+        ],
+        "ronda": "n1-clasificar",
+        "id": "n1-clasificar.01"
       },
       {
         "tipo": "errores",
@@ -123,7 +155,9 @@
             ],
             "error": 1,
             "correcta": "I am going to visit the castle tomorrow.",
-            "explicacion": "Con I se usa am: I am going to visit the castle."
+            "explicacion": "Con I se usa am: I am going to visit the castle.",
+            "ronda": "n1-errores",
+            "id": "n1-errores.02"
           },
           {
             "tipo": "errores",
@@ -140,31 +174,95 @@
             ],
             "error": 4,
             "correcta": "She is going to cook dinner tonight.",
-            "explicacion": "Después de going to va el verbo base: cook, no cooks."
+            "explicacion": "Después de going to va el verbo base: cook, no cooks.",
+            "ronda": "n1-errores",
+            "id": "n1-errores.03"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the plan.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "They",
+              "are",
+              "going",
+              "to",
+              "cooking",
+              "dinner",
+              "tonight."
+            ],
+            "error": 4,
+            "correcta": "They are going to cook dinner tonight.",
+            "explicacion": "Después de going to el verbo va en forma base: cook.",
+            "ronda": "n1-errores",
+            "id": "n1-errores.04"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the plan.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "It",
+              "is",
+              "going",
+              "to",
+              "rained",
+              "tonight."
+            ],
+            "error": 4,
+            "correcta": "It is going to rain tonight.",
+            "explicacion": "Going to + verbo base: rain, no rained.",
+            "ronda": "n1-errores",
+            "id": "n1-errores.05"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the plan.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "I",
+              "am",
+              "go",
+              "to",
+              "visit",
+              "the",
+              "lake",
+              "next",
+              "week."
+            ],
+            "error": 2,
+            "correcta": "I am going to visit the lake next week.",
+            "explicacion": "El plan se forma con am + going to; falta la forma going.",
+            "ronda": "n1-errores",
+            "id": "n1-errores.06"
           }
-        ]
+        ],
+        "ronda": "n1-errores",
+        "id": "n1-errores.01"
       },
       {
         "tipo": "cortar",
-        "texto": "Which phrase refers to the future?",
+        "texto": "Which sentence is about the future?",
         "opciones": [
-          "Yesterday",
-          "Next week",
-          "Last night"
+          "She is going to cook dinner tonight.",
+          "She cooked dinner last night.",
+          "She cooks dinner every night."
         ],
-        "correcta": "Next week",
-        "explicacion": "Next week significa la próxima semana.",
+        "correcta": "She is going to cook dinner tonight.",
+        "explicacion": "Is going to + tonight apuntan al futuro; cooked mira atrás y cooks es rutina.",
         "variantes": [
           {
             "tipo": "cortar",
-            "texto": "Choose the future time.",
+            "texto": "Which expression is about the future?",
             "opciones": [
-              "Tomorrow",
-              "Last year",
-              "Yesterday morning"
+              "In two days",
+              "Two days ago",
+              "Last Sunday"
             ],
-            "correcta": "Tomorrow",
-            "explicacion": "Tomorrow significa mañana, un tiempo futuro."
+            "correcta": "In two days",
+            "explicacion": "In two days significa dentro de dos días; two days ago es pasado.",
+            "ronda": "n1-cortar",
+            "id": "n1-cortar.02"
           },
           {
             "tipo": "cortar",
@@ -175,15 +273,34 @@
               "I visit the lake every day."
             ],
             "correcta": "I am going to visit the lake.",
-            "explicacion": "Am going to expresa un plan para el futuro."
+            "explicacion": "Am going to expresa un plan para el futuro.",
+            "ronda": "n1-cortar",
+            "id": "n1-cortar.03"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Pick the plan for next week.",
+            "opciones": [
+              "We are going to climb the hill next week.",
+              "We climbed the hill last week.",
+              "We climb the hill every week."
+            ],
+            "correcta": "We are going to climb the hill next week.",
+            "explicacion": "Are going to + next week: un plan futuro.",
+            "ronda": "n1-cortar",
+            "id": "n1-cortar.04"
           }
-        ]
+        ],
+        "ronda": "n1-cortar",
+        "id": "n1-cortar.01"
       },
       {
         "tipo": "hacha",
-        "texto": "The griffin will strike!",
+        "texto": "The griffin is going to strike!",
         "correcta": "Cut all three energy balls.",
-        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía."
+        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía.",
+        "ronda": "n1-hacha",
+        "id": "n1-hacha.01"
       },
       {
         "tipo": "parejas",
@@ -225,7 +342,12 @@
               }
             ],
             "correcta": "tonight = esta noche · next year = el próximo año · last night = anoche",
-            "explicacion": "Tonight y next year miran al futuro. Last night mira al pasado."
+            "explicacion": "Tonight y next year miran al futuro. Last night mira al pasado.",
+            "señuelos": [
+              "el año pasado"
+            ],
+            "ronda": "n1-parejas",
+            "id": "n1-parejas.02"
           },
           {
             "tipo": "parejas",
@@ -246,9 +368,45 @@
               }
             ],
             "correcta": "soon = pronto · two days ago = hace dos días · next month = el próximo mes",
-            "explicacion": "Soon y next month miran al futuro. Two days ago mira al pasado."
+            "explicacion": "Soon y next month miran al futuro. Two days ago mira al pasado.",
+            "señuelos": [
+              "hace un mes"
+            ],
+            "ronda": "n1-parejas",
+            "id": "n1-parejas.03"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match each plan with its meaning.",
+            "contexto": "Une cada palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "She is going to cook",
+                "der": "Ella va a cocinar"
+              },
+              {
+                "izq": "They are going to sleep",
+                "der": "Ellos van a dormir"
+              },
+              {
+                "izq": "I am going to read",
+                "der": "Voy a leer"
+              }
+            ],
+            "señuelos": [
+              "Ella cocinó"
+            ],
+            "correcta": "She is going to cook = Ella va a cocinar · They are going to sleep = Ellos van a dormir · I am going to read = Voy a leer",
+            "explicacion": "Am/is/are going to + verbo: lo que alguien va a hacer.",
+            "ronda": "n1-parejas",
+            "id": "n1-parejas.04"
           }
-        ]
+        ],
+        "señuelos": [
+          "hoy"
+        ],
+        "ronda": "n1-parejas",
+        "id": "n1-parejas.01"
       },
       {
         "tipo": "ordenar",
@@ -274,7 +432,12 @@
               "going to",
               "paint the wall",
               "tomorrow."
-            ]
+            ],
+            "sobran": [
+              "are"
+            ],
+            "ronda": "n1-ordenar",
+            "id": "n1-ordenar.02"
           },
           {
             "tipo": "ordenar",
@@ -287,9 +450,55 @@
               "going to",
               "open the gate",
               "tonight."
-            ]
+            ],
+            "sobran": [
+              "is"
+            ],
+            "ronda": "n1-ordenar",
+            "id": "n1-ordenar.03"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Plan the explorers' trip.",
+            "fichas": [
+              "We",
+              "are",
+              "going to",
+              "explore the cave",
+              "next week."
+            ],
+            "correcta": "We are going to explore the cave next week.",
+            "explicacion": "Sujeto + are + going to + verbo + tiempo.",
+            "sobran": [
+              "is"
+            ],
+            "ronda": "n1-ordenar",
+            "id": "n1-ordenar.04"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Plan the stable work.",
+            "fichas": [
+              "He",
+              "is",
+              "going to",
+              "feed the horse",
+              "tomorrow."
+            ],
+            "correcta": "He is going to feed the horse tomorrow.",
+            "explicacion": "He usa is: He is going to feed.",
+            "sobran": [
+              "are"
+            ],
+            "ronda": "n1-ordenar",
+            "id": "n1-ordenar.05"
           }
-        ]
+        ],
+        "sobran": [
+          "is"
+        ],
+        "ronda": "n1-ordenar",
+        "id": "n1-ordenar.01"
       }
     ]
   },
@@ -333,7 +542,12 @@
               "not",
               "going to",
               "cross the river."
-            ]
+            ],
+            "sobran": [
+              "don't"
+            ],
+            "ronda": "n2-ordenar",
+            "id": "n2-ordenar.02"
           },
           {
             "tipo": "ordenar",
@@ -347,16 +561,58 @@
               "not",
               "going to",
               "open the gate."
-            ]
+            ],
+            "sobran": [
+              "isn't"
+            ],
+            "ronda": "n2-ordenar",
+            "id": "n2-ordenar.03"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Ask about the plan. Make a question.",
+            "modelo": "He is going to cross the bridge.",
+            "fichas": [
+              "Is",
+              "he",
+              "going to",
+              "cross",
+              "the bridge?"
+            ],
+            "correcta": "Is he going to cross the bridge?",
+            "explicacion": "En la pregunta, is pasa al inicio.",
+            "sobran": [
+              "are"
+            ],
+            "ronda": "n2-ordenar",
+            "id": "n2-ordenar.04"
           }
-        ]
+        ],
+        "sobran": [
+          "no"
+        ],
+        "ronda": "n2-ordenar",
+        "id": "n2-ordenar.01"
       },
       {
         "tipo": "esquivar",
         "texto": "The basilisk is going to attack on the left!",
         "lado": "izquierda",
         "correcta": "Move right.",
-        "explicacion": "On the left indica que el ataque viene por la izquierda. Mueve al héroe al lado derecho."
+        "explicacion": "On the left indica que el ataque viene por la izquierda. Mueve al héroe al lado derecho.",
+        "variantes": [
+          {
+            "tipo": "esquivar",
+            "texto": "The basilisk is going to attack on the right!",
+            "lado": "derecha",
+            "correcta": "Move left.",
+            "explicacion": "On the right indica que el ataque viene por la derecha. Mueve al héroe al lado izquierdo.",
+            "ronda": "n2-esquivar",
+            "id": "n2-esquivar.02"
+          }
+        ],
+        "ronda": "n2-esquivar",
+        "id": "n2-esquivar.01"
       },
       {
         "tipo": "cortar",
@@ -378,7 +634,9 @@
               "are"
             ],
             "correcta": "am",
-            "explicacion": "Con I se usa am going to."
+            "explicacion": "Con I se usa am going to.",
+            "ronda": "n2-cortar",
+            "id": "n2-cortar.02"
           },
           {
             "tipo": "cortar",
@@ -389,15 +647,47 @@
               "am"
             ],
             "correcta": "are",
-            "explicacion": "Con they se usa are going to."
+            "explicacion": "Con they se usa are going to.",
+            "ronda": "n2-cortar",
+            "id": "n2-cortar.03"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Everyone ___ going to cross the bridge.",
+            "opciones": [
+              "is",
+              "are",
+              "am"
+            ],
+            "correcta": "is",
+            "explicacion": "Everyone se trata como singular: is going to.",
+            "ronda": "n2-cortar",
+            "id": "n2-cortar.04"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "My sister and I ___ going to cross.",
+            "opciones": [
+              "are",
+              "is",
+              "am"
+            ],
+            "correcta": "are",
+            "explicacion": "My sister and I equivale a we: are.",
+            "ronda": "n2-cortar",
+            "id": "n2-cortar.05"
           }
-        ]
+        ],
+        "ronda": "n2-cortar",
+        "id": "n2-cortar.01"
       },
       {
         "tipo": "hacha",
         "texto": "The basilisk is going to attack!",
         "correcta": "Cut all three energy balls.",
-        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía."
+        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía.",
+        "ronda": "n2-hacha",
+        "id": "n2-hacha.01"
       },
       {
         "tipo": "esquiva-frase",
@@ -408,7 +698,37 @@
           "am going to"
         ],
         "correcta": "is going to",
-        "explicacion": "Con it usamos is going to seguido del verbo base: It is going to attack!"
+        "explicacion": "Con it usamos is going to seguido del verbo base: It is going to attack!",
+        "variantes": [
+          {
+            "tipo": "esquiva-frase",
+            "texto": "I ___ jump!",
+            "fichas": [
+              "am going to",
+              "is going to",
+              "are going to"
+            ],
+            "correcta": "am going to",
+            "explicacion": "Con I usamos am going to: I am going to jump!",
+            "ronda": "n2-esquiva-frase",
+            "id": "n2-esquiva-frase.02"
+          },
+          {
+            "tipo": "esquiva-frase",
+            "texto": "We ___ cross now!",
+            "fichas": [
+              "are going to",
+              "am going to",
+              "is going to"
+            ],
+            "correcta": "are going to",
+            "explicacion": "Con we usamos are going to: We are going to cross!",
+            "ronda": "n2-esquiva-frase",
+            "id": "n2-esquiva-frase.03"
+          }
+        ],
+        "ronda": "n2-esquiva-frase",
+        "id": "n2-esquiva-frase.01"
       },
       {
         "tipo": "escuchar",
@@ -417,8 +737,8 @@
         "audio": "Look out! The stone is going to fall!",
         "opciones": [
           "The stone is going to fall!",
-          "The stone fell yesterday.",
-          "The stone is not going to fall!"
+          "The stone is not going to fall!",
+          "The stones are going to fall!"
         ],
         "correcta": "The stone is going to fall!",
         "explicacion": "Is going to + verbo base avisa de algo que está a punto de pasar.",
@@ -434,11 +754,13 @@
               "The bridge is not going to break!"
             ],
             "correcta": "The bridge is going to break!",
-            "explicacion": "Is going to avisa de algo que está a punto de pasar."
+            "explicacion": "Is going to avisa de algo que está a punto de pasar.",
+            "ronda": "n2-escuchar",
+            "id": "n2-escuchar.02"
           },
           {
             "tipo": "escuchar",
-            "texto": "Listen to the warning.",
+            "texto": "Listen to the plan.",
             "contexto": "Escucha y toca la frase que oíste.",
             "audio": "We are going to cross the river tomorrow.",
             "opciones": [
@@ -447,9 +769,43 @@
               "We are not going to cross the river."
             ],
             "correcta": "We are going to cross the river tomorrow.",
-            "explicacion": "Are going to + verbo base expresa un plan para mañana."
+            "explicacion": "Are going to + verbo base expresa un plan para mañana.",
+            "ronda": "n2-escuchar",
+            "id": "n2-escuchar.03"
+          },
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the warning.",
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "The basilisk is not going to attack.",
+            "opciones": [
+              "The basilisk is going to attack.",
+              "The basilisk is not going to attack.",
+              "The basilisk attacked yesterday."
+            ],
+            "correcta": "The basilisk is not going to attack.",
+            "explicacion": "Is not going to indica que no va a ocurrir.",
+            "ronda": "n2-escuchar",
+            "id": "n2-escuchar.04"
+          },
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the plan.",
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "They are going to cross at night.",
+            "opciones": [
+              "They are not going to cross at night.",
+              "They are going to cross at night.",
+              "They crossed last night."
+            ],
+            "correcta": "They are going to cross at night.",
+            "explicacion": "Are going to sin not: sí lo van a hacer.",
+            "ronda": "n2-escuchar",
+            "id": "n2-escuchar.05"
           }
-        ]
+        ],
+        "ronda": "n2-escuchar",
+        "id": "n2-escuchar.01"
       }
     ]
   },
@@ -501,7 +857,9 @@
             ],
             "error": 4,
             "correcta": "I think it will rain tomorrow.",
-            "explicacion": "Después de will usamos el verbo base: rain, no rains."
+            "explicacion": "Después de will usamos el verbo base: rain, no rains.",
+            "ronda": "n3-errores",
+            "id": "n3-errores.02"
           },
           {
             "tipo": "errores",
@@ -519,9 +877,64 @@
             ],
             "error": 3,
             "correcta": "The eagle will fly over the tower.",
-            "explicacion": "Después de will no se usa to: will fly."
+            "explicacion": "Después de will no se usa to: will fly.",
+            "ronda": "n3-errores",
+            "id": "n3-errores.03"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the prediction.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "They",
+              "will",
+              "helped",
+              "us",
+              "tonight."
+            ],
+            "error": 2,
+            "correcta": "They will help us tonight.",
+            "explicacion": "Después de will el verbo va en forma base: help.",
+            "ronda": "n3-errores",
+            "id": "n3-errores.04"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the promise.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "I",
+              "will",
+              "not",
+              "forgets",
+              "you."
+            ],
+            "error": 3,
+            "correcta": "I will not forget you.",
+            "explicacion": "Will not + verbo base: forget.",
+            "ronda": "n3-errores",
+            "id": "n3-errores.05"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the prediction.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "The",
+              "storm",
+              "wills",
+              "stop",
+              "soon."
+            ],
+            "error": 2,
+            "correcta": "The storm will stop soon.",
+            "explicacion": "Will no cambia con he, she o it: nunca lleva -s.",
+            "ronda": "n3-errores",
+            "id": "n3-errores.06"
           }
-        ]
+        ],
+        "ronda": "n3-errores",
+        "id": "n3-errores.01"
       },
       {
         "tipo": "romper-hechizo",
@@ -538,7 +951,48 @@
           "fall!"
         ],
         "correcta": "The hero will not fall.",
-        "explicacion": "Coloca not después de will para negar lo que anuncia el hechizo: The hero will not fall."
+        "explicacion": "Coloca not después de will para negar lo que anuncia el hechizo: The hero will not fall.",
+        "variantes": [
+          {
+            "tipo": "romper-hechizo",
+            "texto": "Make the spell negative.",
+            "invocacion": true,
+            "huecos": [
+              2,
+              3
+            ],
+            "frase": [
+              "The",
+              "storm",
+              "will",
+              "stop!"
+            ],
+            "correcta": "The storm will not stop.",
+            "explicacion": "Coloca not después de will para negar el hechizo: The storm will not stop.",
+            "ronda": "n3-romper-hechizo",
+            "id": "n3-romper-hechizo.02"
+          },
+          {
+            "tipo": "romper-hechizo",
+            "texto": "Make the spell negative.",
+            "invocacion": true,
+            "huecos": [
+              1,
+              2
+            ],
+            "frase": [
+              "We",
+              "will",
+              "win!"
+            ],
+            "correcta": "We will not win.",
+            "explicacion": "Not va justo después de will: We will not win.",
+            "ronda": "n3-romper-hechizo",
+            "id": "n3-romper-hechizo.03"
+          }
+        ],
+        "ronda": "n3-romper-hechizo",
+        "id": "n3-romper-hechizo.01"
       },
       {
         "tipo": "cortar",
@@ -560,7 +1014,9 @@
               "open"
             ],
             "correcta": "open",
-            "explicacion": "Después de will va el verbo base: open."
+            "explicacion": "Después de will va el verbo base: open.",
+            "ronda": "n3-cortar",
+            "id": "n3-cortar.02"
           },
           {
             "tipo": "cortar",
@@ -571,15 +1027,47 @@
               "climbed"
             ],
             "correcta": "climb",
-            "explicacion": "Después de will va el verbo base: climb."
+            "explicacion": "Después de will va el verbo base: climb.",
+            "ronda": "n3-cortar",
+            "id": "n3-cortar.03"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Which sentence is correct?",
+            "opciones": [
+              "She will go home.",
+              "She will goes home.",
+              "She will to go home."
+            ],
+            "correcta": "She will go home.",
+            "explicacion": "Will va seguido del verbo base, sin to ni -s.",
+            "ronda": "n3-cortar",
+            "id": "n3-cortar.04"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Which promise is correct?",
+            "opciones": [
+              "I will not tell anyone.",
+              "I will not told anyone.",
+              "I not will tell anyone."
+            ],
+            "correcta": "I will not tell anyone.",
+            "explicacion": "La negativa es will not + verbo base.",
+            "ronda": "n3-cortar",
+            "id": "n3-cortar.05"
           }
-        ]
+        ],
+        "ronda": "n3-cortar",
+        "id": "n3-cortar.01"
       },
       {
         "tipo": "hacha",
         "texto": "The eagle will strike!",
         "correcta": "Cut all three energy balls.",
-        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía."
+        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía.",
+        "ronda": "n3-hacha",
+        "id": "n3-hacha.01"
       },
       {
         "tipo": "proteger-aliado",
@@ -588,15 +1076,49 @@
         "nodos": [
           "I",
           "will",
-          "did",
+          "not",
           "protect you."
         ],
         "correcta": "I will protect you.",
-        "explicacion": "I will protect you expresa una promesa. Will va seguido del verbo base protect."
+        "explicacion": "I will protect you expresa una promesa. Will va seguido del verbo base protect.",
+        "variantes": [
+          {
+            "tipo": "proteger-aliado",
+            "texto": "Promise to help the ally.",
+            "contexto": "Promise you will help me!",
+            "nodos": [
+              "We",
+              "will",
+              "to",
+              "help you."
+            ],
+            "correcta": "We will help you.",
+            "explicacion": "We will help you es una promesa. Will va seguido del verbo base help.",
+            "ronda": "n3-proteger-aliado",
+            "id": "n3-proteger-aliado.02"
+          },
+          {
+            "tipo": "proteger-aliado",
+            "texto": "Promise to stay with the ally.",
+            "contexto": "Promise you will stay with me!",
+            "nodos": [
+              "I",
+              "will",
+              "going to",
+              "stay with you."
+            ],
+            "correcta": "I will stay with you.",
+            "explicacion": "I will stay with you es una promesa; will va con el verbo base stay.",
+            "ronda": "n3-proteger-aliado",
+            "id": "n3-proteger-aliado.03"
+          }
+        ],
+        "ronda": "n3-proteger-aliado",
+        "id": "n3-proteger-aliado.01"
       },
       {
         "tipo": "ordenar",
-        "texto": "Complete the knight's promise. Use will or 'll.",
+        "texto": "Complete the knight's promise. Use will.",
         "contexto": "Promise to return the key tomorrow.",
         "modelo": "I promise…",
         "correcta": "I promise I will return the key tomorrow.",
@@ -624,7 +1146,12 @@
               "tomorrow.",
               "I",
               "I"
-            ]
+            ],
+            "sobran": [
+              "to"
+            ],
+            "ronda": "n3-ordenar",
+            "id": "n3-ordenar.02"
           },
           {
             "tipo": "ordenar",
@@ -640,9 +1167,38 @@
               "tonight.",
               "I",
               "I"
-            ]
+            ],
+            "sobran": [
+              "are"
+            ],
+            "ronda": "n3-ordenar",
+            "id": "n3-ordenar.03"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Make a promise you will keep.",
+            "contexto": "Promise you will not forget your ally.",
+            "fichas": [
+              "I",
+              "will",
+              "not",
+              "forget",
+              "you."
+            ],
+            "correcta": "I will not forget you.",
+            "explicacion": "Will not + verbo base: una promesa en negativo.",
+            "sobran": [
+              "to"
+            ],
+            "ronda": "n3-ordenar",
+            "id": "n3-ordenar.04"
           }
-        ]
+        ],
+        "sobran": [
+          "am"
+        ],
+        "ronda": "n3-ordenar",
+        "id": "n3-ordenar.01"
       }
     ]
   },
@@ -708,7 +1264,9 @@
               }
             ],
             "correcta": "Do not enter",
-            "explicacion": "NO ENTRY prohíbe entrar a la calle."
+            "explicacion": "NO ENTRY prohíbe entrar a la calle.",
+            "ronda": "n4-zona",
+            "id": "n4-zona.02"
           },
           {
             "tipo": "zona",
@@ -733,9 +1291,40 @@
               }
             ],
             "correcta": "Wait and give way",
-            "explicacion": "Give way significa «ceder el paso»."
+            "explicacion": "Give way significa «ceder el paso».",
+            "ronda": "n4-zona",
+            "id": "n4-zona.03"
+          },
+          {
+            "tipo": "zona",
+            "texto": "A red circle with a white bar. What now?",
+            "tablero": "calle",
+            "señal": {
+              "imagen": "/images/signs/no-entry.svg",
+              "alt": "Círculo rojo con una barra blanca"
+            },
+            "zonas": [
+              {
+                "texto": "Turn around and go back",
+                "icono": "↶"
+              },
+              {
+                "texto": "Enter quickly",
+                "icono": "↑"
+              },
+              {
+                "texto": "Wait and enter later",
+                "icono": "◷"
+              }
+            ],
+            "correcta": "Turn around and go back",
+            "explicacion": "NO ENTRY prohíbe pasar: da la vuelta, no esperes.",
+            "ronda": "n4-zona",
+            "id": "n4-zona.04"
           }
-        ]
+        ],
+        "ronda": "n4-zona",
+        "id": "n4-zona.01"
       },
       {
         "tipo": "parejas",
@@ -782,7 +1371,12 @@
               }
             ],
             "correcta": "helmet = casco · crossing = cruce · lane = carril",
-            "explicacion": "Helmet protege la cabeza, crossing es donde cruzan peatones y lane es un carril."
+            "explicacion": "Helmet protege la cabeza, crossing es donde cruzan peatones y lane es un carril.",
+            "ronda": "n4-parejas",
+            "id": "n4-parejas.02",
+            "señuelos": [
+              "calle"
+            ]
           },
           {
             "tipo": "parejas",
@@ -803,17 +1397,53 @@
               }
             ],
             "correcta": "speed = velocidad · traffic light = semáforo · road = camino",
-            "explicacion": "Speed es la velocidad, traffic light el semáforo y road el camino."
+            "explicacion": "Speed es la velocidad, traffic light el semáforo y road el camino.",
+            "ronda": "n4-parejas",
+            "id": "n4-parejas.03",
+            "señuelos": [
+              "carril"
+            ]
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match the road words.",
+            "contexto": "Une cada palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "wear a helmet",
+                "der": "usar un casco"
+              },
+              {
+                "izq": "red light",
+                "der": "luz roja"
+              },
+              {
+                "izq": "speed limit",
+                "der": "límite de velocidad"
+              }
+            ],
+            "señuelos": [
+              "carril"
+            ],
+            "correcta": "wear a helmet = usar un casco · red light = luz roja · speed limit = límite de velocidad",
+            "explicacion": "Palabras y frases de la calle que ya usaste en las señales.",
+            "ronda": "n4-parejas",
+            "id": "n4-parejas.04"
           }
+        ],
+        "ronda": "n4-parejas",
+        "id": "n4-parejas.01",
+        "señuelos": [
+          "Slow down"
         ]
       },
       {
         "tipo": "cortar",
         "texto": "What does a STOP sign mean?",
         "opciones": [
-          "Go faster",
           "Come to a full stop",
-          "Keep going"
+          "Slow down, then keep going",
+          "Stop only if cars are coming"
         ],
         "correcta": "Come to a full stop",
         "explicacion": "STOP indica que debes detenerte por completo.",
@@ -823,37 +1453,85 @@
             "texto": "What does a YIELD sign mean?",
             "opciones": [
               "Give way",
-              "Go faster",
-              "Park here"
+              "Come to a full stop",
+              "Drive on: you have priority"
             ],
             "correcta": "Give way",
-            "explicacion": "YIELD significa ceder el paso."
+            "explicacion": "YIELD significa ceder el paso.",
+            "ronda": "n4-cortar",
+            "id": "n4-cortar.02",
+            "porQue": {
+              "Come to a full stop": "Eso es STOP. YIELD pide ceder el paso, no parar siempre.",
+              "Drive on: you have priority": "Con YIELD no tienes prioridad: debes ceder."
+            }
           },
           {
             "tipo": "cortar",
             "texto": "What does a NO ENTRY sign mean?",
             "opciones": [
-              "You can enter",
               "Do not enter",
-              "Stop and wait"
+              "Enter slowly",
+              "Stop and wait, then enter"
             ],
             "correcta": "Do not enter",
-            "explicacion": "NO ENTRY significa que no puedes entrar."
+            "explicacion": "NO ENTRY significa que no puedes entrar.",
+            "ronda": "n4-cortar",
+            "id": "n4-cortar.03",
+            "porQue": {
+              "Enter slowly": "NO ENTRY prohíbe entrar, también despacio.",
+              "Stop and wait, then enter": "Esperar no cambia la norma: no se puede entrar."
+            }
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Which sentence is a prohibition?",
+            "opciones": [
+              "Do not cross the street.",
+              "Cross the street.",
+              "You can cross the street."
+            ],
+            "correcta": "Do not cross the street.",
+            "explicacion": "Do not + verbo es una prohibición.",
+            "ronda": "n4-cortar",
+            "id": "n4-cortar.04"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "What does GIVE WAY mean?",
+            "opciones": [
+              "Let others go first",
+              "Go before the others",
+              "Stop and stay there"
+            ],
+            "correcta": "Let others go first",
+            "explicacion": "Give way significa ceder el paso.",
+            "ronda": "n4-cortar",
+            "id": "n4-cortar.05",
+            "porQue": {
+              "Go before the others": "Es lo contrario: give way = ceder el paso.",
+              "Stop and stay there": "Give way es dejar pasar a otros, no quedarse parado para siempre."
+            }
           }
-        ]
+        ],
+        "ronda": "n4-cortar",
+        "id": "n4-cortar.01",
+        "porQue": {
+          "Slow down, then keep going": "STOP no es solo reducir: hay que detenerse por completo.",
+          "Stop only if cars are coming": "En una señal STOP se para siempre, aunque la calle esté libre."
+        }
       },
       {
         "tipo": "hacha",
         "texto": "The dragon will breathe fire!",
         "correcta": "Cut all three energy balls.",
-        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía."
+        "explicacion": "Arrastra el hacha para cortar las tres bolas de energía.",
+        "ronda": "n4-hacha",
+        "id": "n4-hacha.01"
       },
       {
         "tipo": "ordenar",
         "texto": "Equip the rider before the ride.",
-        "contexto": "Write the name of the item that protects the rider's head.",
-        "antes": "Put on your",
-        "despues": ".",
+        "contexto": "Give an instruction to protect the rider’s head.",
         "correcta": "Put on your helmet.",
         "explicacion": "Helmet significa «casco».",
         "fichas": [
@@ -874,7 +1552,12 @@
               "at",
               "the",
               "red light."
-            ]
+            ],
+            "sobran": [
+              "to"
+            ],
+            "ronda": "n4-ordenar",
+            "id": "n4-ordenar.02"
           },
           {
             "tipo": "ordenar",
@@ -887,9 +1570,37 @@
               "to",
               "other",
               "riders."
-            ]
+            ],
+            "sobran": [
+              "from"
+            ],
+            "ronda": "n4-ordenar",
+            "id": "n4-ordenar.03"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Learn the rule.",
+            "contexto": "The sign says: NO crossing.",
+            "fichas": [
+              "Do",
+              "not",
+              "cross",
+              "the street."
+            ],
+            "correcta": "Do not cross the street.",
+            "explicacion": "Do not + verbo base: una prohibición.",
+            "sobran": [
+              "does"
+            ],
+            "ronda": "n4-ordenar",
+            "id": "n4-ordenar.04"
           }
-        ]
+        ],
+        "sobran": [
+          "in"
+        ],
+        "ronda": "n4-ordenar",
+        "id": "n4-ordenar.01"
       },
       {
         "tipo": "zona",
@@ -913,7 +1624,38 @@
           }
         ],
         "correcta": "Stop before the crossing",
-        "explicacion": "La luz roja indica que debes detenerte antes de entrar al cruce."
+        "explicacion": "La luz roja indica que debes detenerte antes de entrar al cruce.",
+        "variantes": [
+          {
+            "tipo": "zona",
+            "texto": "A STOP sign appears. What does the rider do?",
+            "tablero": "calle",
+            "señal": {
+              "imagen": "/images/signs/stop.svg",
+              "alt": "Octágono rojo con la palabra STOP"
+            },
+            "zonas": [
+              {
+                "texto": "Stop at the line",
+                "icono": "▬"
+              },
+              {
+                "texto": "Slow down and keep going",
+                "icono": "↑"
+              },
+              {
+                "texto": "Turn without stopping",
+                "icono": "↔"
+              }
+            ],
+            "correcta": "Stop at the line",
+            "explicacion": "STOP exige detenerse por completo, no solo frenar.",
+            "ronda": "n4-zona-2",
+            "id": "n4-zona-2.02"
+          }
+        ],
+        "ronda": "n4-zona-2",
+        "id": "n4-zona-2.01"
       }
     ]
   },
@@ -934,110 +1676,895 @@
     "preguntas": [
       {
         "tipo": "cortar",
-        "texto": "Which expression talks about the future?",
-        "correcta": "Tonight",
-        "explicacion": "Tonight señala algo que ocurrirá más tarde hoy; last week y yesterday hablan del pasado.",
+        "texto": "It's Friday. Which plan is for tomorrow?",
+        "opciones": [
+          "We are going to visit the museum tomorrow.",
+          "We visited the museum yesterday.",
+          "We are going to visit the museum next month."
+        ],
+        "porQue": {
+          "We visited the museum yesterday.": "Yesterday y el verbo en pasado miran hacia atrás.",
+          "We are going to visit the museum next month.": "Es futuro, pero next month no es mañana: fíjate en la señal de tiempo."
+        },
+        "correcta": "We are going to visit the museum tomorrow.",
+        "explicacion": "Hay que combinar dos pistas: el tiempo (tomorrow) y la estructura (are going to + verbo).",
         "tema": "Introducción al futuro",
         "fase": 1,
-        "opciones": [
-          "Last week",
-          "Tonight",
-          "Yesterday"
+        "ronda": "n5-f1-cortar",
+        "id": "n5-f1-cortar.01",
+        "variantes": [
+          {
+            "tipo": "cortar",
+            "texto": "Which message tells a plan, not a past event?",
+            "opciones": [
+              "Leo is going to bake bread this evening.",
+              "Leo baked bread this morning.",
+              "Leo bakes bread every Sunday."
+            ],
+            "porQue": {
+              "Leo baked bread this morning.": "Baked es pasado: ya ocurrió.",
+              "Leo bakes bread every Sunday.": "Every Sunday indica una costumbre, no un plan concreto."
+            },
+            "correcta": "Leo is going to bake bread this evening.",
+            "explicacion": "Un plan usa is going to + verbo base; baked es pasado y bakes habla de una rutina.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-cortar",
+            "id": "n5-f1-cortar.02"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "It's 8 p.m. Which word means “later today”?",
+            "opciones": [
+              "Tonight",
+              "This morning",
+              "Last night"
+            ],
+            "porQue": {
+              "This morning": "A las 8 p. m., la mañana ya pasó.",
+              "Last night": "Last señala la noche anterior: pasado."
+            },
+            "correcta": "Tonight",
+            "explicacion": "Tonight es la noche de hoy, que todavía no ha pasado a las 8 p. m.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-cortar",
+            "id": "n5-f1-cortar.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "cortar",
+            "texto": "Which expression talks about the future?",
+            "correcta": "Tonight",
+            "explicacion": "Tonight señala algo que ocurrirá más tarde hoy; last week y yesterday hablan del pasado.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "opciones": [
+              "Tonight",
+              "Last week",
+              "Yesterday"
+            ],
+            "ronda": "n5-f1-cortar",
+            "id": "n5-f1-cortar.L01"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Which expression is about the future?",
+            "opciones": [
+              "In two days",
+              "Two days ago",
+              "Last Sunday"
+            ],
+            "correcta": "In two days",
+            "explicacion": "In two days significa dentro de dos días; two days ago es pasado.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-cortar",
+            "id": "n5-f1-cortar.L02"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Which sentence is about the future?",
+            "opciones": [
+              "I visited the lake.",
+              "I am going to visit the lake.",
+              "I visit the lake every day."
+            ],
+            "correcta": "I am going to visit the lake.",
+            "explicacion": "Am going to expresa un plan para el futuro.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-cortar",
+            "id": "n5-f1-cortar.L03"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Pick the plan for next week.",
+            "opciones": [
+              "We are going to climb the hill next week.",
+              "We climbed the hill last week.",
+              "We climb the hill every week."
+            ],
+            "correcta": "We are going to climb the hill next week.",
+            "explicacion": "Are going to + next week: un plan futuro.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-cortar",
+            "id": "n5-f1-cortar.L04"
+          }
         ]
       },
       {
         "tipo": "parejas",
         "texto": "Match each time expression.",
-        "correcta": "tomorrow = mañana · next week = la próxima semana · last night = anoche",
-        "explicacion": "Tomorrow y next week miran al futuro; last night mira al pasado.",
-        "tema": "Introducción al futuro",
-        "fase": 1,
-        "contexto": "Une la expresión con su significado.",
+        "contexto": "Une cada expresión con su significado.",
         "parejas": [
           {
-            "izq": "tomorrow",
-            "der": "mañana"
+            "izq": "next weekend",
+            "der": "el próximo fin de semana"
           },
           {
-            "izq": "next week",
-            "der": "la próxima semana"
+            "izq": "last weekend",
+            "der": "el fin de semana pasado"
           },
           {
-            "izq": "last night",
-            "der": "anoche"
+            "izq": "later today",
+            "der": "más tarde hoy"
+          }
+        ],
+        "señuelos": [
+          "hace una semana"
+        ],
+        "correcta": "next weekend = el próximo fin de semana · last weekend = el fin de semana pasado · later today = más tarde hoy",
+        "explicacion": "Next mira adelante, last mira atrás y later today es futuro cercano.",
+        "tema": "Introducción al futuro",
+        "fase": 1,
+        "ronda": "n5-f1-parejas",
+        "id": "n5-f1-parejas.01",
+        "variantes": [
+          {
+            "tipo": "parejas",
+            "texto": "Match each plan with its meaning.",
+            "contexto": "Une cada plan con su significado.",
+            "parejas": [
+              {
+                "izq": "He is going to swim",
+                "der": "Él va a nadar"
+              },
+              {
+                "izq": "We are going to sing",
+                "der": "Vamos a cantar"
+              },
+              {
+                "izq": "You are going to win",
+                "der": "Vas a ganar"
+              }
+            ],
+            "señuelos": [
+              "Nosotros cantamos"
+            ],
+            "correcta": "He is going to swim = Él va a nadar · We are going to sing = Vamos a cantar · You are going to win = Vas a ganar",
+            "explicacion": "Am/is/are going to + verbo se traduce como «ir a + verbo».",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-parejas",
+            "id": "n5-f1-parejas.02"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match each time expression.",
+            "contexto": "Une cada expresión con su significado.",
+            "parejas": [
+              {
+                "izq": "in ten minutes",
+                "der": "dentro de diez minutos"
+              },
+              {
+                "izq": "ten minutes ago",
+                "der": "hace diez minutos"
+              },
+              {
+                "izq": "next semester",
+                "der": "el próximo semestre"
+              }
+            ],
+            "señuelos": [
+              "hace un semestre"
+            ],
+            "correcta": "in ten minutes = dentro de diez minutos · ten minutes ago = hace diez minutos · next semester = el próximo semestre",
+            "explicacion": "In + tiempo mira adelante; tiempo + ago mira atrás.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-parejas",
+            "id": "n5-f1-parejas.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "parejas",
+            "texto": "Match each time expression.",
+            "correcta": "tomorrow = mañana · next week = la próxima semana · last night = anoche",
+            "explicacion": "Tomorrow y next week miran al futuro; last night mira al pasado.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "contexto": "Une la expresión con su significado.",
+            "parejas": [
+              {
+                "izq": "tomorrow",
+                "der": "mañana"
+              },
+              {
+                "izq": "next week",
+                "der": "la próxima semana"
+              },
+              {
+                "izq": "last night",
+                "der": "anoche"
+              }
+            ],
+            "señuelos": [
+              "hoy"
+            ],
+            "ronda": "n5-f1-parejas",
+            "id": "n5-f1-parejas.L01"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match each time expression.",
+            "contexto": "Une cada palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "tonight",
+                "der": "esta noche"
+              },
+              {
+                "izq": "next year",
+                "der": "el próximo año"
+              },
+              {
+                "izq": "last night",
+                "der": "anoche"
+              }
+            ],
+            "correcta": "tonight = esta noche · next year = el próximo año · last night = anoche",
+            "explicacion": "Tonight y next year miran al futuro. Last night mira al pasado.",
+            "señuelos": [
+              "el año pasado"
+            ],
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-parejas",
+            "id": "n5-f1-parejas.L02"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match each time expression.",
+            "contexto": "Une cada palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "soon",
+                "der": "pronto"
+              },
+              {
+                "izq": "two days ago",
+                "der": "hace dos días"
+              },
+              {
+                "izq": "next month",
+                "der": "el próximo mes"
+              }
+            ],
+            "correcta": "soon = pronto · two days ago = hace dos días · next month = el próximo mes",
+            "explicacion": "Soon y next month miran al futuro. Two days ago mira al pasado.",
+            "señuelos": [
+              "hace un mes"
+            ],
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-parejas",
+            "id": "n5-f1-parejas.L03"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match each plan with its meaning.",
+            "contexto": "Une cada palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "She is going to cook",
+                "der": "Ella va a cocinar"
+              },
+              {
+                "izq": "They are going to sleep",
+                "der": "Ellos van a dormir"
+              },
+              {
+                "izq": "I am going to read",
+                "der": "Voy a leer"
+              }
+            ],
+            "señuelos": [
+              "Ella cocinó"
+            ],
+            "correcta": "She is going to cook = Ella va a cocinar · They are going to sleep = Ellos van a dormir · I am going to read = Voy a leer",
+            "explicacion": "Am/is/are going to + verbo: lo que alguien va a hacer.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-parejas",
+            "id": "n5-f1-parejas.L04"
           }
         ]
       },
       {
         "tipo": "ordenar",
-        "texto": "Assemble the plan for tomorrow.",
-        "correcta": "We are going to explore the forest tomorrow.",
-        "explicacion": "Sujeto + are + going to + verbo base + expresión de tiempo.",
+        "texto": "Write Ana's plan for Saturday.",
+        "fichas": [
+          "Ana",
+          "is",
+          "going to",
+          "visit her cousin",
+          "on Saturday."
+        ],
+        "sobran": [
+          "are"
+        ],
+        "correcta": "Ana is going to visit her cousin on Saturday.",
+        "explicacion": "Sujeto + is + going to + verbo base + complemento + tiempo.",
         "tema": "Introducción al futuro",
         "fase": 1,
-        "fichas": [
-          "tomorrow.",
-          "are",
-          "We",
-          "going to",
-          "explore the forest"
+        "ronda": "n5-f1-ordenar",
+        "id": "n5-f1-ordenar.01",
+        "variantes": [
+          {
+            "tipo": "ordenar",
+            "texto": "Tell what the twins plan to do after school.",
+            "fichas": [
+              "The twins",
+              "are",
+              "going to",
+              "play chess",
+              "after school."
+            ],
+            "sobran": [
+              "is"
+            ],
+            "correcta": "The twins are going to play chess after school.",
+            "explicacion": "The twins es plural: va con are.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-ordenar",
+            "id": "n5-f1-ordenar.02"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Describe your plan for next summer.",
+            "fichas": [
+              "I",
+              "am",
+              "going to",
+              "learn French",
+              "next summer."
+            ],
+            "sobran": [
+              "be"
+            ],
+            "correcta": "I am going to learn French next summer.",
+            "explicacion": "Con I se usa am; el verbo be no se repite.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-ordenar",
+            "id": "n5-f1-ordenar.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "ordenar",
+            "texto": "Assemble the plan for tomorrow.",
+            "correcta": "We are going to explore the forest tomorrow.",
+            "explicacion": "Sujeto + are + going to + verbo base + expresión de tiempo.",
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "fichas": [
+              "tomorrow.",
+              "are",
+              "We",
+              "going to",
+              "explore the forest"
+            ],
+            "sobran": [
+              "is"
+            ],
+            "ronda": "n5-f1-ordenar",
+            "id": "n5-f1-ordenar.L01"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Put the painter's plan in order.",
+            "correcta": "She is going to paint the wall tomorrow.",
+            "explicacion": "Is going to expresa un plan ya decidido.",
+            "fichas": [
+              "She",
+              "is",
+              "going to",
+              "paint the wall",
+              "tomorrow."
+            ],
+            "sobran": [
+              "are"
+            ],
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-ordenar",
+            "id": "n5-f1-ordenar.L02"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Put the guards' plan in order.",
+            "correcta": "They are going to open the gate tonight.",
+            "explicacion": "Con they se usa are going to.",
+            "fichas": [
+              "They",
+              "are",
+              "going to",
+              "open the gate",
+              "tonight."
+            ],
+            "sobran": [
+              "is"
+            ],
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-ordenar",
+            "id": "n5-f1-ordenar.L03"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Plan the explorers' trip.",
+            "fichas": [
+              "We",
+              "are",
+              "going to",
+              "explore the cave",
+              "next week."
+            ],
+            "correcta": "We are going to explore the cave next week.",
+            "explicacion": "Sujeto + are + going to + verbo + tiempo.",
+            "sobran": [
+              "will"
+            ],
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-ordenar",
+            "id": "n5-f1-ordenar.L04"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Plan the stable work.",
+            "fichas": [
+              "He",
+              "is",
+              "going to",
+              "feed the horse",
+              "tomorrow."
+            ],
+            "correcta": "He is going to feed the horse tomorrow.",
+            "explicacion": "He usa is: He is going to feed.",
+            "sobran": [
+              "are"
+            ],
+            "tema": "Introducción al futuro",
+            "fase": 1,
+            "ronda": "n5-f1-ordenar",
+            "id": "n5-f1-ordenar.L05"
+          }
         ]
       },
       {
         "tipo": "errores",
         "texto": "Find the mistake in the plan.",
-        "correcta": "She is going to visit the bridge tomorrow.",
-        "explicacion": "Con she se usa is, no are.",
-        "tema": "Be going to",
-        "fase": 2,
         "contexto": "Tap the wrong word.",
         "frase": [
-          "She",
+          "My",
+          "brother",
           "are",
           "going",
           "to",
           "visit",
-          "the",
-          "bridge",
-          "tomorrow."
+          "us",
+          "on",
+          "Sunday."
         ],
-        "error": 1
+        "error": 2,
+        "correcta": "My brother is going to visit us on Sunday.",
+        "explicacion": "My brother equivale a he: pide is, no are.",
+        "tema": "Be going to",
+        "fase": 2,
+        "ronda": "n5-f2-errores",
+        "id": "n5-f2-errores.01",
+        "variantes": [
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the question.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "Are",
+              "she",
+              "going",
+              "to",
+              "call",
+              "us",
+              "tonight?"
+            ],
+            "error": 0,
+            "correcta": "Is she going to call us tonight?",
+            "explicacion": "En la pregunta, el verbo to be va primero y concuerda con she: Is.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-errores",
+            "id": "n5-f2-errores.02"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the negative sentence.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "He",
+              "is",
+              "not",
+              "going",
+              "to",
+              "comes",
+              "to",
+              "the",
+              "party."
+            ],
+            "error": 5,
+            "correcta": "He is not going to come to the party.",
+            "explicacion": "Después de going to, el verbo siempre va en forma base: come.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-errores",
+            "id": "n5-f2-errores.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the plan.",
+            "correcta": "She is going to visit the bridge tomorrow.",
+            "explicacion": "Con she se usa is, no are.",
+            "tema": "Be going to",
+            "fase": 2,
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "She",
+              "are",
+              "going",
+              "to",
+              "visit",
+              "the",
+              "bridge",
+              "tomorrow."
+            ],
+            "error": 1,
+            "ronda": "n5-f2-errores",
+            "id": "n5-f2-errores.L01"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the plan.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "I",
+              "are",
+              "going",
+              "to",
+              "visit",
+              "the",
+              "castle",
+              "tomorrow."
+            ],
+            "error": 1,
+            "correcta": "I am going to visit the castle tomorrow.",
+            "explicacion": "Con I se usa am: I am going to visit the castle.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-errores",
+            "id": "n5-f2-errores.L02"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the plan.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "She",
+              "is",
+              "going",
+              "to",
+              "cooks",
+              "dinner",
+              "tonight."
+            ],
+            "error": 4,
+            "correcta": "She is going to cook dinner tonight.",
+            "explicacion": "Después de going to va el verbo base: cook, no cooks.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-errores",
+            "id": "n5-f2-errores.L03"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the plan.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "They",
+              "are",
+              "going",
+              "to",
+              "cooking",
+              "dinner",
+              "tonight."
+            ],
+            "error": 4,
+            "correcta": "They are going to cook dinner tonight.",
+            "explicacion": "Después de going to el verbo va en forma base: cook.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-errores",
+            "id": "n5-f2-errores.L04"
+          }
+        ]
       },
       {
         "tipo": "esquiva-frase",
-        "texto": "They ___ attack!",
-        "correcta": "are going to",
-        "explicacion": "Con they usamos are going to seguido del verbo base: They are going to attack!",
-        "tema": "Be going to",
-        "fase": 2,
+        "texto": "The dragon ___ breathe fire!",
         "fichas": [
           "is going to",
           "are going to",
           "am going to"
+        ],
+        "correcta": "is going to",
+        "explicacion": "The dragon es singular (it): is going to.",
+        "tema": "Be going to",
+        "fase": 2,
+        "ronda": "n5-f2-esquiva-frase",
+        "id": "n5-f2-esquiva-frase.01",
+        "variantes": [
+          {
+            "tipo": "esquiva-frase",
+            "texto": "You and I ___ escape!",
+            "fichas": [
+              "are going to",
+              "is going to",
+              "am going to"
+            ],
+            "correcta": "are going to",
+            "explicacion": "You and I equivale a we: are going to.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-esquiva-frase",
+            "id": "n5-f2-esquiva-frase.02"
+          },
+          {
+            "tipo": "esquiva-frase",
+            "texto": "Look! The ice ___ break!",
+            "fichas": [
+              "is going to",
+              "are going to",
+              "am going to"
+            ],
+            "correcta": "is going to",
+            "explicacion": "Se ve que algo va a ocurrir: the ice es singular, así que is going to.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-esquiva-frase",
+            "id": "n5-f2-esquiva-frase.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "esquiva-frase",
+            "texto": "They ___ attack!",
+            "correcta": "are going to",
+            "explicacion": "Con they usamos are going to seguido del verbo base: They are going to attack!",
+            "tema": "Be going to",
+            "fase": 2,
+            "fichas": [
+              "is going to",
+              "are going to",
+              "am going to"
+            ],
+            "ronda": "n5-f2-esquiva-frase",
+            "id": "n5-f2-esquiva-frase.L01"
+          },
+          {
+            "tipo": "esquiva-frase",
+            "texto": "I ___ jump!",
+            "fichas": [
+              "am going to",
+              "is going to",
+              "are going to"
+            ],
+            "correcta": "am going to",
+            "explicacion": "Con I usamos am going to: I am going to jump!",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-esquiva-frase",
+            "id": "n5-f2-esquiva-frase.L02"
+          },
+          {
+            "tipo": "esquiva-frase",
+            "texto": "We ___ cross now!",
+            "fichas": [
+              "are going to",
+              "am going to",
+              "is going to"
+            ],
+            "correcta": "are going to",
+            "explicacion": "Con we usamos are going to: We are going to cross!",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-esquiva-frase",
+            "id": "n5-f2-esquiva-frase.L03"
+          }
         ]
       },
       {
         "tipo": "escuchar",
-        "texto": "Listen to the warning.",
-        "correcta": "The dragon is not going to attack.",
-        "explicacion": "Is not going to + verbo base es la forma negativa de be going to.",
+        "texto": "Listen to the message.",
+        "contexto": "Escucha y toca la frase que oíste.",
+        "audio": "Is the dragon going to attack tonight?",
+        "opciones": [
+          "Is the dragon going to attack tonight?",
+          "The dragon is going to attack tonight.",
+          "Is the dragon going to attack tomorrow?"
+        ],
+        "porQue": {
+          "The dragon is going to attack tonight.": "Aquí el verbo to be va primero: es una pregunta.",
+          "Is the dragon going to attack tomorrow?": "Era tonight, no tomorrow."
+        },
+        "correcta": "Is the dragon going to attack tonight?",
+        "explicacion": "Si oyes Is al inicio, es una pregunta; luego escucha el momento (tonight).",
         "tema": "Be going to",
         "fase": 2,
-        "contexto": "Escucha y toca la frase que oíste.",
-        "audio": "The dragon is not going to attack.",
-        "opciones": [
-          "The dragon is going to attack.",
-          "The dragon is not going to attack.",
-          "The dragon attacked yesterday."
+        "ronda": "n5-f2-escuchar",
+        "id": "n5-f2-escuchar.01",
+        "variantes": [
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the message.",
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "My sister is not going to join us.",
+            "opciones": [
+              "My sister is not going to join us.",
+              "My sister is going to join us.",
+              "My sisters are not going to join us."
+            ],
+            "porQue": {
+              "My sister is going to join us.": "Falta not: el mensaje es negativo.",
+              "My sisters are not going to join us.": "Era una sola hermana (is), no varias (are)."
+            },
+            "correcta": "My sister is not going to join us.",
+            "explicacion": "Atiende a not y a is/are: cambian el significado.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-escuchar",
+            "id": "n5-f2-escuchar.02"
+          },
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the message.",
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "They are going to arrive in two days.",
+            "opciones": [
+              "They are going to arrive in two days.",
+              "They arrived two days ago.",
+              "They are going to arrive in two weeks."
+            ],
+            "porQue": {
+              "They arrived two days ago.": "Arrived + ago es pasado.",
+              "They are going to arrive in two weeks.": "Suena parecido, pero days no es weeks."
+            },
+            "correcta": "They are going to arrive in two days.",
+            "explicacion": "In two days es futuro; two days ago sería pasado.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-escuchar",
+            "id": "n5-f2-escuchar.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the warning.",
+            "correcta": "The dragon is not going to attack.",
+            "explicacion": "Is not going to + verbo base es la forma negativa de be going to.",
+            "tema": "Be going to",
+            "fase": 2,
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "The dragon is not going to attack.",
+            "opciones": [
+              "The dragon is going to attack.",
+              "The dragon is not going to attack.",
+              "The dragon attacked yesterday."
+            ],
+            "ronda": "n5-f2-escuchar",
+            "id": "n5-f2-escuchar.L01"
+          },
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the warning.",
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "Watch out! The bridge is going to break!",
+            "opciones": [
+              "The bridge is going to break!",
+              "The bridge broke last night.",
+              "The bridge is not going to break!"
+            ],
+            "correcta": "The bridge is going to break!",
+            "explicacion": "Is going to avisa de algo que está a punto de pasar.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-escuchar",
+            "id": "n5-f2-escuchar.L02"
+          },
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the warning.",
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "We are going to cross the river tomorrow.",
+            "opciones": [
+              "We are going to cross the river tomorrow.",
+              "We crossed the river yesterday.",
+              "We are not going to cross the river."
+            ],
+            "correcta": "We are going to cross the river tomorrow.",
+            "explicacion": "Are going to + verbo base expresa un plan para mañana.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-escuchar",
+            "id": "n5-f2-escuchar.L03"
+          },
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the warning.",
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "The basilisk is not going to attack.",
+            "opciones": [
+              "The basilisk is going to attack.",
+              "The basilisk is not going to attack.",
+              "The basilisk attacked yesterday."
+            ],
+            "correcta": "The basilisk is not going to attack.",
+            "explicacion": "Is not going to indica que no va a ocurrir.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-escuchar",
+            "id": "n5-f2-escuchar.L04"
+          },
+          {
+            "tipo": "escuchar",
+            "texto": "Listen to the warning.",
+            "contexto": "Escucha y toca la frase que oíste.",
+            "audio": "They are going to cross at night.",
+            "opciones": [
+              "They are not going to cross at night.",
+              "They are going to cross at night.",
+              "They crossed last night."
+            ],
+            "correcta": "They are going to cross at night.",
+            "explicacion": "Are going to sin not: sí lo van a hacer.",
+            "tema": "Be going to",
+            "fase": 2,
+            "ronda": "n5-f2-escuchar",
+            "id": "n5-f2-escuchar.L05"
+          }
         ]
       },
       {
         "tipo": "romper-hechizo",
         "texto": "Make the spell negative.",
-        "correcta": "The knight will not return.",
-        "explicacion": "Coloca not después de will para negar lo que anuncia el hechizo.",
-        "tema": "Will",
-        "fase": 3,
         "invocacion": true,
         "huecos": [
           2,
@@ -1045,104 +2572,982 @@
         ],
         "frase": [
           "The",
-          "knight",
+          "dragon",
           "will",
-          "return!"
+          "wake up!"
+        ],
+        "correcta": "The dragon will not wake up.",
+        "explicacion": "Para negar con will, coloca not justo después de will.",
+        "tema": "Will",
+        "fase": 3,
+        "ronda": "n5-f3-romper-hechizo",
+        "id": "n5-f3-romper-hechizo.01",
+        "variantes": [
+          {
+            "tipo": "romper-hechizo",
+            "texto": "Make the spell negative.",
+            "invocacion": true,
+            "huecos": [
+              1,
+              2
+            ],
+            "frase": [
+              "Ice",
+              "will",
+              "cover",
+              "the",
+              "tower!"
+            ],
+            "correcta": "Ice will not cover the tower.",
+            "explicacion": "Will not va antes del verbo, aunque el sujeto cambie.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-romper-hechizo",
+            "id": "n5-f3-romper-hechizo.02"
+          },
+          {
+            "tipo": "romper-hechizo",
+            "texto": "Make the spell negative.",
+            "invocacion": true,
+            "huecos": [
+              2,
+              3
+            ],
+            "frase": [
+              "The",
+              "bell",
+              "will",
+              "ring!"
+            ],
+            "correcta": "The bell will not ring.",
+            "explicacion": "La negativa de will no necesita do/does.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-romper-hechizo",
+            "id": "n5-f3-romper-hechizo.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "romper-hechizo",
+            "texto": "Make the spell negative.",
+            "correcta": "The knight will not return.",
+            "explicacion": "Coloca not después de will para negar lo que anuncia el hechizo.",
+            "tema": "Will",
+            "fase": 3,
+            "invocacion": true,
+            "huecos": [
+              2,
+              3
+            ],
+            "frase": [
+              "The",
+              "knight",
+              "will",
+              "return!"
+            ],
+            "ronda": "n5-f3-romper-hechizo",
+            "id": "n5-f3-romper-hechizo.L01"
+          },
+          {
+            "tipo": "romper-hechizo",
+            "texto": "Make the spell negative.",
+            "invocacion": true,
+            "huecos": [
+              2,
+              3
+            ],
+            "frase": [
+              "The",
+              "storm",
+              "will",
+              "stop!"
+            ],
+            "correcta": "The storm will not stop.",
+            "explicacion": "Coloca not después de will para negar el hechizo: The storm will not stop.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-romper-hechizo",
+            "id": "n5-f3-romper-hechizo.L02"
+          },
+          {
+            "tipo": "romper-hechizo",
+            "texto": "Make the spell negative.",
+            "invocacion": true,
+            "huecos": [
+              1,
+              2
+            ],
+            "frase": [
+              "We",
+              "will",
+              "win!"
+            ],
+            "correcta": "We will not win.",
+            "explicacion": "Not va justo después de will: We will not win.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-romper-hechizo",
+            "id": "n5-f3-romper-hechizo.L03"
+          }
         ]
       },
       {
         "tipo": "proteger-aliado",
-        "texto": "Promise to help the villagers.",
-        "correcta": "We will help the villagers.",
-        "explicacion": "We will help the villagers expresa una promesa. Will va seguido del verbo base help.",
+        "texto": "Promise to bring water to the village.",
+        "contexto": "Promise you will bring us water!",
+        "nodos": [
+          "I",
+          "will",
+          "not",
+          "bring you water."
+        ],
+        "correcta": "I will bring you water.",
+        "explicacion": "Una promesa lleva sujeto + will + verbo base. Con not prometerías lo contrario.",
         "tema": "Will",
         "fase": 3,
-        "contexto": "Promise you will help us!",
-        "nodos": [
-          "We",
-          "will",
-          "did",
-          "help the villagers."
+        "ronda": "n5-f3-proteger-aliado",
+        "id": "n5-f3-proteger-aliado.01",
+        "variantes": [
+          {
+            "tipo": "proteger-aliado",
+            "texto": "Promise to wait for the traveller.",
+            "contexto": "Promise you will wait for me!",
+            "nodos": [
+              "We",
+              "will",
+              "to",
+              "wait for you."
+            ],
+            "correcta": "We will wait for you.",
+            "explicacion": "Después de will no se usa to: will wait.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-proteger-aliado",
+            "id": "n5-f3-proteger-aliado.02"
+          },
+          {
+            "tipo": "proteger-aliado",
+            "texto": "Promise to keep the secret.",
+            "contexto": "Promise you will keep my secret!",
+            "nodos": [
+              "I",
+              "will",
+              "going to",
+              "keep your secret."
+            ],
+            "correcta": "I will keep your secret.",
+            "explicacion": "Will y going to no se juntan: elige uno.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-proteger-aliado",
+            "id": "n5-f3-proteger-aliado.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "proteger-aliado",
+            "texto": "Promise to help the villagers.",
+            "correcta": "We will help the villagers.",
+            "explicacion": "We will help the villagers expresa una promesa. Will va seguido del verbo base help.",
+            "tema": "Will",
+            "fase": 3,
+            "contexto": "Promise you will help us!",
+            "nodos": [
+              "We",
+              "will",
+              "did",
+              "help the villagers."
+            ],
+            "ronda": "n5-f3-proteger-aliado",
+            "id": "n5-f3-proteger-aliado.L01"
+          },
+          {
+            "tipo": "proteger-aliado",
+            "texto": "Promise to help the ally.",
+            "contexto": "Promise you will help me!",
+            "nodos": [
+              "We",
+              "will",
+              "are",
+              "help you."
+            ],
+            "correcta": "We will help you.",
+            "explicacion": "We will help you es una promesa. Will va seguido del verbo base help.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-proteger-aliado",
+            "id": "n5-f3-proteger-aliado.L02"
+          },
+          {
+            "tipo": "proteger-aliado",
+            "texto": "Promise to stay with the ally.",
+            "contexto": "Promise you will stay with me!",
+            "nodos": [
+              "I",
+              "will",
+              "is",
+              "stay with you."
+            ],
+            "correcta": "I will stay with you.",
+            "explicacion": "I will stay with you es una promesa; will va con el verbo base stay.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-proteger-aliado",
+            "id": "n5-f3-proteger-aliado.L03"
+          }
         ]
       },
       {
-        "tipo": "errores",
-        "texto": "Find the mistake in the promise.",
-        "correcta": "He will return tomorrow.",
-        "explicacion": "Después de will el verbo va en forma base: return, no returns.",
+        "tipo": "cortar",
+        "texto": "Her books fall. You offer help right now.",
+        "opciones": [
+          "Wait, I will help you!",
+          "Wait, I helped you!",
+          "Wait, I helping you!"
+        ],
+        "porQue": {
+          "Wait, I helped you!": "Helped es pasado: la ayuda aún no ocurrió.",
+          "Wait, I helping you!": "Falta el auxiliar: será I will help."
+        },
+        "correcta": "Wait, I will help you!",
+        "explicacion": "Una oferta o decisión en el momento se dice con will + verbo base.",
         "tema": "Will",
         "fase": 3,
-        "contexto": "Tap the wrong word.",
-        "frase": [
-          "He",
-          "will",
-          "returns",
-          "tomorrow."
+        "ronda": "n5-f3-errores",
+        "id": "n5-f3-errores.01",
+        "variantes": [
+          {
+            "tipo": "cortar",
+            "texto": "“I’m cold.” You decide now. Pick the natural reply.",
+            "opciones": [
+              "I will close the window.",
+              "I will closes the window.",
+              "I will to close the window."
+            ],
+            "porQue": {
+              "I will closes the window.": "Después de will el verbo no lleva -s.",
+              "I will to close the window.": "Will no lleva to."
+            },
+            "correcta": "I will close the window.",
+            "explicacion": "Will + verbo en forma base, sin to ni -s.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-errores",
+            "id": "n5-f3-errores.02"
+          },
+          {
+            "tipo": "cortar",
+            "texto": "Complete the promise: “I ___ tell your secret.”",
+            "opciones": [
+              "will not",
+              "not will",
+              "will not to"
+            ],
+            "porQue": {
+              "not will": "Not va después de will, no antes.",
+              "will not to": "No se añade to después de will not."
+            },
+            "correcta": "will not",
+            "explicacion": "La promesa negativa es will not (o won’t) + verbo base.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-errores",
+            "id": "n5-f3-errores.03"
+          }
         ],
-        "error": 2
+        "legado": [
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the promise.",
+            "correcta": "He will return tomorrow.",
+            "explicacion": "Después de will el verbo va en forma base: return, no returns.",
+            "tema": "Will",
+            "fase": 3,
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "He",
+              "will",
+              "returns",
+              "tomorrow."
+            ],
+            "error": 2,
+            "ronda": "n5-f3-errores",
+            "id": "n5-f3-errores.L01"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the prediction.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "I",
+              "think",
+              "it",
+              "will",
+              "rains",
+              "tomorrow."
+            ],
+            "error": 4,
+            "correcta": "I think it will rain tomorrow.",
+            "explicacion": "Después de will usamos el verbo base: rain, no rains.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-errores",
+            "id": "n5-f3-errores.L02"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the prediction.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "The",
+              "eagle",
+              "will",
+              "to",
+              "fly",
+              "over",
+              "the",
+              "tower."
+            ],
+            "error": 3,
+            "correcta": "The eagle will fly over the tower.",
+            "explicacion": "Después de will no se usa to: will fly.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-errores",
+            "id": "n5-f3-errores.L03"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the prediction.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "They",
+              "will",
+              "helped",
+              "us",
+              "tonight."
+            ],
+            "error": 2,
+            "correcta": "They will help us tonight.",
+            "explicacion": "Después de will el verbo va en forma base: help.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-errores",
+            "id": "n5-f3-errores.L04"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the promise.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "I",
+              "will",
+              "not",
+              "forgets",
+              "you."
+            ],
+            "error": 3,
+            "correcta": "I will not forget you.",
+            "explicacion": "Will not + verbo base: forget.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-errores",
+            "id": "n5-f3-errores.L05"
+          },
+          {
+            "tipo": "errores",
+            "texto": "Find the mistake in the plan.",
+            "contexto": "Tap the wrong word.",
+            "frase": [
+              "The",
+              "storm",
+              "wills",
+              "stop",
+              "soon."
+            ],
+            "error": 2,
+            "correcta": "The storm will stop soon.",
+            "explicacion": "Will no cambia con he, she o it: nunca lleva -s.",
+            "tema": "Will",
+            "fase": 3,
+            "ronda": "n5-f3-errores",
+            "id": "n5-f3-errores.L06"
+          }
+        ]
       },
       {
         "tipo": "zona",
-        "texto": "Let the other cars pass first.",
-        "correcta": "Give way to the cars",
-        "explicacion": "YIELD significa ceder el paso: Give way to the cars.",
-        "tema": "Traffic signs and rules",
-        "fase": 4,
+        "texto": "You see a YIELD sign. A cyclist is coming.",
         "tablero": "calle",
         "señal": {
           "imagen": "/images/signs/yield.svg",
-          "alt": "Señal triangular con la palabra YIELD"
+          "alt": "Triángulo invertido con borde rojo"
         },
         "zonas": [
           {
-            "texto": "Go straight through fast",
-            "icono": "↑"
+            "texto": "Wait for the cyclist",
+            "icono": "◷"
           },
           {
-            "texto": "Give way to the cars",
-            "icono": "▲"
+            "texto": "Speed up and pass first",
+            "icono": "↗"
           },
           {
-            "texto": "Turn back",
-            "icono": "↶"
+            "texto": "Stop and park here",
+            "icono": "▬"
+          }
+        ],
+        "correcta": "Wait for the cyclist",
+        "porQue": {
+          "Speed up and pass first": [
+            "YIELD pide ceder el paso, no ganarlo.",
+            "YIELD means give way, not take priority."
+          ],
+          "Stop and park here": [
+            "No hay que estacionar: solo ceder y continuar cuando esté libre.",
+            "You do not park: just give way and go on when it is clear."
+          ]
+        },
+        "explicacion": "YIELD significa ceder el paso: esperas al ciclista y luego continúas.",
+        "tema": "Traffic signs and rules",
+        "fase": 4,
+        "ronda": "n5-f4-zona",
+        "id": "n5-f4-zona.01",
+        "variantes": [
+          {
+            "tipo": "zona",
+            "texto": "The road has a NO ENTRY sign. Find another way.",
+            "tablero": "calle",
+            "señal": {
+              "imagen": "/images/signs/no-entry.svg",
+              "alt": "Círculo rojo con una barra blanca"
+            },
+            "zonas": [
+              {
+                "texto": "Take another street",
+                "icono": "↶"
+              },
+              {
+                "texto": "Drive in slowly",
+                "icono": "↑"
+              },
+              {
+                "texto": "Wait here and enter later",
+                "icono": "◷"
+              }
+            ],
+            "correcta": "Take another street",
+            "porQue": {
+              "Drive in slowly": [
+                "NO ENTRY prohíbe entrar, también despacio.",
+                "NO ENTRY forbids entering, even slowly."
+              ],
+              "Wait here and enter later": [
+                "Esperar no cambia la norma: seguirá prohibido.",
+                "Waiting does not change the rule: it stays forbidden."
+              ]
+            },
+            "explicacion": "NO ENTRY: no se puede pasar; hay que buscar otro camino.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-zona",
+            "id": "n5-f4-zona.02"
+          },
+          {
+            "tipo": "zona",
+            "texto": "The sign says STOP, but the road is empty. What now?",
+            "tablero": "calle",
+            "señal": {
+              "imagen": "/images/signs/stop.svg",
+              "alt": "Octágono rojo con la palabra STOP"
+            },
+            "zonas": [
+              {
+                "texto": "Stop completely, then go",
+                "icono": "▬"
+              },
+              {
+                "texto": "Slow down and keep going",
+                "icono": "↑"
+              },
+              {
+                "texto": "Stop only if a car comes",
+                "icono": "◷"
+              }
+            ],
+            "correcta": "Stop completely, then go",
+            "porQue": {
+              "Slow down and keep going": [
+                "Reducir no basta: STOP exige detenerse por completo.",
+                "Slowing down is not enough: STOP means a full stop."
+              ],
+              "Stop only if a car comes": [
+                "La norma no depende de si viene un coche.",
+                "The rule does not depend on whether a car comes."
+              ]
+            },
+            "explicacion": "Con STOP siempre te detienes por completo, aunque la calle esté vacía.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-zona",
+            "id": "n5-f4-zona.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "zona",
+            "texto": "Let the other cars pass first.",
+            "correcta": "Give way to the cars",
+            "explicacion": "YIELD significa ceder el paso: Give way to the cars.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "tablero": "calle",
+            "señal": {
+              "imagen": "/images/signs/yield.svg",
+              "alt": "Señal triangular con la palabra YIELD"
+            },
+            "zonas": [
+              {
+                "texto": "Go straight through fast",
+                "icono": "↑"
+              },
+              {
+                "texto": "Give way to the cars",
+                "icono": "▲"
+              },
+              {
+                "texto": "Turn back",
+                "icono": "↶"
+              }
+            ],
+            "ronda": "n5-f4-zona",
+            "id": "n5-f4-zona.L01"
+          },
+          {
+            "tipo": "zona",
+            "texto": "Keep the rider out of the street.",
+            "tablero": "calle",
+            "señal": {
+              "imagen": "/images/signs/no-entry.svg",
+              "alt": "Círculo rojo con una barra blanca"
+            },
+            "zonas": [
+              {
+                "texto": "Enter slowly",
+                "icono": "↑"
+              },
+              {
+                "texto": "Do not enter",
+                "icono": "✖"
+              },
+              {
+                "texto": "Wait and enter",
+                "icono": "◷"
+              }
+            ],
+            "correcta": "Do not enter",
+            "explicacion": "NO ENTRY prohíbe entrar a la calle.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-zona",
+            "id": "n5-f4-zona.L02"
+          },
+          {
+            "tipo": "zona",
+            "texto": "Let the other rider go first.",
+            "tablero": "calle",
+            "señal": {
+              "imagen": "/images/signs/yield.svg",
+              "alt": "Triángulo invertido con borde rojo"
+            },
+            "zonas": [
+              {
+                "texto": "Enter first",
+                "icono": "↗"
+              },
+              {
+                "texto": "Overtake",
+                "icono": "↑"
+              },
+              {
+                "texto": "Wait and give way",
+                "icono": "◷"
+              }
+            ],
+            "correcta": "Wait and give way",
+            "explicacion": "Give way significa «ceder el paso».",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-zona",
+            "id": "n5-f4-zona.L03"
+          },
+          {
+            "tipo": "zona",
+            "texto": "A red circle with a white bar. What now?",
+            "tablero": "calle",
+            "señal": {
+              "imagen": "/images/signs/no-entry.svg",
+              "alt": "Círculo rojo con una barra blanca"
+            },
+            "zonas": [
+              {
+                "texto": "Turn around and go back",
+                "icono": "↶"
+              },
+              {
+                "texto": "Enter quickly",
+                "icono": "↑"
+              },
+              {
+                "texto": "Wait and enter later",
+                "icono": "◷"
+              }
+            ],
+            "correcta": "Turn around and go back",
+            "explicacion": "NO ENTRY prohíbe pasar: da la vuelta, no esperes.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-zona",
+            "id": "n5-f4-zona.L04"
           }
         ]
       },
       {
         "tipo": "parejas",
-        "texto": "Match each traffic word.",
-        "correcta": "stop = detenerse · give way = ceder el paso · crossing = cruce",
-        "explicacion": "Son las palabras clave de las normas de la Puerta Real.",
-        "tema": "Traffic signs and rules",
-        "fase": 4,
-        "contexto": "Une la palabra con su significado.",
+        "texto": "Match the road words.",
+        "contexto": "Une cada palabra con su significado.",
         "parejas": [
           {
-            "izq": "stop",
-            "der": "detenerse"
+            "izq": "pedestrian",
+            "der": "peatón"
           },
           {
-            "izq": "give way",
-            "der": "ceder el paso"
+            "izq": "sidewalk",
+            "der": "acera"
           },
           {
-            "izq": "crossing",
-            "der": "cruce"
+            "izq": "traffic jam",
+            "der": "atasco"
+          }
+        ],
+        "señuelos": [
+          "autopista"
+        ],
+        "correcta": "pedestrian = peatón · sidewalk = acera · traffic jam = atasco",
+        "explicacion": "Son palabras que verás en una calle: peatón, acera y atasco.",
+        "tema": "Traffic signs and rules",
+        "fase": 4,
+        "ronda": "n5-f4-parejas",
+        "id": "n5-f4-parejas.01",
+        "variantes": [
+          {
+            "tipo": "parejas",
+            "texto": "Match each instruction.",
+            "contexto": "Une cada indicación con su significado.",
+            "parejas": [
+              {
+                "izq": "Slow down",
+                "der": "Reduce la velocidad"
+              },
+              {
+                "izq": "Turn left",
+                "der": "Gira a la izquierda"
+              },
+              {
+                "izq": "Keep right",
+                "der": "Mantente a la derecha"
+              }
+            ],
+            "señuelos": [
+              "Da marcha atrás"
+            ],
+            "correcta": "Slow down = Reduce la velocidad · Turn left = Gira a la izquierda · Keep right = Mantente a la derecha",
+            "explicacion": "Las indicaciones empiezan con el verbo: Slow down, Turn, Keep.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-parejas",
+            "id": "n5-f4-parejas.02"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match each road sign.",
+            "contexto": "Une cada letrero con su significado.",
+            "parejas": [
+              {
+                "izq": "No parking",
+                "der": "Prohibido estacionar"
+              },
+              {
+                "izq": "One way",
+                "der": "Sentido único"
+              },
+              {
+                "izq": "Dead end",
+                "der": "Calle sin salida"
+              }
+            ],
+            "señuelos": [
+              "Cruce peatonal"
+            ],
+            "correcta": "No parking = Prohibido estacionar · One way = Sentido único · Dead end = Calle sin salida",
+            "explicacion": "No + sustantivo expresa una prohibición en un letrero.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-parejas",
+            "id": "n5-f4-parejas.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "parejas",
+            "texto": "Match each traffic word.",
+            "correcta": "stop = detenerse · give way = ceder el paso · crossing = cruce",
+            "explicacion": "Son las palabras clave de las normas de la Puerta Real.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "contexto": "Une la palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "stop",
+                "der": "detenerse"
+              },
+              {
+                "izq": "give way",
+                "der": "ceder el paso"
+              },
+              {
+                "izq": "crossing",
+                "der": "cruce"
+              }
+            ],
+            "señuelos": [
+              "carril"
+            ],
+            "ronda": "n5-f4-parejas",
+            "id": "n5-f4-parejas.L01"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match the road words.",
+            "contexto": "Une cada palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "helmet",
+                "der": "casco"
+              },
+              {
+                "izq": "crossing",
+                "der": "cruce"
+              },
+              {
+                "izq": "lane",
+                "der": "carril"
+              }
+            ],
+            "correcta": "helmet = casco · crossing = cruce · lane = carril",
+            "explicacion": "Helmet protege la cabeza, crossing es donde cruzan peatones y lane es un carril.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-parejas",
+            "id": "n5-f4-parejas.L02"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match the road words.",
+            "contexto": "Une cada palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "speed",
+                "der": "velocidad"
+              },
+              {
+                "izq": "traffic light",
+                "der": "semáforo"
+              },
+              {
+                "izq": "road",
+                "der": "camino"
+              }
+            ],
+            "correcta": "speed = velocidad · traffic light = semáforo · road = camino",
+            "explicacion": "Speed es la velocidad, traffic light el semáforo y road el camino.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-parejas",
+            "id": "n5-f4-parejas.L03"
+          },
+          {
+            "tipo": "parejas",
+            "texto": "Match the road words.",
+            "contexto": "Une cada palabra con su significado.",
+            "parejas": [
+              {
+                "izq": "wear a helmet",
+                "der": "usar un casco"
+              },
+              {
+                "izq": "red light",
+                "der": "luz roja"
+              },
+              {
+                "izq": "speed limit",
+                "der": "límite de velocidad"
+              }
+            ],
+            "señuelos": [
+              "carril"
+            ],
+            "correcta": "wear a helmet = usar un casco · red light = luz roja · speed limit = límite de velocidad",
+            "explicacion": "Palabras y frases de la calle que ya usaste en las señales.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-parejas",
+            "id": "n5-f4-parejas.L04"
           }
         ]
       },
       {
         "tipo": "ordenar",
-        "texto": "Assemble the prohibition.",
-        "correcta": "Do not cross the street.",
-        "explicacion": "Una prohibición se forma con Do not + verbo base.",
+        "texto": "Warn the rider at the crossing.",
+        "contexto": "A pedestrian is crossing.",
+        "fichas": [
+          "Stop",
+          "and",
+          "wait for",
+          "the pedestrian."
+        ],
+        "sobran": [
+          "to"
+        ],
+        "correcta": "Stop and wait for the pedestrian.",
+        "explicacion": "Una orden empieza por el verbo: Stop and wait for…",
         "tema": "Traffic signs and rules",
         "fase": 4,
-        "fichas": [
-          "cross",
-          "the street.",
-          "not",
-          "Do"
+        "ronda": "n5-f4-ordenar",
+        "id": "n5-f4-ordenar.01",
+        "variantes": [
+          {
+            "tipo": "ordenar",
+            "texto": "Write the rule for the sign.",
+            "contexto": "The sign says: NO PARKING.",
+            "fichas": [
+              "Do",
+              "not",
+              "park",
+              "here."
+            ],
+            "sobran": [
+              "does"
+            ],
+            "correcta": "Do not park here.",
+            "explicacion": "Para prohibir: Do not + verbo base.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-ordenar",
+            "id": "n5-f4-ordenar.02"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Give advice to a new rider.",
+            "contexto": "It is raining and the road is wet.",
+            "fichas": [
+              "Slow down",
+              "on",
+              "wet",
+              "roads."
+            ],
+            "sobran": [
+              "in"
+            ],
+            "correcta": "Slow down on wet roads.",
+            "explicacion": "Se dice on wet roads (sobre calzadas mojadas).",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-ordenar",
+            "id": "n5-f4-ordenar.03"
+          }
+        ],
+        "legado": [
+          {
+            "tipo": "ordenar",
+            "texto": "Assemble the prohibition.",
+            "correcta": "Do not cross the street.",
+            "explicacion": "Una prohibición se forma con Do not + verbo base.",
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "fichas": [
+              "cross",
+              "the street.",
+              "not",
+              "Do"
+            ],
+            "sobran": [
+              "does"
+            ],
+            "ronda": "n5-f4-ordenar",
+            "id": "n5-f4-ordenar.L01"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Obey the traffic light.",
+            "contexto": "The light is red.",
+            "correcta": "Stop at the red light.",
+            "explicacion": "Red light significa luz roja: hay que detenerse.",
+            "fichas": [
+              "Stop",
+              "at",
+              "the",
+              "red light."
+            ],
+            "sobran": [
+              "on"
+            ],
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-ordenar",
+            "id": "n5-f4-ordenar.L02"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Be polite on the road.",
+            "contexto": "Let other riders go first.",
+            "correcta": "Give way to other riders.",
+            "explicacion": "Give way significa ceder el paso.",
+            "fichas": [
+              "Give way",
+              "to",
+              "other",
+              "riders."
+            ],
+            "sobran": [
+              "for"
+            ],
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-ordenar",
+            "id": "n5-f4-ordenar.L03"
+          },
+          {
+            "tipo": "ordenar",
+            "texto": "Learn the rule.",
+            "contexto": "The sign says: NO crossing.",
+            "fichas": [
+              "Do",
+              "not",
+              "cross",
+              "the street."
+            ],
+            "correcta": "Do not cross the street.",
+            "explicacion": "Do not + verbo base: una prohibición.",
+            "sobran": [
+              "does"
+            ],
+            "tema": "Traffic signs and rules",
+            "fase": 4,
+            "ronda": "n5-f4-ordenar",
+            "id": "n5-f4-ordenar.L04"
+          }
         ]
       }
     ]

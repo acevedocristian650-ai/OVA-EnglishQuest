@@ -3,13 +3,17 @@
 // La lógica no toca el DOM: recibe el «storage» como parámetro (localStorage en el navegador, un objeto simulado
 // en las pruebas). Si el almacenamiento está bloqueado o lleno el juego sigue funcionando durante la sesión.
 import { reactive, computed } from 'vue'
+import { bancoPreguntas, limitarVistas } from './useBancoPreguntas.js'
+import { evaluarFinal, tieneAyuda, esAyudaDeLectura, APROBACION_INICIAL, PESO_AYUDA_INICIAL } from '../lib/criterioEducativo.js'
+export { evaluarFinal, tieneAyuda, esAyudaDeLectura, APROBACION_INICIAL, PESO_AYUDA_INICIAL } from '../lib/criterioEducativo.js'
 
-export const CLAVE = 'english-quest-v2'
-export const VERSION = 2
+// v3: identificadores permanentes de pregunta + evidencias de aprendizaje. La clave v2 NO se borra: se migra al leer.
+export const CLAVE = 'english-quest-v3'
+export const CLAVE_V2 = 'english-quest-v2'
+export const VERSION = 3
 const CLAVES_ANTIGUAS = { graficos: 'english-quest-graphics-v1', nivel: 'english-quest-unlocked-level' }
 export const NIVELES_TOTALES = 5 // cuatro batallas + «La última prueba del reino» (evaluación integradora)
 export const NIVEL_FINAL = 5
-export const APROBACION_INICIAL = 0.7 // el valor real se lee de data/evaluacion.json
 // Solo existen dos perfiles gráficos. Las preferencias antiguas «equilibrada» y «auto» se migran a Lite (alternativa segura).
 export const PERFILES_VALIDOS = ['alta', 'lite']
 const MAX_ERRORES = 60
@@ -44,12 +48,12 @@ export function ajustesIniciales() {
     volumen: { musica: 0.8, efectos: 1, voces: 1 }, tiempoExtra: 1, practica: false
   }
 }
-const nivelVacio = () => ({ intentos: 0, victorias: 0, derrotas: 0, completado: false, estrellas: 0, mejorAciertos: 0, mejorPrecision: 0, mejorVida: 0, mejorTiempo: null, ultimaFecha: null, aprobada: false })
+const nivelVacio = () => ({ intentos: 0, victorias: 0, derrotas: 0, completado: false, estrellas: 0, mejorAciertos: 0, mejorPrecision: 0, mejorVida: 0, mejorTiempo: null, ultimaFecha: null, aprobada: false, ultimoFinal: null })
 export function progresoInicial() {
   return {
     desbloqueado: 1, niveles: {}, temas: {}, tipos: {},
     combate: { proyectilesCortados: 0, esquivasLogradas: 0, esquivasFallidas: 0, paradasPerfectas: 0, paradasParciales: 0, golpesRecibidos: 0, danoRecibido: 0, derrotasPorVida: 0 },
-    segundosActividades: 0, refuerzo: {}, ultimaSesion: null, sesiones: 0
+    segundosActividades: 0, refuerzo: {}, vistas: {}, corregidas: 0, ultimaSesion: null, sesiones: 0
   }
 }
 export function datosIniciales() { return { app: 'english-quest', version: VERSION, ajustes: ajustesIniciales(), progreso: progresoInicial() } }
@@ -92,7 +96,8 @@ export function validarDatos(bruto) {
       intentos: ent(n.intentos, 0, 1e6, 0), victorias: ent(n.victorias, 0, 1e6, 0), derrotas: ent(n.derrotas, 0, 1e6, 0),
       completado: n.completado === true, estrellas: ent(n.estrellas, 0, 3, 0), mejorAciertos: ent(n.mejorAciertos, 0, 50, 0),
       mejorPrecision: num(n.mejorPrecision, 0, 1, 0), mejorVida: ent(n.mejorVida, 0, 100, 0),
-      mejorTiempo: Number.isFinite(n.mejorTiempo) ? num(n.mejorTiempo, 0, 1e6, null) : null, ultimaFecha: fecha(n.ultimaFecha), aprobada: n.aprobada === true
+      mejorTiempo: Number.isFinite(n.mejorTiempo) ? num(n.mejorTiempo, 0, 1e6, null) : null, ultimaFecha: fecha(n.ultimaFecha), aprobada: n.aprobada === true,
+      ultimoFinal: esObjeto(n.ultimoFinal) && JSON.stringify(n.ultimoFinal).length < 6000 ? n.ultimoFinal : null
     }
   }
   const contadores = (origen) => Object.fromEntries(Object.entries(esObjeto(origen) ? origen : {}).slice(0, 40)
@@ -101,14 +106,33 @@ export function validarDatos(bruto) {
   p.tipos = contadores(pr.tipos)
   for (const k of Object.keys(p.combate)) p.combate[k] = ent(esObjeto(pr.combate) ? pr.combate[k] : 0, 0, 1e9, 0)
   p.segundosActividades = ent(pr.segundosActividades, 0, 1e9, 0)
-  for (const [k, r] of Object.entries(esObjeto(pr.refuerzo) ? pr.refuerzo : {}).slice(0, MAX_ERRORES)) {
+  // Refuerzo: cada entrada se guarda con el id PERMANENTE de la pregunta. Las entradas antiguas (clave «nivel|texto») se
+  // convierten por coincidencia exacta (nivel + tipo + texto + respuesta); si no se puede, por la posición de la ronda.
+  for (const [, r] of Object.entries(esObjeto(pr.refuerzo) ? pr.refuerzo : {}).slice(0, MAX_ERRORES)) {
     if (!esObjeto(r) || !r.texto) { reparado = true; continue }
-    p.refuerzo[cadena(k, '', 160)] = {
-      nivel: ent(r.nivel, 1, NIVELES_TOTALES, 1), indice: ent(r.indice, 0, 20, 0), tipo: cadena(r.tipo, '', 40), tema: cadena(r.tema, '', 80),
-      texto: cadena(r.texto), correcta: cadena(r.correcta), explicacion: cadena(r.explicacion, '', 600),
-      fallos: ent(r.fallos, 1, 1e4, 1), aciertosSeguidos: ent(r.aciertosSeguidos, 0, 100, 0), ultimaFecha: fecha(r.ultimaFecha)
+    let id = typeof r.id === 'string' && r.id ? cadena(r.id, '', 80) : null
+    let aproximada = r.migradaAprox === true
+    if (!id) {
+      reparado = true
+      const m = bancoPreguntas.resolverLegado({ nivel: ent(r.nivel, 1, NIVELES_TOTALES, 1), tipo: r.tipo, texto: r.texto, correcta: r.correcta, indice: ent(r.indice, 0, 20, 0) })
+      if (!m) continue
+      id = m.id; aproximada = !m.exacta
     }
+    const q = bancoPreguntas.buscar(id)
+    const registro = {
+      id, ronda: q?.ronda ?? cadena(r.ronda, '', 80), nivel: ent(r.nivel, 1, NIVELES_TOTALES, 1), indice: ent(r.indice, 0, 20, 0), tipo: cadena(r.tipo, '', 40), tema: cadena(r.tema, '', 80),
+      texto: cadena(r.texto), correcta: cadena(r.correcta), explicacion: cadena(r.explicacion, '', 600),
+      fallos: ent(r.fallos, 1, 1e4, 1), aciertosSeguidos: ent(r.aciertosSeguidos, 0, 100, 0), ultimaFecha: fecha(r.ultimaFecha),
+      practicadas: (Array.isArray(r.practicadas) ? r.practicadas : []).filter((x) => typeof x === 'string').slice(-8).map((x) => cadena(x, '', 80)),
+      ...(aproximada ? { migradaAprox: true } : {})
+    }
+    const previa = p.refuerzo[id]
+    p.refuerzo[id] = previa ? { ...registro, fallos: Math.max(previa.fallos, registro.fallos), aciertosSeguidos: Math.min(previa.aciertosSeguidos, registro.aciertosSeguidos) } : registro
   }
+  for (const [ronda, lista] of Object.entries(esObjeto(pr.vistas) ? pr.vistas : {}).slice(0, 80)) {
+    if (Array.isArray(lista)) p.vistas[cadena(ronda, '', 80)] = lista.filter((x) => typeof x === 'string').slice(-8).map((x) => cadena(x, '', 80))
+  }
+  p.corregidas = ent(pr.corregidas, 0, 1e6, 0)
   p.ultimaSesion = fecha(pr.ultimaSesion)
   p.sesiones = ent(pr.sesiones, 0, 1e6, 0)
   // Un nivel no puede estar desbloqueado si el anterior no se completó… pero se respeta el máximo guardado.
@@ -143,6 +167,15 @@ export function leerAlmacen(storage) {
   let crudo
   try { crudo = storage.getItem(CLAVE) } catch { return { datos: datosIniciales(), origen: 'nuevo', almacenamiento: 'bloqueado' } }
   if (crudo == null) {
+    // Progreso guardado con la versión 2: se convierte sin borrar la copia original.
+    let v2 = null
+    try { v2 = storage.getItem(CLAVE_V2) } catch { /* sin acceso */ }
+    if (v2 != null) {
+      try {
+        const bruto = JSON.parse(v2)
+        if (esObjeto(bruto) && bruto.app === 'english-quest' && Number.isInteger(bruto.version) && bruto.version <= VERSION) return { datos: validarDatos(bruto).datos, origen: 'migrado', almacenamiento: 'ok' }
+      } catch { /* copia v2 dañada: se intenta con claves aún más antiguas */ }
+    }
     const m = migrarClavesAntiguas(storage)
     return { datos: m.datos, origen: m.migrado ? 'migrado' : 'nuevo', almacenamiento: 'ok' }
   }
@@ -170,7 +203,9 @@ export function xpDe(progreso) {
 }
 
 export const esLinguistico = (tipo) => !TIPOS_MOTRICES.includes(tipo)
+// Clave del criterio ANTIGUO. Se conserva solo para migrar datos y para historiales sin id (pruebas antiguas).
 export const claveRefuerzo = (nivel, texto) => `${nivel}|${texto}`.slice(0, 160)
+const resumenFinal = (f, fecha) => ({ fecha, aprendizaje: f.aprendizaje, aprobada: f.aprobada, global: f.global, porTema: f.porTema.map(({ tema, fase, total, aciertos, primerIntento, conAyuda, falladas, sinResponder, estado }) => ({ tema, fase, total, aciertos, primerIntento, conAyuda, falladas, sinResponder, estado })) })
 
 export function crearProgreso(storage, { ahora = () => new Date(), diferirGuardado = (fn) => { fn(); return 0 } } = {}) {
   const estado = reactive({ cargado: false, origen: 'nuevo', almacenamiento: storage ? 'ok' : 'memoria', ...datosIniciales() })
@@ -213,7 +248,7 @@ export function crearProgreso(storage, { ahora = () => new Date(), diferirGuarda
 
   // Registra el resultado de una partida. «historial» es el del motor de combate (una entrada por ronda).
   // La práctica y el refuerzo no pasan por aquí: no alteran intentos, estrellas ni experiencia.
-  function registrarPartida({ nivel: n, tema, resultado, historial, vidaCaballero = 0, segundos = 0, combate = {}, totalRondas = 6, aprobacion = APROBACION_INICIAL, minimoPorTema = 3 }) {
+  function registrarPartida({ nivel: n, tema, resultado, historial, vidaCaballero = 0, segundos = 0, combate = {}, totalRondas = 6, aprobacion = APROBACION_INICIAL, minimoPorTema = 3, pesoAyuda = PESO_AYUDA_INICIAL }) {
     const p = estado.progreso
     const antes = { xp: xp.value, rango: rango.value.id, estrellas: nivel(n).estrellas, completado: nivel(n).completado }
     const registro = nivel(n)
@@ -224,33 +259,36 @@ export function crearProgreso(storage, { ahora = () => new Date(), diferirGuarda
     const precision = lingu.length ? aciertos / lingu.length : 0
     p.segundosActividades += Math.round(historial.reduce((t, h) => t + (h.segundos || 0), 0))
     for (const h of historial) {
-      if (esLinguistico(h.tipo)) { contar(p.temas, h.tema ?? tema, h.acierto); contar(p.tipos, h.tipo, h.acierto) }
-      const clave = claveRefuerzo(n, h.texto)
+      if (esLinguistico(h.tipo)) {
+        contar(p.temas, h.tema ?? tema, h.acierto)
+        // Escuchar con ayuda (transcripción o sin voz) es evidencia de LECTURA, no de comprensión auditiva.
+        contar(p.tipos, esAyudaDeLectura(h) ? 'escuchar-lectura' : h.tipo, h.acierto)
+      }
+      const id = h.id ?? claveRefuerzo(n, h.texto)
+      const ronda = h.ronda ?? bancoPreguntas.buscar(h.id)?.ronda ?? null
+      if (h.id && ronda) p.vistas[ronda] = limitarVistas(p.vistas[ronda] ?? [], h.id)
       if (!h.acierto && esLinguistico(h.tipo)) {
-        const r = p.refuerzo[clave]
-        p.refuerzo[clave] = { nivel: n, indice: h.indice ?? 0, tipo: h.tipo, tema, texto: h.texto, correcta: h.correcta, explicacion: h.explicacion || '', fallos: (r?.fallos ?? 0) + 1, aciertosSeguidos: 0, ultimaFecha: ahora().toISOString() }
-      } else if (h.acierto && p.refuerzo[clave]) {
-        // Acertar de nuevo en una partida normal también cuenta como evidencia de mejora.
-        p.refuerzo[clave].aciertosSeguidos++
-        if (p.refuerzo[clave].aciertosSeguidos >= 2) delete p.refuerzo[clave]
+        const r = p.refuerzo[id]
+        p.refuerzo[id] = { id, ronda: ronda ?? '', nivel: n, indice: h.indice ?? 0, tipo: h.tipo, tema: h.tema ?? tema, texto: h.texto, correcta: h.correcta, explicacion: h.explicacion || '', fallos: (r?.fallos ?? 0) + 1, aciertosSeguidos: 0, ultimaFecha: ahora().toISOString(), practicadas: r?.practicadas ?? [] }
+      } else if (h.acierto) {
+        // Acertar en una partida normal también es evidencia: sirve cualquier variante de la MISMA ronda (no solo la que falló).
+        // Un acierto con ayuda no cuenta como evidencia independiente.
+        if (tieneAyuda(h)) continue
+        for (const [k, r] of Object.entries(p.refuerzo)) {
+          if (k !== id && !(ronda && r.ronda === ronda)) continue
+          r.aciertosSeguidos++
+          if (r.aciertosSeguidos >= 2) { delete p.refuerzo[k]; p.corregidas++ }
+        }
       }
     }
     // Evaluación integradora: el resultado EDUCATIVO se calcula aparte del resultado de COMBATE.
     // Solo cuentan las respuestas lingüísticas; una victoria sobre el guardián no equivale a aprobar.
+    // Cada acierto se clasifica como evidencia: independiente (primer intento) o con ayuda (vale `pesoAyuda`).
     let final = null
     if (n === NIVEL_FINAL) {
-      const grupos = new Map()
-      for (const h of lingu) {
-        const g = grupos.get(h.tema) ?? { tema: h.tema, fase: h.fase ?? 0, aciertos: 0, total: 0 }
-        g.total++; if (h.acierto) g.aciertos++
-        grupos.set(h.tema, g)
-      }
-      const porTema = [...grupos.values()].sort((a, b) => a.fase - b.fase).map((g) => ({ ...g, precision: g.total ? g.aciertos / g.total : 0, aprobado: g.total >= minimoPorTema && g.aciertos / g.total >= aprobacion }))
-      const completo = lingu.length >= totalRondas
-      final = { completo, umbral: aprobacion, aprobada: completo && precision >= aprobacion && porTema.every((g) => g.aprobado) || (completo && precision >= aprobacion && porTema.length > 0 && porTema.filter((g) => !g.aprobado).length === 0), porTema, reforzar: porTema.filter((g) => !g.aprobado) }
-      // «Aprobada» exige todos los desafíos lingüísticos, el porcentaje global y el mínimo en cada temática.
-      final.aprobada = completo && precision >= aprobacion && final.reforzar.length === 0
-      if (completo) registro.mejorPrecision = Math.max(registro.mejorPrecision, precision)
+      final = evaluarFinal(lingu, { aprobacion, minimoPorTema, pesoAyuda, totalRondas })
+      if (final.completo) registro.mejorPrecision = Math.max(registro.mejorPrecision, precision)
+      if (final.completo) registro.ultimoFinal = resumenFinal(final, ahora().toISOString())
       if (final.aprobada) registro.aprobada = true
     }
     const claves = Object.keys(p.refuerzo)
@@ -286,20 +324,28 @@ export function crearProgreso(storage, { ahora = () => new Date(), diferirGuarda
   }
 
   // Práctica de refuerzo: no cambia XP, estrellas, intentos ni derrotas; solo la maestría de esa pregunta.
-  function registrarRefuerzo(clave, acierto) {
+  // `idPracticada` es la variante que se acaba de practicar (para rotar por todas antes de repetir). `conAyuda`: no suma.
+  function registrarRefuerzo(clave, acierto, idPracticada = null, conAyuda = false) {
     const r = estado.progreso.refuerzo[clave]
     if (!r) return false
-    if (acierto) { r.aciertosSeguidos++; if (r.aciertosSeguidos >= 2) { delete estado.progreso.refuerzo[clave]; guardar(); return true } } else r.aciertosSeguidos = 0
+    if (idPracticada) r.practicadas = limitarVistas(r.practicadas ?? [], idPracticada)
+    if (acierto && !conAyuda) {
+      r.aciertosSeguidos++
+      if (r.aciertosSeguidos >= 2) { delete estado.progreso.refuerzo[clave]; estado.progreso.corregidas++; guardar(); return true }
+    } else if (!acierto) r.aciertosSeguidos = 0
     guardar()
     return false
   }
+  // Historial de variantes vistas por ronda: permite no repetir y recorrer todas.
+  const vistasDe = (ronda) => estado.progreso.vistas[ronda] ?? []
+  function registrarVista(ronda, id) { estado.progreso.vistas[ronda] = limitarVistas(estado.progreso.vistas[ronda] ?? [], id); guardar() }
 
   function exportar() { return JSON.stringify(snapshot(), null, 2) }
   function importar(texto) {
     let bruto
     try { bruto = JSON.parse(texto) } catch { return { ok: false, motivo: 'json' } }
     if (!esObjeto(bruto) || bruto.app !== 'english-quest' || !Number.isInteger(bruto.version)) return { ok: false, motivo: 'formato' }
-    if (bruto.version > VERSION) return { ok: false, motivo: 'version' }
+    if (bruto.version > VERSION) return { ok: false, motivo: 'version' }  // las copias v1/v2 se migran en validarDatos
     const { datos } = validarDatos(bruto)
     aplicar(datos)
     guardarYa()
@@ -317,7 +363,7 @@ export function crearProgreso(storage, { ahora = () => new Date(), diferirGuarda
     }
   }
 
-  return { estado, xp, rango, cargar, ajustar, registrarPartida, registrarRefuerzo, exportar, importar, reiniciar, guardarYa, estadisticas, nivel, desbloquear: (n) => { estado.progreso.desbloqueado = Math.max(estado.progreso.desbloqueado, Math.min(NIVELES_TOTALES + 1, n)); guardar() } }
+  return { estado, xp, rango, cargar, ajustar, registrarPartida, registrarRefuerzo, vistasDe, registrarVista, exportar, importar, reiniciar, guardarYa, estadisticas, nivel, desbloquear: (n) => { estado.progreso.desbloqueado = Math.max(estado.progreso.desbloqueado, Math.min(NIVELES_TOTALES + 1, n)); guardar() } }
 }
 
 let instancia = null

@@ -1,18 +1,22 @@
 <!--
   Actividad.vue - Una actividad complementaria de la biblioteca. Tipos: opcion, ordenar, relacionar, clasificar, corregir.
   Retroalimentación inmediata, se puede repetir, y NO afecta a la vida, la experiencia ni las estrellas del juego.
+  Las fichas y columnas se barajan con semilla (nunca en el orden correcto); al repetir, el orden cambia.
 -->
 <template>
   <article class="act" :aria-labelledby="`act-t-${actividad.id}`">
-    <h3 :id="`act-t-${actividad.id}`">{{ t(actividad.titulo) }}</h3>
+    <div class="cab-act">
+      <p class="insignia" aria-hidden="true"><span>{{ ICONOS[actividad.tipo] ?? '📜' }}</span></p>
+      <h3 :id="`act-t-${actividad.id}`">{{ t(actividad.titulo) }}</h3>
+    </div>
     <p class="instr" lang="es">{{ instruccionVisible }}</p>
 
     <!-- OPCIÓN / COMPLETAR -->
     <div v-if="actividad.tipo === 'opcion'">
       <img v-if="actividad.imagen" class="senal" :src="actividad.imagen" :alt="actividad.alt || ''" />
       <div class="opciones">
-        <button v-for="(o, i) in actividad.opciones" :key="i" type="button" class="op" lang="en" :disabled="resuelta"
-          :class="{ ok: resuelta && i === actividad.correcta, mal: resuelta && sel === i && i !== actividad.correcta }" @click="elegirOpcion(i)">{{ o }}</button>
+        <button v-for="i in ordenOpciones" :key="i" type="button" class="op" lang="en" :disabled="resuelta"
+          :class="{ ok: resuelta && i === actividad.correcta, mal: resuelta && sel === i && i !== actividad.correcta }" @click="elegirOpcion(i)">{{ actividad.opciones[i] }}</button>
       </div>
     </div>
 
@@ -78,11 +82,16 @@
 </template>
 
 <script setup>
+import { semillaDe, ordenFichas, barajarSemilla } from '~/composables/useBarajar.js'
+
 const props = defineProps({ actividad: { type: Object, required: true } })
 const emit = defineEmits(['resuelta'])
 const { t } = useLanguage()
 const a = props.actividad
 
+const ICONOS = { opcion: '🎯', ordenar: '🧩', relacionar: '🔗', clasificar: '⚖️', corregir: '🔍' }
+
+const temporizadores = []
 const resuelta = ref(false)
 const acierto = ref(false)
 const sel = ref(null)
@@ -93,18 +102,24 @@ const hechas = ref([])
 const errores = ref(0)
 const asignado = ref((a.items ?? []).map(() => null))
 
-const barajar = (n) => {
-  const base = [...Array(n).keys()]
-  let m
-  do { m = [...base].sort(() => Math.random() - 0.5) } while (n > 1 && m.every((v, i) => v === i))
-  return m
+// Barajado con semilla de la actividad: estable entre servidor y cliente, distinto
+// en cada actividad, y al repetir (`vuelta`) el orden cambia. Nunca el orden correcto.
+const vuelta = ref(0)
+const semillaAct = () => (semillaDe(`${a.id}|${a.titulo}`) + vuelta.value * 7919) >>> 0
+
+function barajarColumna(n, desplazamiento) {
+  return barajarSemilla(Array.from({ length: n }, (_, i) => i), (semillaAct() + desplazamiento) >>> 0)
 }
+function barajarTexto(lista) {
+  return ordenFichas(lista, a.correcta ?? '', semillaAct()).map((i) => lista[i])
+}
+
+const ordenOpciones = computed(() => barajarColumna((a.opciones ?? []).length, 53))
 const fichas = reactive([...(a.fichas ?? [])])
-const izq = ref(barajar((a.parejas ?? []).length))
-const der = ref(barajar((a.parejas ?? []).length))
+const izq = ref(barajarColumna((a.parejas ?? []).length, 13))
+const der = ref(barajarColumna((a.parejas ?? []).length, 29))
 // Para ordenar se muestran barajadas las fichas: se reordena la lista en el montaje
 if (a.tipo === 'ordenar') fichas.splice(0, fichas.length, ...barajarTexto(a.fichas))
-function barajarTexto(lista) { const copia = [...lista]; let m; do { m = [...copia].sort(() => Math.random() - 0.5) } while (m.join(' ') === a.correcta.replace(/\s+/g, ' ')); return m }
 
 const instruccionVisible = computed(() => t(a.instruccion))
 const norm = (s) => s.replace(/\s+/g, ' ').trim()
@@ -118,54 +133,88 @@ function unir(i) {
   if (selIzq.value === i) {
     hechas.value.push(i); selIzq.value = null; falloDer.value = null
     if (hechas.value.length === a.parejas.length) cerrar(errores.value === 0)
-  } else { errores.value++; falloDer.value = i; setTimeout(() => { falloDer.value = null }, 600) }
+  } else { errores.value++; falloDer.value = i; temporizadores.push(setTimeout(() => { falloDer.value = null }, 600)) }
 }
 function comprobarClasificar() { cerrar(a.items.every((it, i) => asignado.value[i] === it.grupo)) }
 function elegirPalabra(i) { if (resuelta.value) return; sel.value = i; cerrar(i === a.error) }
 
-let temporizadores = []
 function reiniciar() {
   resuelta.value = false; acierto.value = false; sel.value = null; armado.value = []; selIzq.value = null; falloDer.value = null
   hechas.value = []; errores.value = 0; asignado.value = (a.items ?? []).map(() => null)
-  if (a.tipo === 'relacionar') { izq.value = barajar(a.parejas.length); der.value = barajar(a.parejas.length) }
+  vuelta.value++
+  if (a.tipo === 'relacionar') {
+    izq.value = barajarColumna(a.parejas.length, 13)
+    der.value = barajarColumna(a.parejas.length, 29)
+  }
   if (a.tipo === 'ordenar') fichas.splice(0, fichas.length, ...barajarTexto(a.fichas))
 }
-onBeforeUnmount(() => { temporizadores.forEach(clearTimeout); temporizadores = [] })
+onBeforeUnmount(() => { temporizadores.forEach(clearTimeout); temporizadores.length = 0 })
 </script>
 
 <style scoped>
-.act { padding: 1rem; border: 1px solid #8f7959; border-radius: 10px; background: #141c2a; color: #f1e8d3; }
-h3 { margin: 0 0 .25rem; color: #ffe09a; font: 700 1.1rem Georgia, serif; }
-.instr { margin: 0 0 .8rem; line-height: 1.45; }
+/* Tarjeta de entrenamiento sobre el pergamino */
+.act {
+  padding: 1rem;
+  border: 1px solid #b68a48;
+  border-radius: 12px;
+  background: linear-gradient(170deg, #fff8e6, #f3e9cf);
+  color: #2b1d0e;
+  box-shadow: 0 6px 18px #4a2f1422;
+}
+.cab-act { display: flex; align-items: center; gap: .55rem; }
+.insignia { margin: 0; }
+.insignia span {
+  display: inline-grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid #b68a48;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe09a, #e3cf9f);
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px #4a2f1433;
+}
+h3 { margin: 0; color: #4a2f14; font: 700 1.1rem Georgia, serif; }
+.instr { margin: .4rem 0 .8rem; line-height: 1.45; color: #5a4632; }
 .senal { display: block; width: 110px; height: 110px; margin: 0 auto .8rem; object-fit: contain; }
 .opciones { display: grid; gap: .5rem; }
 button { font: inherit; }
-.op, .ficha, .palabra, .g { min-height: 44px; padding: .4rem .8rem; color: #f7edda; background: #243247; border: 1px solid #8f7959; border-radius: 8px; cursor: pointer; text-align: left; }
-.op:hover:not(:disabled), .ficha:hover:not(:disabled), .g:hover:not(:disabled), .palabra:hover:not(:disabled) { background: #31445f; }
-button:focus-visible { outline: 3px solid #ffe09a; outline-offset: 2px; }
+.op, .ficha, .palabra, .g {
+  min-height: 44px; padding: .4rem .8rem;
+  color: #2b1d0e; background: #fffdf6;
+  border: 1px solid #b68a48; border-radius: 8px;
+  cursor: pointer; text-align: left;
+  transition: background 120ms, transform 120ms, border-color 120ms;
+}
+.op:hover:not(:disabled), .ficha:hover:not(:disabled), .g:hover:not(:disabled), .palabra:hover:not(:disabled) { background: #ffeec2; transform: translateY(-1px); }
+button:focus-visible { outline: 3px solid #b68a48; outline-offset: 2px; }
 button:disabled { cursor: default; }
-.op.ok, .palabra.ok, li.ok { border-color: #6fcf97; background: #1f4a33; }
-.op.mal, .palabra.mal, li.mal { border-color: #eb7b6d; background: #5a2620; }
-.op.activo, .g.activo { border-color: #ffe09a; background: #4b3d1e; }
+.op.ok, .palabra.ok, li.ok { border-color: #2e7d4f; background: #dff0e2; }
+.op.mal, .palabra.mal, li.mal { border-color: #a83226; background: #f6dcd6; }
+.op.activo, .g.activo { border-color: #4a2f14; background: #ffe09a; }
 .ficha { text-align: center; }
-.ficha.puesta { background: #3a2f1c; }
+.ficha.puesta { background: #ffe09a; border-color: #4a2f14; }
 .armado, .banco, .frase { display: flex; flex-wrap: wrap; gap: .45rem; margin: .4rem 0; }
-.armado { min-height: 56px; padding: .5rem; border: 1px dashed #8f7959; border-radius: 8px; align-items: center; }
-.vacio { color: #b9b2a3; font-size: .9rem; }
+.armado { min-height: 56px; padding: .5rem; border: 1px dashed #b68a48; border-radius: 8px; align-items: center; background: #fff8e6; }
+.vacio { color: #6b543a; font-size: .9rem; }
 .rel { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
 .col { display: grid; gap: .5rem; align-content: start; }
 .lista-clas { display: grid; gap: .5rem; margin: 0; padding: 0; list-style: none; }
-.lista-clas li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem; padding: .5rem; border: 1px solid #5a6b85; border-radius: 8px; }
+.lista-clas li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem; padding: .5rem; border: 1px solid #b68a48; border-radius: 8px; background: #fffdf6; }
 .txt { font-weight: 600; }
 .grupos { display: flex; flex-wrap: wrap; gap: .35rem; }
 .g { text-align: center; min-height: 40px; font-size: .9rem; }
 .acciones { display: flex; gap: .5rem; margin-top: .6rem; }
 .b-pri, .b-sec { min-height: 44px; padding: 0 1rem; border-radius: 8px; cursor: pointer; font-weight: 700; }
-.b-pri { color: #2a1d08; background: #ffe09a; border: 1px solid #ffe09a; }
+.b-pri { color: #2a1d08; background: #ffe09a; border: 1px solid #b68a48; }
 .b-pri:disabled { opacity: .45; }
-.b-sec { color: #ffe09a; background: transparent; border: 1px solid #b3955c; }
-.retro { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .5rem; margin-top: .8rem; padding: .6rem .75rem; border-radius: 8px; line-height: 1.4; }
-.retro.bien { background: #1f4a33; border: 1px solid #6fcf97; }
-.retro.fallo { background: #4a3417; border: 1px solid #e8bd71; }
+.b-sec { color: #4a2f14; background: transparent; border: 1px solid #b68a48; }
+.retro { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .5rem; margin-top: .8rem; padding: .6rem .75rem; border-radius: 8px; line-height: 1.4; animation: entrar-retro 280ms cubic-bezier(.2, 1.3, .4, 1) backwards; }
+@keyframes entrar-retro { from { opacity: 0; translate: 0 8px; } }
+.retro.bien { background: #dff0e2; border: 1px solid #2e7d4f; }
+.retro.fallo { background: #f6e8c8; border: 1px solid #b68a48; }
 .retro .b-sec { margin-left: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .op, .ficha, .palabra, .g, .retro { transition: none; animation: none; }
+}
 </style>

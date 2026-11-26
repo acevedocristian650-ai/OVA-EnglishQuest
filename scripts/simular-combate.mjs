@@ -5,6 +5,7 @@
 import { readFileSync } from 'node:fs'
 import { nextTick } from 'vue'
 import { useCombatEngine } from '../composables/useCombatEngine.js'
+import { aplicarDificultad } from '../lib/dificultad.js'
 const niveles = JSON.parse(readFileSync(new URL('../data/niveles.json', import.meta.url), 'utf8'))
 
 // --- tiempo falso (los temporizadores del motor se ejecutan al «avanzar»)
@@ -166,4 +167,21 @@ sinRespuesta.agotar()
 sinRespuesta.terminarAtaque()
 ok(sinRespuesta.vidaCaballero.value < 100 && sinRespuesta.historial.value[0].agotado &&
   !eventosTiempo.includes('victoria'), 'agotar el reloj cuesta vida y registra la ronda')
+// El adaptador alimenta el reloj real, no solo la interfaz.
+for (const zona of niveles) {
+  const normal = crearCombate(aplicarDificultad(zona, 'normal'), [])
+  const original = crearCombate(zona, [])
+  const dificil = crearCombate(aplicarDificultad(zona, 'dificil'), [])
+  for (let i = 0; i < zona.preguntas.length; i++) {
+    normal.indice.value = i; original.indice.value = i; dificil.indice.value = i
+    ok(normal.tiempoTotal.value === original.tiempoTotal.value && dificil.tiempoTotal.value === 10, `dificultad: ${zona.numero}.${i + 1}, Normal intacto y Difícil 10 s`)
+  }
+  normal.destruir(); original.destruir(); dificil.destruir()
+}
+const relojDificil = crearCombate(aplicarDificultad(niveles[1], 'dificil'), [])
+ok(relojDificil.tiempoRestante.value === 10 && relojDificil.reloj.total.value === 10, 'el reloj inicia realmente en 10 s')
+// Tick manual con tiempo simulado, sin cambiar las reglas de combate.
+for (let i = 0; i < 20; i++) { avanzar(500); relojDificil.reloj.tick() }
+ok(relojDificil.agotado.value && relojDificil.fase.value !== 'pregunta', 'el modo Difícil agota la ronda tras 10 s activos')
+relojDificil.destruir()
 console.log(fallos ? `\n${fallos} FALLOS` : '\nTodo correcto'); process.exit(fallos?1:0)

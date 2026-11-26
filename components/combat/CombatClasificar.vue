@@ -6,10 +6,15 @@
         <button v-if="!usadas.includes(indice)" type="button" class="palabra" lang="en"
           :class="{ arrastrando: arrastre?.indice === indice }"
           :style="arrastre?.indice === indice ? { transform: `translate(${arrastre.dx}px, ${arrastre.dy}px)` } : null"
-          @pointerdown="tomar($event, indice)">
+          :aria-pressed="elegida === indice" @pointerdown="tomar($event, indice)" @click="elegirFicha(indice)">
           {{ palabra.texto }}
         </button>
       </div>
+    </div>
+    <!-- Alternativa al arrastre (teclado o toque): elegir la palabra y enviarla al héroe o al monstruo -->
+    <div v-if="elegida !== null" class="destinos-tecla" role="group" :aria-label="t('Enviar la palabra elegida')">
+      <button type="button" @click="enviar('heroe')">🛡️ {{ t('Héroe: futuro') }}</button>
+      <button type="button" @click="enviar('monstruo')">👹 {{ t('Monstruo: pasado') }}</button>
     </div>
   </div>
 </template>
@@ -19,6 +24,10 @@ import { ref, onBeforeUnmount } from 'vue'
 
 const props = defineProps({ pregunta: { type: Object, required: true } })
 const emit = defineEmits(['impacto', 'error', 'completar'])
+const { t } = useLanguage()
+const elegida = ref(null)
+let ultimoArrastre = -1
+function elegirFicha(indice) { if (ultimoArrastre === indice) { ultimoArrastre = -1; return } if (!usadas.value.includes(indice)) elegida.value = elegida.value === indice ? null : indice }
 const usadas = ref([])
 const arrastre = ref(null)
 
@@ -57,6 +66,7 @@ function resaltar(destino) {
 
 function tomar(evento, indice) {
   if (arrastre.value || evento.button !== 0) return
+  ultimoArrastre = -1
   marcarDestinos(evento.currentTarget.closest('.escenario'), true)
   evento.currentTarget.setPointerCapture(evento.pointerId)
   arrastre.value = { indice, puntero: evento.pointerId, x: evento.clientX, y: evento.clientY, dx: 0, dy: 0 }
@@ -97,6 +107,16 @@ onBeforeUnmount(() => {
   })
 })
 
+function enviar(destino) {
+  const indice = elegida.value
+  if (indice === null || usadas.value.includes(indice)) return
+  elegida.value = null
+  if (destino !== (props.pregunta.palabras[indice].futuro ? 'heroe' : 'monstruo')) { emit('error', destino); return }
+  usadas.value.push(indice)
+  emit('impacto', destino)
+  if (usadas.value.length === props.pregunta.palabras.length) emit('completar')
+}
+
 function soltar(evento) {
   const ficha = arrastre.value
   if (ficha?.puntero !== evento.pointerId) return
@@ -108,6 +128,8 @@ function soltar(evento) {
   marcarDestinos(arena, false)
   if (!destino || Math.hypot(evento.clientX - ficha.x, evento.clientY - ficha.y) < 8) return
 
+  ultimoArrastre = ficha.indice
+  elegida.value = null
   const correcto = destino === (props.pregunta.palabras[ficha.indice].futuro ? 'heroe' : 'monstruo')
   if (!correcto) {
     emit('error', destino)
@@ -122,6 +144,8 @@ function soltar(evento) {
 
 <style scoped>
 .palabras-combate { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+.destinos-tecla { position: absolute; inset: auto 0.45rem 4.4rem; display: flex; justify-content: center; gap: 0.4rem; pointer-events: auto; }
+.destinos-tecla button { min-height: 44px; padding: 0.3rem 0.7rem; border: 1px solid #e6b96e; border-radius: 999px; background: #1a2232f2; color: #fff0cc; font-weight: 700; }
 .fichas-arena {
   position: absolute;
   inset: auto 0.45rem 0.45rem;

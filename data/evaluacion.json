@@ -1,5 +1,8 @@
 {
-  "_nota": "Criterio de aprobación de «La última prueba del reino». Provisional: se podrá cambiar según las orientaciones del profesor. aprobacion = porcentaje mínimo (0 a 1) de respuestas lingüísticas correctas, global y por temática.",
-  "aprobacion": 0.7,
-  "minimoPorTema": 3
+  "_nota": "Criterio de «La última prueba del reino» (versión 2). Se evalúa EVIDENCIA DE INGLÉS, no destreza de juego: los desafíos motrices (hacha) no existen en esta prueba y la victoria sobre el guardián no cuenta como aprendizaje.",
+  "_justificacion": "Cada temática se evalúa con 3 desafíos. Se fija el dominio en 2 de cada 3 (≥ 66 %). Un acierto con pista, transcripción o corrección tras un error vale la mitad como evidencia; la transcripción no se contabiliza como comprensión auditiva. La aprobación exige completar los 12 desafíos de las cuatro temáticas y lograr el umbral global y por temática. Criterio propuesto pendiente de validación docente.",
+  "aprobacion": 0.66,
+  "minimoPorTema": 3,
+  "pesoAyuda": 0.5,
+  "dominioPleno": "Todos los desafíos de la temática acertados sin ayuda"
 }
